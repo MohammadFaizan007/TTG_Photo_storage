@@ -1,0 +1,51 @@
+<resources>
+    <string name="app_name">TTG_Photo_storage</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="crash_toast_text">Crash Report</string>
+    <string name="enter_pswd_err">Please Enter Your Password</string>
+
+    <!--    PERMISSIONS    -->
+    <string name="alert_internet">Not able to connect to Server. Please check your network connection and try again.</string>
+    <string name="alert_text">Alert</string>
+    <string name="permission_camera_rationale11">Some permission are required to use the app.</string>
+    <string name="reqst_permission">Request permission?</string>
+
+    <string name="alert_login">You Are Not Authorized To Access The App. Contact Your System Administrator.</string>
+
+
+    <!--    MENU-->
+
+    <string name="my_profile">My Profile</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="about_us">About Us</string>
+    <string name="logout">Logout</string>
+    <string name="term">Terms &amp; Condition</string>
+    <string name="capability">Global Capability</string>
+    <string name="radio_select"><b><u>Please Select Radio Button</u></b></string>
+
+
+    <string name="crn_enter">Please choose any option to enter CRN.</string>
+    <string name="asset_enter">Please choose any option to enter Asset ID.</string>
+    <string name="type_crn">Please type CRN in text box.</string>
+    <string name="type_asset">Please type Asset ID in text box.</string>
+    <string name="type_comment">Type any comment here.</string>
+    <string name="radio_crn">Search Result by CRN.</string>
+    <string name="radio_asset">Search Result by Asset ID.</string>
+    <string name="choose_radio">Please choose any option to get result.</string>
+    <string name="scan_bar">Scan Barcode</string>
+    <string name="type_bar">Enter Barcode</string>
+    <string name="dialog_heading"><b>TTG-Photo Storage</b></string>
+    <string name="dialog_success">Photo Uploaded \n Successfully!</string>
+
+
+    <string name="dialog_body"><b>Your previous Asset ID is</b></string>
+    <string name="dialog_asset"><b>Asset ID Already been used !</b></string>
+    <string name="dialog_reuse"><b>You want to Overwrite new images on this Asset ID</b></string>
+
+
+
+
+
+</resources>

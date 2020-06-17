@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00ff00"
+    android:keepScreenOn="true">
+
+    <com.notbytes.barcode_reader.camera.CameraSourcePreview
+        android:id="@+id/preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+<!--        <TextView-->
+<!--            android:id="@+id/scan_crn"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@color/zxing_transparent"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="5dp"-->
+<!--            android:text="Scan CRN"-->
+<!--            android:textColor="@color/zxing_status_text"-->
+<!--            android:textSize="16sp"-->
+<!--            android:visibility="gone"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/scan_assetid"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="10dp"-->
+<!--            android:background="@color/zxing_transparent"-->
+<!--            android:gravity="center"-->
+<!--            android:padding="5dp"-->
+<!--            android:text="Scan Asset ID"-->
+<!--            android:textColor="@color/zxing_status_text"-->
+<!--            android:textSize="16sp" />-->
+
+        <com.notbytes.barcode_reader.camera.GraphicOverlay
+            android:id="@+id/graphicOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.notbytes.barcode_reader.camera.CameraSourcePreview>
+
+    <com.notbytes.barcode_reader.ScannerOverlay
+        android:id="@+id/scan_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#44000000"
+        app:line_color="#7323DC"
+        app:line_speed="6"
+        app:line_width="5"
+        app:square_height="250"
+        app:square_width="250" />
+
+</RelativeLayout>

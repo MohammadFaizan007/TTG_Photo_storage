@@ -1,0 +1,196 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@color/color_bg"
+        android:paddingTop="32dp">
+
+
+        <TextView
+            android:id="@+id/profile_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:padding="5dp"
+            android:drawableRight="@drawable/cross"
+            android:drawableTint="@color/navyBlue"
+            android:text="Welcome Mohd Faizan "
+            android:maxEms="20"
+            android:textColor="@color/navyBlue"
+            android:textColorHint="@color/navyBlue"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/myProfile"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="25dp"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/user_icon"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/my_profile"
+            android:textColor="@color/text_color"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+
+        <TextView
+            android:id="@+id/aboutUs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/about_icon"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/about_us"
+            android:textColor="@color/text_color"
+            android:textSize="18sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+
+        <TextView
+            android:id="@+id/capability"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/global_icon"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/capability"
+            android:textColor="@color/text_color"
+            android:textSize="18sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+
+        <TextView
+            android:id="@+id/contactUs"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/contact_icon"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/contact_us"
+            android:textColor="@color/text_color"
+            android:textSize="18sp" />
+
+        <View
+            android:id="@+id/order_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+        <TextView
+            android:id="@+id/termCandition"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/term_icon"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/term"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+
+        <TextView
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/logout_icon"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/logout"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:visibility="visible" />
+
+        <View
+            android:id="@+id/prof_view"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

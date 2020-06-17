@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ttg_photo_storage.activity.FullScreenImageActivity">
+
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/custom_header"/>
+
+
+    <LinearLayout
+        android:id="@+id/ll_full"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_120sdp"
+        android:orientation="vertical">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fullScreenImageView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/comment_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/type_comment"
+        android:padding="@dimen/_10sdp"
+        android:layout_marginTop="-130dp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_below="@+id/ll_full"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="@color/text_color"/>
+</RelativeLayout>

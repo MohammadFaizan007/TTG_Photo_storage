@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/custom_header" />
+
+    <EditText
+        android:id="@+id/et_old_pswd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_35sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:background="@drawable/login_bck"
+        android:elevation="5dp"
+        android:hint="Old Password"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:paddingStart="40dp"
+        android:paddingLeft="40dp"
+        android:textSize="16sp" />
+
+
+    <EditText
+        android:id="@+id/et_new_pswd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:background="@drawable/login_bck"
+        android:elevation="5dp"
+        android:hint="New Password"
+        android:imeOptions="actionNext"
+        android:inputType="textPassword"
+        android:paddingStart="40dp"
+        android:paddingLeft="40dp"
+        android:textSize="16sp" />
+
+
+    <EditText
+        android:id="@+id/et_confrm_pswd"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:background="@drawable/login_bck"
+        android:elevation="5dp"
+        android:hint="Confirm New Password"
+        android:imeOptions="actionNext"
+        android:inputType="text"
+        android:paddingStart="40dp"
+        android:paddingLeft="40dp"
+        android:textSize="16sp" />
+
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/background_btn"
+        android:drawableTint="@color/white"
+        android:gravity="center"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:text="Update"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_14sdp"
+        android:textStyle="bold" />
+
+
+</LinearLayout>
+
+

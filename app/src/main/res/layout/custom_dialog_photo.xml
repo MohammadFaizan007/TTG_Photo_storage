@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a Image Title"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:padding="@dimen/_5sdp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/navyBlue"/>
+
+    <TextView
+        android:id="@+id/upload_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:drawableLeft="@drawable/upload"
+        android:paddingLeft="25dp"
+        android:paddingEnd="12dp"
+        android:paddingRight="12dp"
+        android:singleLine="true"
+        android:text="Upload Image"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:drawableTint="@color/black"/>
+
+    <TextView
+        android:id="@+id/view_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:drawableLeft="@drawable/ic_filter_black_24dp"
+        android:paddingLeft="25dp"
+        android:paddingEnd="12dp"
+        android:paddingRight="12dp"
+        android:singleLine="true"
+        android:text="View Image"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/edit_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Image"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textAlignment="textStart"
+        android:padding="@dimen/_5sdp"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/remove_image"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginTop="10dp"
+        android:drawablePadding="20dp"
+        android:gravity="center_vertical"
+        android:paddingStart="10dp"
+        android:drawableLeft="@drawable/ic_delete"
+        android:paddingLeft="25dp"
+        android:paddingEnd="12dp"
+        android:paddingRight="12dp"
+        android:singleLine="true"
+        android:text="Remove Image"
+        android:textColor="@color/text_color"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+
+</LinearLayout>
