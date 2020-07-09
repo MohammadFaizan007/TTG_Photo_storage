@@ -138,6 +138,31 @@
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/color_bg" />
+
+        <TextView
+            android:id="@+id/viewShipment"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="1dp"
+            android:drawablePadding="20dp"
+            android:gravity="center_vertical"
+            android:drawableRight="@drawable/arrow"
+            android:drawableLeft="@drawable/term_icon"
+            android:paddingStart="25dp"
+            android:paddingLeft="25dp"
+            android:paddingEnd="12dp"
+            android:paddingRight="12dp"
+            android:singleLine="true"
+            android:text="@string/ship"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/text_color"
+            android:textSize="18sp"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/color_bg" />
         <TextView
             android:id="@+id/termCandition"
             android:layout_width="match_parent"

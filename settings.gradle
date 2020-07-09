@@ -1,2 +1,2 @@
-include ':app', ':barcode-reader'
+include ':app', ':barcode-reader', ':ananas'
 rootProject.name='TTG_Photo_storage'

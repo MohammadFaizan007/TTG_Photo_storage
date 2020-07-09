@@ -17,19 +17,40 @@
         android:id="@+id/assedId"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/_14sdp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:padding="@dimen/_5sdp"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_14sdp"
         app:layout_constraintBottom_toTopOf="@+id/rv_post"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/app_bar" />
-
+        app:layout_constraintTop_toBottomOf="@+id/app_bar"
+        app:layout_constraintVertical_bias="0.0" />
+    <Button
+        android:id="@+id/ship_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_35sdp"
+        android:background="@drawable/background_btn"
+        android:drawablePadding="-40dp"
+        android:drawableTint="@color/white"
+        android:gravity="center"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:text="View Shipments"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/assedId" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -37,13 +58,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/assedId" />
+        app:layout_constraintTop_toBottomOf="@+id/ship_btn" />
 
     <TextView
         android:id="@+id/txt_Norecfound"

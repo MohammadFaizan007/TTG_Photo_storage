@@ -22,6 +22,7 @@
     <string name="about_us">About Us</string>
     <string name="logout">Logout</string>
     <string name="term">Terms &amp; Condition</string>
+    <string name="ship">View Shipment</string>
     <string name="capability">Global Capability</string>
     <string name="radio_select"><b><u>Please Select Radio Button</u></b></string>
 
@@ -40,9 +41,14 @@
     <string name="dialog_success">Photo Uploaded \n Successfully!</string>
 
 
-    <string name="dialog_body"><b>Your previous Asset ID is</b></string>
-    <string name="dialog_asset"><b>Asset ID Already been used !</b></string>
-    <string name="dialog_reuse"><b>You want to Overwrite new images on this Asset ID</b></string>
+    <string name="dialog_body">Your previous Asset ID is</string>
+    <string name="dialog_asset">Asset ID Already been used !</string>
+    <string name="dialog_reuse">You want to Overwrite new images on this Asset ID</string>
+
+    <string name="declair">I hereby declare that the above mentioned contents of this shipment are fully correct</string>
+    <string name="title_delete">Delete</string>
+    <string name="title_draw">Draw</string>
+    <string name="title_save">Save</string>
 
 
 

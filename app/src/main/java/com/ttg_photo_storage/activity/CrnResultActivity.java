@@ -3,6 +3,7 @@ package com.ttg_photo_storage.activity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +43,8 @@ public class CrnResultActivity extends BaseActivity {
     TextView assedId;
     @BindView(R.id.txt_Norecfound)
     TextView txtNorecfound;
+    @BindView(R.id.ship_btn)
+    Button ship_btn;
     private List<UidsItem> list;
 
     @Override
@@ -54,10 +57,17 @@ public class CrnResultActivity extends BaseActivity {
 
         String sourceString = "<b>" + "CRN:  " + "</b> " + "<u>"+PreferencesManager.getInstance(context).getCrnID()+"</u>";
         assedId.setText(Html.fromHtml(sourceString));
-        if (NetworkUtils.getConnectivityStatus(context) != 0)
+        if (NetworkUtils.getConnectivityStatus(context) != 0) {
             getPost();
-        else
+        } else {
             showMessage(getResources().getString(R.string.alert_internet));
+        }
+        ship_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToActivity(CrnResultActivity.this,ViewShipmentActivity.class,null);
+            }
+        });
     }
 
     @Override
@@ -66,12 +76,21 @@ public class CrnResultActivity extends BaseActivity {
 
     }
 
-    @OnClick(R.id.side_menu)
-    public void onViewClicked() {
-        hideKeyboard();
-        finish();
-        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
 
+    @OnClick({R.id.side_menu,R.id.ship_btn})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.side_menu:
+                hideKeyboard();
+                finish();
+                overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+                break;
+//            case R.id.btn_shipment:
+//                goToActivity(CrnResultActivity.this,ViewProfileActivity.class,null);
+////                goToActivity(MainContainer.this, AssetIDScanActivity.class, null);
+
+//                break;
+        }
     }
 
     private void getPost() {

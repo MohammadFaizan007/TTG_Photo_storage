@@ -32,13 +32,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainContainer extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public TextView profile_name, my_profile, contactUs, aboutUs, logout, capability, termCandition;
+    public TextView profile_name, my_profile, contactUs, aboutUs, logout, capability, termCandition,viewShipment;
     @BindView(R.id.nav_view)
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
     @BindView(R.id.title)
     TextView title_tv;
+//    @BindView(R.id.viewShipment)
+//    TextView viewShipment;
     private Fragment currentFragment;
 
 
@@ -51,8 +53,11 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
         setSupportActionBar(toolbar);
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
             title_tv.setText("Enter CRN");
-        }else {
+
+        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")){
             title_tv.setText("Search Data");
+        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("shipment")) {
+            title_tv.setText("Add Shipment");
         }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -122,9 +127,17 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
             aboutUs = view.findViewById(R.id.aboutUs);
             capability = view.findViewById(R.id.capability);
             termCandition = view.findViewById(R.id.termCandition);
+            viewShipment = view.findViewById(R.id.viewShipment);
             logout = view.findViewById(R.id.logout);
 
             profile_name.setText("Welcome " + PreferencesManager.getInstance(context).getNAME()+"!");
+            if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
+                viewShipment.setVisibility(View.VISIBLE);
+            }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")){
+                viewShipment.setVisibility(View.GONE);
+            }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("shipment")) {
+                viewShipment.setVisibility(View.GONE);
+            }
 
             profile_name.setOnClickListener(this);
             my_profile.setOnClickListener(this);
@@ -132,6 +145,7 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
             aboutUs.setOnClickListener(this);
             capability.setOnClickListener(this);
             termCandition.setOnClickListener(this);
+            viewShipment.setOnClickListener(this);
             logout.setOnClickListener(this);
 
         } catch (Error | Exception e) {
@@ -168,6 +182,10 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
             case R.id.capability:
                 drawerLayout.closeDrawer(GravityCompat.START);
                 goToActivity(MainContainer.this, GlobalCapabilityActivity.class, null);
+                break;
+            case R.id.viewShipment:
+                drawerLayout.closeDrawer(GravityCompat.START);
+                goToActivity(MainContainer.this, ViewShipmentActivity.class, null);
                 break;
             case R.id.termCandition:
                 drawerLayout.closeDrawer(GravityCompat.START);
