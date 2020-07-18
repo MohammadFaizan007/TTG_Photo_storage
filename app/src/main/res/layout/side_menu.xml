@@ -157,7 +157,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/text_color"
             android:textSize="18sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"

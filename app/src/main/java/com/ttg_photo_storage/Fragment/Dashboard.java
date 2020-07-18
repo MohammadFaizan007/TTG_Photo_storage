@@ -2,7 +2,9 @@ package com.ttg_photo_storage.Fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +19,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,6 +27,7 @@ import android.widget.PopupMenu;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,6 +37,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.developers.imagezipper.ImageZipper;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.notbytes.barcode_reader.BarcodeReaderActivity;
 import com.notbytes.barcode_reader.BarcodeReaderFragment;
@@ -45,6 +50,7 @@ import com.ttg_photo_storage.activity.UploadPhotoActivity;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseFragment;
 import com.ttg_photo_storage.utils.NetworkUtils;
+import com.ttg_photo_storage.utils.Utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,16 +58,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import id.zelory.compressor.Compressor;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 
-public class Dashboard extends BaseFragment implements View.OnClickListener ,BarcodeReaderFragment.BarcodeReaderListener {
+public class Dashboard extends BaseFragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener {
     private static final int BARCODE_READER_ACTIVITY_REQUEST = 1208;
     @BindView(R.id.tapToScan)
     LinearLayout tapToScan;
@@ -160,24 +168,29 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
     File IMAGE_SIGNATUREFile;
     private String edit_search_st = "", timeDate_st = "", noOfVechile_st = "", vehicleNumber_st = "", vehicleType_st = "",
             companyName_st = "", noOfLogisticsStaff_st = "", noOfBoxes_st = "", noOfPallets_st = "", noOfDevices_st = "", packageQuality_st = "",
-            supervisorName_st = "", phone_no_st = "", et_message_st = "",reason_message_st = "",time_st = "";
-    public String accept_st = "no" ;
+            supervisorName_st = "", phone_no_st = "", et_message_st = "", reason_message_st = "", time_st = "";
+    public String accept_st = "no";
     Unbinder unbinder;
+    private int mYear, mMonth, mDay, mHour, mMinute;
+    TimePickerDialog timePickerDialog;
+    Calendar calendar;
+    int currentHour;
+    int currentMinute;
+    String amPm;
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dashboard, container, false);
         unbinder = ButterKnife.bind(this, view);
-        SimpleDateFormat curFormater = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat curFormater = new SimpleDateFormat("MM/dd/yyyy");
         String dateStr = curFormater.format(new Date());
         Date date = new Date();
-        String strDateFormat = "hh:mm:ss a";
+        String strDateFormat = "hh:mm a";
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         String formattedDate = dateFormat.format(date);
         timeDate.setText(dateStr);
         time.setText(formattedDate);
-
         PreferencesManager.getInstance(context).setAccept(accept_st);
 
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
@@ -201,6 +214,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
         btn_RejectShipment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_RejectShipment.setBackground(getActivity().getResources().getDrawable(R.drawable.cancel_btn));
+                btn_AcceptShipment.setBackground(getActivity().getResources().getDrawable(R.drawable.rect_btn_bg_darkgreen));
                 vehicleDetails.setVisibility(View.GONE);
                 logisticsDetails.setVisibility(View.GONE);
                 logisticsSupervisorDetails.setVisibility(View.GONE);
@@ -213,7 +228,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 reason_ll.setVisibility(View.VISIBLE);
                 btn_Next.setVisibility(View.GONE);
                 btn_NextR.setVisibility(View.VISIBLE);
-                accept_st= "yes";
+                accept_st = "yes";
                 PreferencesManager.getInstance(context).setAccept(accept_st);
 
             }
@@ -221,6 +236,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
         btn_AcceptShipment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_RejectShipment.setBackground(getActivity().getResources().getDrawable(R.drawable.rect_btn_bg_darkgreen));
+                btn_AcceptShipment.setBackground(getActivity().getResources().getDrawable(R.drawable.green_btn));
                 vehicleDetails.setVisibility(View.VISIBLE);
                 logisticsDetails.setVisibility(View.VISIBLE);
                 logisticsSupervisorDetails.setVisibility(View.VISIBLE);
@@ -233,7 +250,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 reason_ll.setVisibility(View.GONE);
                 btn_Next.setVisibility(View.VISIBLE);
                 btn_NextR.setVisibility(View.GONE);
-                accept_st= "no";
+                accept_st = "no";
                 PreferencesManager.getInstance(context).setAccept(accept_st);
 
             }
@@ -248,12 +265,14 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
         imageSignature.setOnClickListener(this);
         btn_Next.setOnClickListener(this);
         btn_NextR.setOnClickListener(this);
+        timeDate.setOnClickListener(this);
+        time.setOnClickListener(this);
 
         selectID_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton rb = (RadioButton) radioGroup.findViewById(i);
-                if (rb.getText().toString().equalsIgnoreCase("Search Result by CRN.")) {
+                if (rb.getText().toString().equalsIgnoreCase("Search Result by CRN.\n(Shipment Details also Available)")) {
                     crnID_et.setVisibility(View.VISIBLE);
                     assedIDEt.setVisibility(View.GONE);
                     searchbtn.setVisibility(View.GONE);
@@ -272,14 +291,14 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
     }
 
 
-//    private void addBarcodeReaderFragment() {
-//        BarcodeReaderFragment readerFragment = BarcodeReaderFragment.newInstance(true, false, View.VISIBLE);
-//        readerFragment.setListener(this);
-//        FragmentManager supportFragmentManager = getFragmentManager();
-//        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-//        fragmentTransaction.replace(R.id.fm_container, readerFragment);
-//        fragmentTransaction.commitAllowingStateLoss();
-//    }
+    private void addBarcodeReaderFragment() {
+        BarcodeReaderFragment readerFragment = BarcodeReaderFragment.newInstance(true, false, View.VISIBLE);
+        readerFragment.setListener(this);
+        FragmentManager supportFragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fm_container, readerFragment);
+        fragmentTransaction.commitAllowingStateLoss();
+    }
 
     @Override
     public void onViewCreatedStuff(View view, @Nullable Bundle savedInstanceState) {
@@ -366,6 +385,32 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 signatureDialog();
                 break;
 
+            case R.id.date:
+                datePicker(timeDate, true);
+                break;
+
+            case R.id.time:
+                calendar = Calendar.getInstance();
+                currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+                currentMinute = calendar.get(Calendar.MINUTE);
+                currentMinute = calendar.get(Calendar.SECOND);
+                timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
+                        if (hourOfDay >= 11) {
+                            hourOfDay = hourOfDay-12;
+                            amPm = "PM";
+                        }else {
+                            amPm = "AM";
+                        }
+                        time.setText(String.format("%02d:%02d", hourOfDay, minutes) +  amPm);
+                    }
+                }, currentHour, currentMinute, false);
+
+                timePickerDialog.show();
+
+                break;
+
             case R.id.btn_Next:
                 if (ValidationShipment()) {
                     if (NetworkUtils.getConnectivityStatus(context) != 0) {
@@ -389,6 +434,32 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
 
         }
 
+    }
+
+
+    private void datePicker(final EditText et, final boolean depart) {
+        Calendar cal = Calendar.getInstance();
+        int mYear, mMonth, mDay;
+        mYear = cal.get(Calendar.YEAR);
+        mMonth = cal.get(Calendar.MONTH);
+        mDay = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                et.setText(Utils.changeDateFormat(dayOfMonth, monthOfYear, year));
+                if (depart) {
+                    Calendar departcal = Calendar.getInstance();
+                    departcal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                    departcal.set(Calendar.MONTH, monthOfYear);
+                    departcal.set(Calendar.YEAR, year);
+                }
+            }
+        }, mYear, mMonth, mDay);
+
+        datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
+        datePickerDialog.show();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -445,12 +516,23 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 finalMPhotoEditor.saveAsFile(sdPath, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String signaturePath) {
-                        IMAGE_SIGNATUREFile = new File(signaturePath);
-                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(signaturePath);
+                        File signatureFile = new File(signaturePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(signatureFile.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSignature.setImageBitmap(scaled);
+                        try {
+                            IMAGE_SIGNATUREFile=new ImageZipper(getActivity())
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(signatureFile);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
+                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
+
                     }
 
                     @Override
@@ -500,7 +582,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
             PreferencesManager.getInstance(context).setCrnID(barcode.rawValue);
             if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
                 goToActivity(AssetIDScanActivity.class, null);
-            } else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("shipment")) {
+            } else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
                 edit_search.setText(barcode.rawValue);
             }
 //            mTvResultHeader.setText("On Activity Result");
@@ -591,7 +673,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
 
             PreferencesManager.getInstance(context).setCrnID(edit_search_st);
             PreferencesManager.getInstance(context).setDate(timeDate_st);
-            PreferencesManager.getInstance(context).setTime(time_st);
+            PreferencesManager.getInstance(context).setTimeship(time_st);
             PreferencesManager.getInstance(context).setNoOfVechile(noOfVechile_st);
             PreferencesManager.getInstance(context).setVechileNumber(vehicleNumber_st);
             PreferencesManager.getInstance(context).setVechileType(vehicleType_st);
@@ -617,57 +699,57 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 time_st = "";
                 showError("Please enter time", time);
                 return false;
-            } else if (noOfVechile_st.length() == 0) {
-                noOfVechile_st = "";
-                showError("Please enter no of vechile", noOfVechile);
-                return false;
-            } else if (vehicleNumber_st.length() == 0) {
-                vehicleNumber_st = "";
-                showError("Please enter vechile number", vehicleNumber);
-                return false;
-            } else if (vehicleType_st.length() == 0) {
-                vehicleType_st = "";
-                showError("Please enter vechile type", vehicleType);
-                return false;
-            } else if (companyName_st.length() == 0) {
-                companyName_st = "";
-                showError("Please enter company name", companyName);
-                return false;
-            } else if (noOfLogisticsStaff_st.length() == 0) {
-                noOfLogisticsStaff_st = "";
-                showError("Please enter no of logistics staff", noOfLogisticsStaff);
-                return false;
-            } else if (noOfBoxes_st.length() == 0) {
-                noOfBoxes_st = "";
-                showError("Please enter no of boxes", noOfBoxes);
-                return false;
-            } else if (noOfPallets_st.length() == 0) {
-                noOfPallets_st = "";
-                showError("Please enter no of pallets", noOfPallets);
-                return false;
-            } else if (noOfDevices_st.length() == 0) {
-                noOfDevices_st = "";
-                showError("Please enter no of devices", noOfDevices);
-                return false;
-            } else if (packageQuality_st.length() == 0) {
-                packageQuality_st = "";
-                showError("Please enter packaging quality", packageQuality);
-                return false;
-            } else if (supervisorName_st.length() == 0) {
-                supervisorName_st = "";
-                showError("Please enter supervisor name", supervisorName);
-                return false;
-            } else if (phone_no_st.length() == 0) {
-                phone_no_st = "";
-                showError("Please enter mobile no", phone_no);
-                return false;
-            } else if (IMAGE_SIGNATUREFile == null) {
-                showError("Please do your signature", et_message);
-                return false;
-            } else if (et_message_st.length() == 0) {
-                et_message_st = "";
-                showError("Please enter message", et_message);
-                return false;
+//            } else if (noOfVechile_st.length() == 0) {
+//                noOfVechile_st = "";
+//                showError("Please enter no of vechile", noOfVechile);
+//                return false;
+//            } else if (vehicleNumber_st.length() == 0) {
+//                vehicleNumber_st = "";
+//                showError("Please enter vechile number", vehicleNumber);
+//                return false;
+//            } else if (vehicleType_st.length() == 0) {
+//                vehicleType_st = "";
+//                showError("Please enter vechile type", vehicleType);
+//                return false;
+//            } else if (companyName_st.length() == 0) {
+//                companyName_st = "";
+//                showError("Please enter company name", companyName);
+//                return false;
+//            } else if (noOfLogisticsStaff_st.length() == 0) {
+//                noOfLogisticsStaff_st = "";
+//                showError("Please enter no of logistics staff", noOfLogisticsStaff);
+//                return false;
+//            } else if (noOfBoxes_st.length() == 0) {
+//                noOfBoxes_st = "";
+//                showError("Please enter no of boxes", noOfBoxes);
+//                return false;
+//            } else if (noOfPallets_st.length() == 0) {
+//                noOfPallets_st = "";
+//                showError("Please enter no of pallets", noOfPallets);
+//                return false;
+//            } else if (noOfDevices_st.length() == 0) {
+//                noOfDevices_st = "";
+//                showError("Please enter no of devices", noOfDevices);
+//                return false;
+//            } else if (packageQuality_st.length() == 0) {
+//                packageQuality_st = "";
+//                showError("Please enter packaging quality", packageQuality);
+//                return false;
+//            } else if (supervisorName_st.length() == 0) {
+//                supervisorName_st = "";
+//                showError("Please enter supervisor name", supervisorName);
+//                return false;
+//            } else if (phone_no_st.length() == 0) {
+//                phone_no_st = "";
+//                showError("Please enter mobile no", phone_no);
+//                return false;
+//            } else if (IMAGE_SIGNATUREFile == null) {
+//                showError("Please do your signature", et_message);
+//                return false;
+//            } else if (et_message_st.length() == 0) {
+//                et_message_st = "";
+//                showError("Please enter message", et_message);
+//                return false;
             }
 
         } catch (Exception e) {
@@ -675,6 +757,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
         }
         return true;
     }
+
     private boolean ValidationShipmentReject() {
         try {
             edit_search_st = edit_search.getText().toString();
@@ -698,7 +781,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener ,Bar
                 time_st = "";
                 showError("Please enter time", time);
                 return false;
-            }  else if (reason_message_st.length() == 0) {
+            } else if (reason_message_st.length() == 0) {
                 reason_message_st = "";
                 showError("Please enter reason", timeDate);
                 return false;

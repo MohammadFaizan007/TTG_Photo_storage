@@ -18,7 +18,6 @@ import com.google.gson.JsonArray;
 import com.ttg_photo_storage.BuildConfig;
 import com.ttg_photo_storage.R;
 import com.ttg_photo_storage.activity.FullScreenImageActivity;
-import com.ttg_photo_storage.activity.PostResultActivity;
 import com.ttg_photo_storage.retrofit.MvpView;
 
 import org.json.JSONArray;

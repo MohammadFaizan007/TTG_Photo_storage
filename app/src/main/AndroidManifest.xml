@@ -115,6 +115,19 @@
             android:name=".activity.ViewShipmentActivity"
             android:label="Get Post"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.EditProfileActivity"
+            android:label="Get Post"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ViewShipmentDetails"
+            android:label="Get Post"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.ViewShipImagesActivity"
+            android:label="Get Post"
+            android:theme="@style/AppTheme.NoActionBar" />
+
 
         <activity
             android:name=".activity.ManualEntryActivity"

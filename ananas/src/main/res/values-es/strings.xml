@@ -71,29 +71,29 @@
 
     <string-array translatable="false" name="iamutkarshtiwari_github_io_ananas_types">
         <item>type1</item>
-        <item>type2</item>
-        <item>type3</item>
-        <item>type4</item>
-        <item>type5</item>
-        <item>type6</item>
+<!--        <item>type2</item>-->
+<!--        <item>type3</item>-->
+<!--        <item>type4</item>-->
+<!--        <item>type5</item>-->
+<!--        <item>type6</item>-->
     </string-array>
 
     <string-array name="iamutkarshtiwari_github_io_ananas_type_names">
         <item>Tipo 1</item>
-        <item>Tipo 2</item>
-        <item>Tipo 3</item>
-        <item>Tipo 4</item>
-        <item>Tipo 5</item>
-        <item>Tipo 6</item>
+<!--        <item>Tipo 2</item>-->
+<!--        <item>Tipo 3</item>-->
+<!--        <item>Tipo 4</item>-->
+<!--        <item>Tipo 5</item>-->
+<!--        <item>Tipo 6</item>-->
     </string-array>
 
     <integer-array translatable="false" name="iamutkarshtiwari_github_io_ananas_type_count">
         <item>5</item>
-        <item>5</item>
-        <item>5</item>
-        <item>5</item>
-        <item>4</item>
-        <item>5</item>
+<!--        <item>5</item>-->
+<!--        <item>5</item>-->
+<!--        <item>5</item>-->
+<!--        <item>4</item>-->
+<!--        <item>5</item>-->
     </integer-array>
 
     <string name="iamutkarshtiwari_github_io_ananas_more">Mas</string>

@@ -46,7 +46,7 @@ public class PostResultSecondActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activitygetpost);
+        setContentView(R.layout.asset_id_result);
         ButterKnife.bind(this);
         rvPost.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         title.setText("Photo List");

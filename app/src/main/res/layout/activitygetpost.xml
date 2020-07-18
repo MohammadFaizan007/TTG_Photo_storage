@@ -33,10 +33,10 @@
     <Button
         android:id="@+id/ship_btn"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:layout_marginStart="@dimen/_35sdp"
+        android:layout_height="@dimen/_45sdp"
+        android:layout_marginStart="@dimen/_50sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginEnd="@dimen/_35sdp"
+        android:layout_marginEnd="@dimen/_50sdp"
         android:background="@drawable/background_btn"
         android:drawablePadding="-40dp"
         android:drawableTint="@color/white"

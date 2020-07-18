@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -53,10 +52,9 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
         setSupportActionBar(toolbar);
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
             title_tv.setText("Enter CRN");
-
         }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")){
             title_tv.setText("Search Data");
-        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("shipment")) {
+        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
             title_tv.setText("Add Shipment");
         }
 
@@ -132,11 +130,11 @@ public class MainContainer extends BaseActivity implements NavigationView.OnNavi
 
             profile_name.setText("Welcome " + PreferencesManager.getInstance(context).getNAME()+"!");
             if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
-                viewShipment.setVisibility(View.VISIBLE);
+                viewShipment.setVisibility(View.GONE);
             }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")){
                 viewShipment.setVisibility(View.GONE);
-            }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("shipment")) {
-                viewShipment.setVisibility(View.GONE);
+            }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
+                viewShipment.setVisibility(View.VISIBLE);
             }
 
             profile_name.setOnClickListener(this);

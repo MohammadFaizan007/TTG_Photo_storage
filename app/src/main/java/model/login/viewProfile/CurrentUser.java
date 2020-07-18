@@ -13,6 +13,9 @@ public class CurrentUser{
 	@SerializedName("mobile")
 	private String mobile;
 
+	@SerializedName("profile_pic")
+	private String profilePic;
+
 	@SerializedName("id")
 	private String id;
 
@@ -21,6 +24,9 @@ public class CurrentUser{
 
 	@SerializedName("type")
 	private String type;
+
+	@SerializedName("device")
+	private String device;
 
 	@SerializedName("email")
 	private String email;
@@ -37,6 +43,10 @@ public class CurrentUser{
 		return mobile;
 	}
 
+	public String getProfilePic(){
+		return profilePic;
+	}
+
 	public String getId(){
 		return id;
 	}
@@ -47,6 +57,10 @@ public class CurrentUser{
 
 	public String getType(){
 		return type;
+	}
+
+	public String getDevice(){
+		return device;
 	}
 
 	public String getEmail(){

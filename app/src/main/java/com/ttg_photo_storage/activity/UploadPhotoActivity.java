@@ -26,6 +26,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.bumptech.glide.Glide;
+import com.developers.imagezipper.ImageZipper;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.ttg_photo_storage.R;
 import com.ttg_photo_storage.app.PreferencesManager;
@@ -41,7 +42,17 @@ import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
 import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,8 +61,10 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 import iamutkarshtiwari.github.io.ananas.editimage.EditImageActivity;
 import iamutkarshtiwari.github.io.ananas.editimage.ImageEditorIntentBuilder;
+import id.zelory.compressor.Compressor;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
+import model.login.shipUpload.ShipUploadResponse;
 import model.login.upload.FilesAcceptedItem;
 import model.login.upload.UploadPhotoResponse;
 import okhttp3.MediaType;
@@ -147,38 +160,9 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
     Unbinder unbinder;
     ArrayList<FilesAcceptedItem> list = new ArrayList<FilesAcceptedItem>();
     ProgressDialog pd;
-    Bitmap bmp;
     Bitmap alteredBitmap;
     private final int PHOTO_EDITOR_REQUEST_CODE = 231;
 
-
-//    int img_count = 0;
-//
-//    private String imageOne_pic = "";
-//    private String imageTwo_pic = "";
-//    private String imageThree_pic = "";
-//    private String imageFour_pic = "";
-//    private String imageFive_pic = "";
-//    private String imageSix_pic = "";
-//    private String imageSeven_pic = "";
-//    private String imageEight_pic = "";
-//    private String imageNine_pic = "";
-//    private String imageTen_pic = "";
-//    private String imageEleven_pic = "";
-//    private String imageTwelve_pic = "";
-//
-//    private String IMAGE_ONE = "file1";
-//    private String IMAGE_TWO = "file2";
-//    private String IMAGE_THREE = "file3";
-//    private String IMAGE_FOUR = "file4";
-//    private String IMAGE_FIVE = "file5";
-//    private String IMAGE_SIX = "file6";
-//    private String IMAGE_SEVEN = "file6";
-//    private String IMAGE_EIGHT = "file6";
-//    private String IMAGE_NINE = "file6";
-//    private String IMAGE_TEN = "file6";
-//    private String IMAGE_ELEVEN = "file6";
-//    private String IMAGE_TWELVE = "file6";
 
 
     private String desc1_st = "";
@@ -212,6 +196,9 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
     private File IMAGE_THIRTEENFile;
     private File IMAGE_FOURTEENFile;
     private File IMAGE_FIFTEENFile;
+    private File SignatureFile;
+    long time;
+    String formattedDate,dateStr ;
     PhotoEditor mPhotoEditor;
 
     private void showProgressDialog() {
@@ -252,9 +239,16 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             assedId.setVisibility(View.VISIBLE);
 
         }
+        SignatureFile = new File(PreferencesManager.getInstance(context).getSignatureImage());
+        SimpleDateFormat curFormater = new SimpleDateFormat("yyyy/MM/dd");
+         dateStr = curFormater.format(new Date());
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        formattedDate = sdf.format(cal.getTime());
+//        Log.e("LastTime>>>>>>>>>>>>",dateStr+"=="+formattedDate);
+//        Log.e("LastTimeback>>>>>>>>>>>>", PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
 
 
-        init();
 
 
     }
@@ -286,7 +280,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
 
     @OnClick({R.id.side_menu, R.id.imageOne, R.id.imageSecond, R.id.imageThird, R.id.imageFourth, R.id.imageFive, R.id.imageSix,
             R.id.imageSeven, R.id.imageEight, R.id.imageNine, R.id.imageTen, R.id.imageEleven, R.id.imageTwele,
-            R.id.btn_submit, R.id.imageThirteen, R.id.imageFourteen, R.id.imageFifteen,R.id.btn_submitShipment})
+            R.id.btn_submit, R.id.imageThirteen, R.id.imageFourteen, R.id.imageFifteen, R.id.btn_submitShipment})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.side_menu:
@@ -1402,8 +1396,8 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         dialog.show();
 
                     }
-        });
-        break;
+                });
+                break;
 
             case R.id.imageFifteen:
                 final AlertDialog.Builder alert15 = new AlertDialog.Builder(UploadPhotoActivity.this);
@@ -1483,26 +1477,35 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 break;
 
 
-        case R.id.btn_submit:
-        if (Validation()) {
-            if (NetworkUtils.getConnectivityStatus(context) != 0) {
-                getPhotoUpload();
-            } else {
-                showMessage(getResources().getString(R.string.alert_internet));
-            }
-        }
-        break;
+            case R.id.btn_submit:
+                if (Validation()) {
+                    if (NetworkUtils.getConnectivityStatus(context) != 0) {
+                        getPhotoUpload();
+                    } else {
+                        showMessage(getResources().getString(R.string.alert_internet));
+                    }
+                }
+                break;
             case R.id.btn_submitShipment:
-                if (NetworkUtils.getConnectivityStatus(context)!=0){
-//                    getShipUpload();
-                } else {
-                    showMessage(getResources().getString(R.string.alert_internet));
+                if (ValidationShip()) {
+                    if (NetworkUtils.getConnectivityStatus(context) != 0) {
+                        if(PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("no")) {
+                            getShipUpload();
+                            Log.i("REjected======>>>",PreferencesManager.getInstance(context).getAccept());
+                        }else if (PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("yes")) {
+                            Log.i("REjected======>>>",PreferencesManager.getInstance(context).getAccept());
+                            getShipUploadReject();
+                        }
+//                        getShipUpload();
+                    } else {
+                        showMessage(getResources().getString(R.string.alert_internet));
+                    }
                 }
 
+        }
+
+
     }
-
-
-}
 
     @Override
     public void onCancelClick() {
@@ -1532,14 +1535,15 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 case IMAGE_FIFTEEN:
                     try {
                         Intent intent = new ImageEditorIntentBuilder(this, pickResult.getPath(), outputFile.getAbsolutePath())
-                                .withAddText() // Add the features you need
-                                .withPaintFeature()
-                                .withFilterFeature()
+//                                .withAddText() // Add the features you need
                                 .withRotateFeature()
+                                .withPaintFeature()
+//                                .withFilterFeature()
+//
                                 .withCropFeature()
-                                .withBrightnessFeature()
-                                .withSaturationFeature()
-                                .withBeautyFeature()
+//                                .withBrightnessFeature()
+//                                .withSaturationFeature()
+//                                .withBeautyFeature()
                                 .withStickerFeature()
                                 .forcePortrait(true)  // Add this to force portrait mode (It's set to false by default)
                                 .build();
@@ -1565,898 +1569,307 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             switch (selection) {
                 case IMAGE_ONE:
                     if (resultCode == RESULT_OK) {
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(newFilePath);
-                        IMAGE_ONEfile = new File(newFilePath);
+                        File fileONE  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileONE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageOne.setImageBitmap(scaled);
+                        try {
+                            IMAGE_ONEfile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileONE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_ONEfile = Compressor.getDefault(context).compressToFile(fileONE);
 
                     }
                     break;
                 case IMAGE_TWO:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_TWOFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TWOFile.getAbsolutePath());
+                        File fileTWO = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileTWO.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSecond.setImageBitmap(scaled);
+                        try {
+                            IMAGE_TWOFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileTWO);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_TWOFile = Compressor.getDefault(context).compressToFile(fileTWO);
                     }
                     break;
                 case IMAGE_THREE:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_THREEFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_THREEFile.getAbsolutePath());
+                        File fileTHREE = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileTHREE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageThird.setImageBitmap(scaled);
+                        try {
+                            IMAGE_THREEFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileTHREE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_THREEFile = Compressor.getDefault(context).compressToFile(fileTHREE);
 
                     }
                     break;
                 case IMAGE_FOUR:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_FOURFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FOURFile.getAbsolutePath());
+                        File fileFOUR  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileFOUR.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFourth.setImageBitmap(scaled);
+                        try {
+                            IMAGE_FOURFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileFOUR);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_FOURFile = Compressor.getDefault(context).compressToFile(fileFOUR);
 
                     }
                     break;
                 case IMAGE_FIVE:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_FIVEFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FIVEFile.getAbsolutePath());
+                        File fileFIVE  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileFIVE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFive.setImageBitmap(scaled);
+                        try {
+                            IMAGE_FIVEFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileFIVE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_FIVEFile = Compressor.getDefault(context).compressToFile(fileFIVE);
                     }
                     break;
                 case IMAGE_SIX:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_SIXFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_SIXFile.getAbsolutePath());
+                        File fileSIX = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileSIX.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSix.setImageBitmap(scaled);
+                        try {
+                            IMAGE_SIXFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileSIX);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_SIXFile = Compressor.getDefault(context).compressToFile(fileSIX);
                     }
                     break;
                 case IMAGE_SEVEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_SEVENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_SEVENFile.getAbsolutePath());
+                        File fileSEVEN = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileSEVEN.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSeven.setImageBitmap(scaled);
+                        try {
+                            IMAGE_SEVENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileSEVEN);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_SEVENFile = Compressor.getDefault(context).compressToFile(fileSEVEN);
                     }
                     break;
                 case IMAGE_EIGHT:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_EIGHTFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_EIGHTFile.getAbsolutePath());
+                        File fileEIGHT  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileEIGHT.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageEight.setImageBitmap(scaled);
+                        try {
+                            IMAGE_EIGHTFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileEIGHT);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_EIGHTFile = Compressor.getDefault(context).compressToFile(fileEIGHT);
                     }
                     break;
                 case IMAGE_NINE:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_NINEFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_NINEFile.getAbsolutePath());
+                        File fileNINE  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileNINE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageNine.setImageBitmap(scaled);
+                        try {
+                            IMAGE_NINEFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileNINE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_NINEFile = Compressor.getDefault(context).compressToFile(fileNINE);
                     }
                     break;
 //
                 case IMAGE_TEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_TENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TENFile.getAbsolutePath());
+                        File fileTEN= new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileTEN.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageTen.setImageBitmap(scaled);
+                        try {
+                            IMAGE_TENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileTEN);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_TENFile = Compressor.getDefault(context).compressToFile(fileTEN);
                     }
                     break;
                 case IMAGE_ELEVEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_ELEVENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_ELEVENFile.getAbsolutePath());
+                        File fileELEVEN  = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileELEVEN.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageEleven.setImageBitmap(scaled);
+                        try {
+                            IMAGE_ELEVENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileELEVEN);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_ELEVENFile = Compressor.getDefault(context).compressToFile(fileELEVEN);
                     }
                     break;
 //
                 case IMAGE_TWELVE:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_TWELEFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TWELEFile.getAbsolutePath());
+                        File fileTWELE = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileTWELE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageTwele.setImageBitmap(scaled);
+                        try {
+                            IMAGE_TWELEFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileTWELE);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_TWELEFile = Compressor.getDefault(context).compressToFile(fileTWELE);
                     }
                     break;
 
                 case IMAGE_THIRTEEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_THIRTEENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_THIRTEENFile.getAbsolutePath());
+                        File fileThirteen = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileThirteen.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageThirteen.setImageBitmap(scaled);
+                        try {
+                            IMAGE_THIRTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileThirteen);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_THIRTEENFile = Compressor.getDefault(context).compressToFile(fileThirteen);
+
                     }
                     break;
                 case IMAGE_FOURTEEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_FOURTEENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FOURTEENFile.getAbsolutePath());
+                        File fileFourteen   = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileFourteen.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFourteen.setImageBitmap(scaled);
+                        try {
+                            IMAGE_FOURTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileFourteen);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_FOURTEENFile = Compressor.getDefault(context).compressToFile(fileFourteen);
                     }
                     break;
 
                 case IMAGE_FIFTEEN:
                     if (resultCode == RESULT_OK) {
-                        IMAGE_FIFTEENFile = new File(newFilePath);
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FIFTEENFile.getAbsolutePath());
+                        File fileFifteen = new File(newFilePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(fileFifteen.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFifteen.setImageBitmap(scaled);
+                        try {
+                            IMAGE_FIFTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                                    .setQuality(90)
+                                    .setMaxWidth(520)
+                                    .setMaxHeight(720)
+                                    .compressToFile(fileFifteen);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        IMAGE_FIFTEENFile = Compressor.getDefault(context).compressToFile(fileFifteen);
                     }
                     break;
             }
         }
     }
 
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogOne() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_ONEfile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_ONEfile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageOne.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogtwo() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_TWOFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TWOFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_TWOFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageSecond.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogthree() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_THREEFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_THREEFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_THREEFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageThird.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogfour() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_FOURFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FOURFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_FOURFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageFourth.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogfive() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_FIVEFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_FIVEFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_FIVEFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageFive.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogsix() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_SIXFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_SIXFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageSix.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogseven() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_SEVENFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_SEVENFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageSeven.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogeight() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_EIGHTFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_EIGHTFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageEight.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialognine() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_NINEFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_NINEFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageNine.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogTen() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TENFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_TENFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageTen.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogEleven() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_ELEVENFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_ELEVENFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageEleven.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
-//
-//    @SuppressLint("ResourceAsColor")
-//    private void openDialogTwelve() {
-//        final Dialog dialog = new Dialog(context);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(R.layout.custom_dialog_edit);
-//        int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.50);
-//        int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.50);
-//        dialog.getWindow().setLayout(height, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
-//        dialog.show();
-//        PhotoEditorView mPhotoEditorView = dialog.findViewById(R.id.photoEditorView);
-//        ImageView undo = (ImageView) dialog.findViewById(R.id.imgUndo);
-//        ImageView redo = (ImageView) dialog.findViewById(R.id.imgRedo);
-//        ImageView save = (ImageView) dialog.findViewById(R.id.imgSave);
-////        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_SIXFile.getAbsolutePath());
-//        Bitmap bitmapImage = BitmapFactory.decodeFile(IMAGE_TWELEFile.getAbsolutePath());
-//        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-//        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-//        mPhotoEditorView.getSource().setImageBitmap(scaled);
-//        mPhotoEditor = new PhotoEditor.Builder(UploadPhotoActivity.this, mPhotoEditorView)
-//                .setPinchTextScalable(true) // set flag to make text scalable when pinch
-//                .build(); // build photo editor sdk
-//        mPhotoEditor.setBrushDrawingMode(true);
-//        mPhotoEditor.setBrushColor(R.color.red);
-//        mPhotoEditor.setBrushSize(5);
-//        showToastS("Now Edit Image With finger gestures");
-//        undo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.undo();
-//            }
-//        });
-//        redo.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mPhotoEditor.redo();
-//            }
-//        });
-//        save.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                mPhotoEditor.undo();
-//                dialog.dismiss();
-//                mPhotoEditor.saveAsFile(IMAGE_TWELEFile.getAbsolutePath(), new PhotoEditor.OnSaveListener() {
-//                    @Override
-//                    public void onSuccess(@NonNull String imagePathOne) {
-//                        Bitmap bitmap = Utils.getCompressedBitmap(imagePathOne);
-//                        imageTwele.setImageBitmap(bitmap);
-//                    }
-//
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//    }
 
 
-/*Selection Images*/
-private enum SELECTION {
-    IMAGE_ONE, IMAGE_TWO, IMAGE_THREE, IMAGE_FOUR, IMAGE_FIVE, IMAGE_SIX, IMAGE_SEVEN, IMAGE_EIGHT, IMAGE_NINE, IMAGE_TEN, IMAGE_ELEVEN, IMAGE_TWELVE, IMAGE_THIRTEEN, IMAGE_FOURTEEN, IMAGE_FIFTEEN
-}
+    /*Selection Images*/
+    private enum SELECTION {
+        IMAGE_ONE, IMAGE_TWO, IMAGE_THREE, IMAGE_FOUR, IMAGE_FIVE, IMAGE_SIX, IMAGE_SEVEN, IMAGE_EIGHT, IMAGE_NINE, IMAGE_TEN, IMAGE_ELEVEN, IMAGE_TWELVE, IMAGE_THIRTEEN, IMAGE_FOURTEEN, IMAGE_FIFTEEN
+    }
 
     private SELECTION selection;
     private PickImageDialog dialog;
@@ -2663,7 +2076,181 @@ private enum SELECTION {
 
     }
 
-    public void getShipUpload(){
+    public void getShipUpload() {
+        try {
+            showProgressDialog();
+            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
+            RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
+            RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
+            RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "");
+            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
+                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null, signatureBody = null;
+            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
+                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13 = null, desc14 = null, desc15 = null;
+
+            if (IMAGE_ONEfile != null) {
+                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
+                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
+                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
+            }
+            if (IMAGE_TWOFile != null) {
+                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
+                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
+                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
+            }
+            if (IMAGE_THREEFile != null) {
+                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
+                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
+                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
+            }
+            if (IMAGE_FOURFile != null) {
+                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
+                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
+                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
+            }
+            if (IMAGE_FIVEFile != null) {
+                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
+                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
+                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
+            }
+            if (IMAGE_SIXFile != null) {
+                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
+                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
+                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
+            }
+
+            if (IMAGE_SEVENFile != null) {
+                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
+                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
+                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
+            }
+
+            if (IMAGE_EIGHTFile != null) {
+                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
+                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
+                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
+            }
+
+            if (IMAGE_NINEFile != null) {
+                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
+                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
+                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
+            }
+
+            if (IMAGE_TENFile != null) {
+                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
+                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
+                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
+            }
+
+            if (IMAGE_ELEVENFile != null) {
+                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
+                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
+                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
+            }
+
+            if (IMAGE_TWELEFile != null) {
+                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
+                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
+                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
+            }
+            if (IMAGE_THIRTEENFile != null) {
+                RequestBody requestBody13 = RequestBody.create(MediaType.parse("file13/*"), IMAGE_THIRTEENFile);
+                desc13 = RequestBody.create(MediaType.parse("desc13"), desc13_st);
+                body13 = MultipartBody.Part.createFormData("file13", IMAGE_THIRTEENFile.getName(), requestBody13);
+            }
+
+            if (IMAGE_FOURTEENFile != null) {
+                RequestBody requestBody14 = RequestBody.create(MediaType.parse("file14/*"), IMAGE_FOURTEENFile);
+                desc14 = RequestBody.create(MediaType.parse("desc14"), desc14_st);
+                body14 = MultipartBody.Part.createFormData("file14", IMAGE_FOURTEENFile.getName(), requestBody14);
+            }
+            if (IMAGE_FIFTEENFile != null) {
+                RequestBody requestBody15 = RequestBody.create(MediaType.parse("file15/*"), IMAGE_FIFTEENFile);
+                desc15 = RequestBody.create(MediaType.parse("desc15"), desc15_st);
+                body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
+            }
+            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " "+formattedDate);
+            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
+            RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCompanyName());
+            RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getVechileType());
+            RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
+            RequestBody vahicle_number = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getVechileNumber());
+            RequestBody box_condition = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getPackagingQuality());
+            RequestBody supervisor_name = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getSupervisorName());
+            if (SignatureFile != null) {
+                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), SignatureFile);
+                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", SignatureFile.getName(), requestBodySignature);
+
+            }
+
+            RequestBody note = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getMessage());
+            RequestBody no_of_staff = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getLogistics_Staff());
+            RequestBody no_of_box = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfBoxes());
+            RequestBody no_of_pallets = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfPallets());
+            RequestBody no_of_devices = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfDevices());
+            RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
+            RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getPhoneNumber());
+            RequestBody is_reject = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getAccept());
+
+            Log.i("token>>>", token.toString());
+            Log.i("addpost>>", action.toString());
+            Call<ShipUploadResponse> photocall = apiServices.ShipUpload(token, action, crn,description, body, body2
+                    , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
+                    , input_time, ship_time, logistic_company, vahicle_type, vahicle_container, vahicle_number, box_condition, supervisor_name, signatureBody, note,
+                    no_of_staff, no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject);
+            photocall.enqueue(new Callback<ShipUploadResponse>() {
+                @Override
+                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
+                    pd.dismiss();
+                    LoggerUtil.logItem(response.body());
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+//                        PreferencesManager.getInstance(context).setFileDesc(response.body().getFilesDesc());
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
+                        ViewGroup viewGroup = findViewById(android.R.id.content);
+                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+                        builder.setView(dialogView);
+                        TextView heading = dialogView.findViewById(R.id.heading);
+                        TextView body = dialogView.findViewById(R.id.body);
+                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+                        heading.setText(R.string.dialog_heading);
+                        body.setText(R.string.dialog_success);
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
+                            }
+                        });
+
+
+                    } else {
+                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
+
+                }
+            });
+
+
+        } catch (
+                Exception e) {
+            showMessage("Something went wrong please check token");
+            e.printStackTrace();
+        }
+
+    }
+
+    public void getShipUploadReject() {
         try {
             showProgressDialog();
             RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
@@ -2673,7 +2260,7 @@ private enum SELECTION {
             MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
                     body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null, signatureBody = null;
             RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
-                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13= null, desc14 = null, desc15 = null;
+                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13 = null, desc14 = null, desc15 = null;
 
             if (IMAGE_ONEfile != null) {
                 RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
@@ -2758,49 +2345,74 @@ private enum SELECTION {
                 body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
             }
 
-            RequestBody time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getTimeship());
-            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate());
-            RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getLogistics_Staff());
-            RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getVechileType());
-            RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
-            RequestBody vahicle_number = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getVechileNumber());
-            RequestBody box_condition = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getPackagingQuality());
-            RequestBody supervisor_name = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getSupervisorName());
-//            RequestBody supervisor_sign = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getSignatureImage());
+            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " "+formattedDate);
+            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
+            RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody vahicle_number = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody box_condition = RequestBody.create(MediaType.parse("text/plain"),"");
+            RequestBody supervisor_name = RequestBody.create(MediaType.parse("text/plain"),"");
+//            if (SignatureFile != null) {
+//                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), SignatureFile);
+//                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", SignatureFile.getName(), requestBodySignature);
+//
+//            }
 
-
-            if (PreferencesManager.getInstance(context).getSignatureImage()!= null){
-                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("image/*"), PreferencesManager.getInstance(context).getSignatureImage());
-                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", PreferencesManager.getInstance(context).getSignatureImage(), requestBodySignature);
-            }
-            RequestBody note = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getMessage());
-            RequestBody no_of_box = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfBoxes());
-            RequestBody no_of_pallets = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfPallets());
-            RequestBody no_of_devices = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfDevices());
-            RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
-            RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getPhoneNumber());
+            RequestBody note = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getReasonMessage());
+            RequestBody no_of_box = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody no_of_pallets = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody no_of_devices = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), "");
             RequestBody is_reject = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getAccept());
 
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", action.toString());
-            Call<UploadPhotoResponse> photocall  = apiServices.ShipUpload(token,action,crn,body,body2
-            ,body3,body4,body5,body6,body7,body8,body9,body10,body11,body12,body13,body14,body15,desc1,desc2,desc3,desc4,desc5,desc6,desc7,desc8,desc9,desc10,desc11,desc12,desc13,desc14,desc15
-            ,time,ship_time,logistic_company,vahicle_type,vahicle_container,vahicle_number,box_condition,supervisor_name,signatureBody,note,
-                    no_of_box,no_of_pallets,no_of_devices,no_of_vahicle,supervisor_ph_no,is_reject);
-            photocall.enqueue(new Callback<UploadPhotoResponse>() {
+            Call<ShipUploadResponse> photocall = apiServices.ShipUploadResject(token, action, crn, body, body2
+                    , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
+                    , input_time, ship_time, logistic_company, vahicle_type, vahicle_container, vahicle_number, box_condition, supervisor_name, note,
+                    no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject);
+            photocall.enqueue(new Callback<ShipUploadResponse>() {
                 @Override
-                public void onResponse(Call<UploadPhotoResponse> call, Response<UploadPhotoResponse> response) {
+                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
+                    pd.dismiss();
+                    LoggerUtil.logItem(response.body());
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
+                        ViewGroup viewGroup = findViewById(android.R.id.content);
+                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+                        builder.setView(dialogView);
+                        TextView heading = dialogView.findViewById(R.id.heading);
+                        TextView body = dialogView.findViewById(R.id.body);
+                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+                        heading.setText(R.string.dialog_heading);
+                        body.setText(R.string.dialog_success);
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
+                            }
+                        });
+
+
+                    } else {
+                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+                    }
 
                 }
 
+
                 @Override
-                public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
+                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
 
                 }
             });
-
-
-
 
 
         } catch (
@@ -2810,7 +2422,6 @@ private enum SELECTION {
         }
 
     }
-
 
 
     private boolean Validation() {
@@ -2828,6 +2439,9 @@ private enum SELECTION {
             desc10_st = des_ten.getText().toString().trim();
             desc11_st = des_eleven.getText().toString().trim();
             desc12_st = des_twele.getText().toString().trim();
+            desc13_st = des_thirteen.getText().toString().trim();
+            desc14_st = des_fourteen.getText().toString().trim();
+            desc15_st = des_fifteen.getText().toString().trim();
 
             if (IMAGE_ONEfile == null && IMAGE_TWOFile == null && IMAGE_THREEFile == null && IMAGE_FOURFile == null
                     && IMAGE_FIVEFile == null && IMAGE_SIXFile == null && IMAGE_SEVENFile == null && IMAGE_EIGHTFile == null
@@ -2835,6 +2449,31 @@ private enum SELECTION {
                 showError("Please select at least one image", des_one);
                 return false;
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+    private boolean ValidationShip() {
+        try {
+
+            desc1_st = des_one.getText().toString().trim();
+            desc2_st = des_two.getText().toString().trim();
+            desc3_st = des_three.getText().toString().trim();
+            desc4_st = des_four.getText().toString().trim();
+            desc5_st = des_five.getText().toString().trim();
+            desc6_st = des_six.getText().toString().trim();
+            desc7_st = des_seven.getText().toString().trim();
+            desc8_st = des_Eight.getText().toString().trim();
+            desc9_st = des_nine.getText().toString().trim();
+            desc10_st = des_ten.getText().toString().trim();
+            desc11_st = des_eleven.getText().toString().trim();
+            desc12_st = des_twele.getText().toString().trim();
+            desc13_st = des_thirteen.getText().toString().trim();
+            desc14_st = des_fourteen.getText().toString().trim();
+            desc15_st = des_fifteen.getText().toString().trim();
+
 
         } catch (Exception e) {
             e.printStackTrace();

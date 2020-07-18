@@ -18,4 +18,5 @@
     <color name="color_bg">#EEEBEB</color>
     <color name="zxing_transparent">#00000000</color>
     <color name="red">#DD1616</color>
+    <color name="yellow">#F4D03F </color>
 </resources>

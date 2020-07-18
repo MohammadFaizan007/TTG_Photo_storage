@@ -32,7 +32,7 @@
     <string name="type_crn">Please type CRN in text box.</string>
     <string name="type_asset">Please type Asset ID in text box.</string>
     <string name="type_comment">Type any comment here.</string>
-    <string name="radio_crn">Search Result by CRN.</string>
+    <string name="radio_crn">Search Result by CRN.\n(Shipment Details also Available)</string>
     <string name="radio_asset">Search Result by Asset ID.</string>
     <string name="choose_radio">Please choose any option to get result.</string>
     <string name="scan_bar">Scan Barcode</string>

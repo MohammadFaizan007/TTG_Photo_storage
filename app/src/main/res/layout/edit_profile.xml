@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/custom_header" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--        <de.hdodenhof.circleimageview.CircleImageView-->
+        <!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
+        <!--            android:id="@+id/profile_photo"-->
+        <!--            android:layout_width="120dp"-->
+        <!--            android:layout_height="120dp"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginLeft="16dp"-->
+        <!--            android:layout_marginTop="@dimen/_25sdp"-->
+        <!--            android:layout_marginRight="16dp"-->
+        <!--            android:src="@drawable/choose_photo"-->
+        <!--            app:civ_border_color="@color/navyBlue"-->
+        <!--            app:civ_border_width="1dp"-->
+        <!--            android:padding="@dimen/_5sdp"/>-->
+
+        <RelativeLayout
+            android:id="@+id/profile_photo_lt"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:background="@drawable/circle_yellow">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_photo"
+                android:layout_width="110dp"
+                android:layout_height="110dp"
+                android:layout_gravity="center"
+                android:background="@drawable/white_circle_new"
+                android:src="@drawable/user_new"
+                app:civ_border_color="@color/navyBlue"
+                app:civ_border_width="1dp" />
+
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="65dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/edit_profile_image"
+               />
+
+
+        </RelativeLayout>
+
+
+        <!--        <RelativeLayout-->
+        <!--            android:id="@+id/profile_photo_lt"-->
+        <!--            android:layout_width="110dp"-->
+        <!--            android:layout_height="110dp"-->
+        <!--            android:layout_marginTop="@dimen/_40sdp"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:background="@drawable/circle_yellow">-->
+
+        <!--            <ImageView-->
+        <!--                android:id="@+id/profile_photo"-->
+        <!--                android:layout_width="100dp"-->
+        <!--                android:layout_height="100dp"-->
+        <!--                android:layout_centerInParent="true"-->
+        <!--                android:layout_marginLeft="10dp"-->
+        <!--                android:background="@drawable/white_circle_new"-->
+        <!--                android:src="@drawable/user_new" />-->
+
+        <!--            <ImageView-->
+        <!--                android:layout_width="25dp"-->
+        <!--                android:layout_height="25dp"-->
+        <!--                android:layout_alignParentRight="true"-->
+        <!--                android:layout_marginTop="75dp"-->
+        <!--                android:scaleType="centerCrop"-->
+        <!--                android:src="@drawable/tick_edit" />-->
+
+        <!--        </RelativeLayout>-->
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_35sdp"
+            android:layout_marginEnd="@dimen/_35sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/login_bck"
+            android:elevation="5dp"
+            android:gravity="center_vertical"
+            android:hint="Enter name"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/phone_no"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_35sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/login_bck"
+            android:elevation="5dp"
+            android:gravity="center_vertical"
+            android:hint="Enter phone number"
+            android:inputType="number"
+            android:maxLength="10"
+            android:paddingStart="15dp"
+            android:paddingEnd="0dp"
+            android:textColor="@color/text_color"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_35sdp"
+            android:background="@drawable/background_btn"
+            android:drawablePadding="-40dp"
+            android:drawableTint="@color/white"
+            android:gravity="center"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+
+

@@ -19,7 +19,7 @@ public class PreferencesManager {
     private static final String CRN = "crn";
     private static final String Email = "email";
     private static final String FILEDESC = "filedesc";
-    private static final String ONEIMAGE = "oneimage";
+    private static final String PROFILE_PIC = "profile-pic";
 
 
 //    shipment Details
@@ -40,6 +40,8 @@ public class PreferencesManager {
     private static final String SIGNATURE_IMAGE = "signature_image";
     private static final String REASON_MESSAGE = "reason_message";
     private static final String ACCEPT = "accept";
+    private static final String POSITION_HASH = "position_hash";
+    private static final String POSITION_CRN = "position_crn";
 
 
 
@@ -163,12 +165,12 @@ public class PreferencesManager {
     }
 
 
-    public String getOneimage() {
-        return mPref.getString(ONEIMAGE, "");
+    public String getProfilePic() {
+        return mPref.getString(PROFILE_PIC, "");
     }
 
-    public void setOneImage(String value) {
-        mPref.edit().putString(ONEIMAGE, value).apply();
+    public void setProfilePic(String value) {
+        mPref.edit().putString(PROFILE_PIC, value).apply();
     }
 
     public String getDate() {
@@ -272,7 +274,7 @@ public class PreferencesManager {
     }
 
     public void setPhoneNumber(String value) {
-        mPref.edit().putString(PACKAGING_QUALITY, value).apply();
+        mPref.edit().putString(PHONE_NUMBER, value).apply();
     }
 
     public String getMessage() {
@@ -306,6 +308,23 @@ public class PreferencesManager {
 
     public void setAccept(String value) {
         mPref.edit().putString(ACCEPT, value).apply();
+    }
+
+
+    public String getPositionHash() {
+        return mPref.getString(POSITION_HASH, "");
+    }
+
+    public void setPositionHash(String value) {
+        mPref.edit().putString(POSITION_HASH, value).apply();
+    }
+
+    public String getPositionCrn() {
+        return mPref.getString(POSITION_CRN, "");
+    }
+
+    public void setPositionCrn(String value) {
+        mPref.edit().putString(POSITION_CRN, value).apply();
     }
 
 }

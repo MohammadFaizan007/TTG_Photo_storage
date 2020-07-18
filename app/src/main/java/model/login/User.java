@@ -10,11 +10,26 @@ public class User{
 	@SerializedName("firstname")
 	private String firstname;
 
-	@SerializedName("name")
-	private String name;
-
 	@SerializedName("mobile")
 	private String mobile;
+
+	@SerializedName("profile_pic")
+	private String profilePic;
+
+	@SerializedName("type")
+	private String type;
+
+	@SerializedName("crn_status")
+	private String crnStatus;
+
+	@SerializedName("lastname")
+	private String lastname;
+
+	@SerializedName("token")
+	private String token;
+
+	@SerializedName("name")
+	private String name;
 
 	@SerializedName("id")
 	private String id;
@@ -22,17 +37,11 @@ public class User{
 	@SerializedName("time")
 	private String time;
 
-	@SerializedName("type")
-	private String type;
+	@SerializedName("device")
+	private String device;
 
 	@SerializedName("email")
 	private String email;
-
-	@SerializedName("lastname")
-	private String lastname;
-
-	@SerializedName("token")
-	private String token;
 
 	public void setCountry(String country){
 		this.country = country;
@@ -50,20 +59,60 @@ public class User{
 		return firstname;
 	}
 
-	public void setName(String name){
-		this.name = name;
-	}
-
-	public String getName(){
-		return name;
-	}
-
 	public void setMobile(String mobile){
 		this.mobile = mobile;
 	}
 
 	public String getMobile(){
 		return mobile;
+	}
+
+	public void setProfilePic(String profilePic){
+		this.profilePic = profilePic;
+	}
+
+	public String getProfilePic(){
+		return profilePic;
+	}
+
+	public void setType(String type){
+		this.type = type;
+	}
+
+	public String getType(){
+		return type;
+	}
+
+	public void setCrnStatus(String crnStatus){
+		this.crnStatus = crnStatus;
+	}
+
+	public String getCrnStatus(){
+		return crnStatus;
+	}
+
+	public void setLastname(String lastname){
+		this.lastname = lastname;
+	}
+
+	public String getLastname(){
+		return lastname;
+	}
+
+	public void setToken(String token){
+		this.token = token;
+	}
+
+	public String getToken(){
+		return token;
+	}
+
+	public void setName(String name){
+		this.name = name;
+	}
+
+	public String getName(){
+		return name;
 	}
 
 	public void setId(String id){
@@ -82,12 +131,12 @@ public class User{
 		return time;
 	}
 
-	public void setType(String type){
-		this.type = type;
+	public void setDevice(String device){
+		this.device = device;
 	}
 
-	public String getType(){
-		return type;
+	public String getDevice(){
+		return device;
 	}
 
 	public void setEmail(String email){
@@ -96,21 +145,5 @@ public class User{
 
 	public String getEmail(){
 		return email;
-	}
-
-	public void setLastname(String lastname){
-		this.lastname = lastname;
-	}
-
-	public String getLastname(){
-		return lastname;
-	}
-
-	public void setToken(String token){
-		this.token = token;
-	}
-
-	public String getToken(){
-		return token;
 	}
 }

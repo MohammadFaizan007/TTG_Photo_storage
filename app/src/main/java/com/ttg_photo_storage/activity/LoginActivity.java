@@ -75,7 +75,8 @@ public class LoginActivity extends BaseActivity {
                     LoggerUtil.logItem(response.body());
                     if(response.body().getStatus().equalsIgnoreCase("success")){
                         if (response.body().getUser().getType().equalsIgnoreCase("staff")
-                                || response.body().getUser().getType().equalsIgnoreCase("client")) {
+                                || response.body().getUser().getType().equalsIgnoreCase("client")||
+                                response.body().getUser().getType().equalsIgnoreCase("ship")) {
                             PreferencesManager.getInstance(context).setNAME(response.body().getUser().getName());
                             PreferencesManager.getInstance(context).setType(response.body().getUser().getType());
                             PreferencesManager.getInstance(context).setToken(response.body().getUser().getToken());
@@ -84,6 +85,7 @@ public class LoginActivity extends BaseActivity {
                             PreferencesManager.getInstance(context).setMobile(response.body().getUser().getMobile());
                             PreferencesManager.getInstance(context).setTime(response.body().getUser().getTime());
                             PreferencesManager.getInstance(context).setEmail(response.body().getUser().getEmail());
+                            PreferencesManager.getInstance(context).setProfilePic(response.body().getUser().getProfilePic());
                             goToActivityWithFinish(LoginActivity.this, MainContainer.class, null);
                             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                         }else{
