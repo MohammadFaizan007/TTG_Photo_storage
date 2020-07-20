@@ -9,6 +9,7 @@ android {
         multiDexEnabled true
         versionCode 5
         versionName "1.4"
+        resConfigs "en", "fr"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -22,7 +23,6 @@ android {
             buildConfigField "String", "BASE_URL", "\"https://ttg-photostorage.com/\""
             // IMAGE URL
             buildConfigField "String", "BASE_URL_FORIMAGE", "\"https://ttg-photostorage.com/\""
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
