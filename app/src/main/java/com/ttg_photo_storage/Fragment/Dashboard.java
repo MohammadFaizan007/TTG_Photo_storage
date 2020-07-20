@@ -211,6 +211,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             heading_staff.setVisibility(View.GONE);
             main_shipmant.setVisibility(View.VISIBLE);
         }
+
         btn_RejectShipment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -291,17 +292,18 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     }
 
 
-    private void addBarcodeReaderFragment() {
-        BarcodeReaderFragment readerFragment = BarcodeReaderFragment.newInstance(true, false, View.VISIBLE);
-        readerFragment.setListener(this);
-        FragmentManager supportFragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fm_container, readerFragment);
-        fragmentTransaction.commitAllowingStateLoss();
-    }
+//    private void addBarcodeReaderFragment() {
+//        BarcodeReaderFragment readerFragment = BarcodeReaderFragment.newInstance(true, false, View.VISIBLE);
+//        readerFragment.setListener(this);
+//        FragmentManager supportFragmentManager = getFragmentManager();
+//        FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+//        fragmentTransaction.replace(R.id.fm_container, readerFragment);
+//        fragmentTransaction.commitAllowingStateLoss();
+//    }
 
     @Override
     public void onViewCreatedStuff(View view, @Nullable Bundle savedInstanceState) {
+
 
     }
 
@@ -373,6 +375,13 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 packaging.setOnMenuItemClickListener(item -> {
                     try {
                         packageQuality.setText(item.getTitle());
+                        if (packageQuality.getText().toString().equalsIgnoreCase("Poor")) {
+                            packageQuality.setTextColor(context.getResources().getColor(R.color.red));
+                        } else if (packageQuality.getText().toString().equalsIgnoreCase("Fair")) {
+                            packageQuality.setTextColor(context.getResources().getColor(R.color.yellow));
+                        } else if (packageQuality.getText().toString().equalsIgnoreCase("Good")) {
+                            packageQuality.setTextColor(context.getResources().getColor(R.color.success));
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -380,6 +389,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 });
 
                 packaging.show();
+
                 break;
             case R.id.imageSignature:
                 signatureDialog();
@@ -398,12 +408,12 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
                         if (hourOfDay >= 11) {
-                            hourOfDay = hourOfDay-12;
+                            hourOfDay = hourOfDay - 12;
                             amPm = "PM";
-                        }else {
+                        } else {
                             amPm = "AM";
                         }
-                        time.setText(String.format("%02d:%02d", hourOfDay, minutes) +  amPm);
+                        time.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
                     }
                 }, currentHour, currentMinute, false);
 
@@ -435,7 +445,6 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
         }
 
     }
-
 
     private void datePicker(final EditText et, final boolean depart) {
         Calendar cal = Calendar.getInstance();
@@ -521,16 +530,16 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSignature.setImageBitmap(scaled);
-                        try {
-                            IMAGE_SIGNATUREFile=new ImageZipper(getActivity())
-                                    .setQuality(90)
-                                    .setMaxWidth(520)
-                                    .setMaxHeight(720)
-                                    .compressToFile(signatureFile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-//                        IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
+//                        try {
+//                            IMAGE_SIGNATUREFile=new ImageZipper(getActivity())
+//                                    .setQuality(90)
+//                                    .setMaxWidth(520)
+//                                    .setMaxHeight(720)
+//                                    .compressToFile(signatureFile);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+                        IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
                         PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
 
                     }

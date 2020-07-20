@@ -218,8 +218,13 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_photo);
         ButterKnife.bind(this);
-        title.setText("Upload Photo");
-        String sourceString = "<b>" + "CRN:  " + "</b> " + PreferencesManager.getInstance(context).getCrnID();
+        if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")){
+            title.setText("Upload Photo");
+        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")){
+            title.setText("Add Shipment Image");
+        }
+//        title.setText("Upload Photo");
+        String sourceString = "<u>"+"<b>" + "CRN:  " + "</b> " + PreferencesManager.getInstance(context).getCrnID()+"</u>";
         crnID.setText(Html.fromHtml(sourceString));
         String sourceString2 = "<b>" + "Asset ID:  " + "</b> " + PreferencesManager.getInstance(context).getUid();
         assedId.setText(Html.fromHtml(sourceString2));
@@ -2042,7 +2047,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         TextView body = dialogView.findViewById(R.id.body);
                         TextView ok = dialogView.findViewById(R.id.buttonOk);
                         heading.setText(R.string.dialog_heading);
-                        body.setText(R.string.dialog_success);
+                        body.setText(R.string.ship_success);
                         AlertDialog alertDialog = builder.create();
                         alertDialog.setCanceledOnTouchOutside(false);
                         alertDialog.show();
@@ -2215,7 +2220,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         TextView body = dialogView.findViewById(R.id.body);
                         TextView ok = dialogView.findViewById(R.id.buttonOk);
                         heading.setText(R.string.dialog_heading);
-                        body.setText(R.string.dialog_success);
+                        body.setText(R.string.ship_success);
                         AlertDialog alertDialog = builder.create();
                         alertDialog.setCanceledOnTouchOutside(false);
                         alertDialog.show();

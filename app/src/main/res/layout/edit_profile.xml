@@ -54,7 +54,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="65dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/edit_profile_image"
+                android:src="@drawable/edit_icon"
                />
 
 

@@ -45,7 +45,6 @@ import com.notbytes.barcode_reader.camera.GraphicOverlay;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.prefs.PreferenceChangeListener;
 
 public class BarcodeReaderFragment extends Fragment implements View.OnTouchListener, BarcodeGraphicTracker.BarcodeGraphicTrackerListener {
     protected static final String TAG = BarcodeReaderFragment.class.getSimpleName();

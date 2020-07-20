@@ -191,7 +191,6 @@ public class EditProfileActivity extends BaseActivity implements IPickCancel, IP
                 pickSetup.setTitle("Choose Profile Image");
                 break;
         }
-
         pickSetup.setGalleryIcon(com.vansuita.pickimage.R.mipmap.gallery_colored);
         pickSetup.setCameraIcon(com.vansuita.pickimage.R.mipmap.camera_colored);
         pickSetup.setCancelTextColor(R.color.colorAccent);
@@ -234,10 +233,14 @@ public class EditProfileActivity extends BaseActivity implements IPickCancel, IP
         user_name.setText(profile.getCurrentUser().getName());
 //        profile_photo.setBackground(null);
 //        profile_photo.setImageDrawable(null);
-        Glide.with(EditProfileActivity.this)
-                .load(BuildConfig.BASE_URL_FORIMAGE + profile.getCurrentUser().getProfilePic())
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
+//        Glide.with(EditProfileActivity.this)
+//                .load(BuildConfig.BASE_URL_FORIMAGE+ profile.getCurrentUser().getProfilePic())
+//                .diskCacheStrategy(DiskCacheStrategy.NONE)
+//                .skipMemoryCache(true)
+//                .into(profile_photo);
+        Glide.with(context).load(BuildConfig.BASE_URL_FORIMAGE + profile.getCurrentUser().getProfilePic())
+                .apply(new RequestOptions().diskCacheStrategy(AUTOMATIC).placeholder(R.drawable.user_new)
+                        .error(R.drawable.user_new))
                 .into(profile_photo);
 
     }

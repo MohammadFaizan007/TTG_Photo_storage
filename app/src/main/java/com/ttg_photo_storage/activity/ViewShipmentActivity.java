@@ -56,7 +56,7 @@ public class ViewShipmentActivity extends BaseActivity {
         setContentView(R.layout.activity_view_ship);
         ButterKnife.bind(this);
         rvPost.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        title.setText("View Shipment");
+        title.setText("CRN");
         SimpleDateFormat curFormater = new SimpleDateFormat("yyyy/MM/dd");
         dateStr = curFormater.format(new Date());
         Calendar cal = Calendar.getInstance();

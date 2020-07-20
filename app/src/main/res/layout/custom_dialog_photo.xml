@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a Image Title"
+        android:text="Select Options"
         android:textSize="18sp"
         android:textAlignment="center"
         android:textColor="@color/black"

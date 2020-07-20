@@ -14,6 +14,7 @@ class BarcodeTrackerFactory implements MultiProcessor.Factory<Barcode> {
     private BarcodeGraphicTracker.BarcodeGraphicTrackerListener listener;
 
     BarcodeTrackerFactory(GraphicOverlay<BarcodeGraphic> barcodeGraphicOverlay, BarcodeGraphicTracker.BarcodeGraphicTrackerListener listener) {
+        mGraphicOverlay = barcodeGraphicOverlay;
         this.listener = listener;
     }
 

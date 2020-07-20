@@ -7,8 +7,7 @@
 
     <include
         android:id="@+id/app_bar"
-        layout="@layout/custom_header"
-      />
+        layout="@layout/custom_header" />
 
 
     <androidx.core.widget.NestedScrollView
@@ -69,15 +68,14 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
                         android:layout_weight=".3"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text="Date"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                       />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -147,6 +145,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/logistics_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -239,78 +238,78 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
                     android:orientation="horizontal"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_10sdp"
                     android:weightSum="4">
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="-3dp"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:padding="@dimen/_5sdp"
-                        android:text="No of Staff"
+                        android:text="No.of Staff"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
+                        android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_marginLeft="@dimen/_12sdp"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:padding="@dimen/_5sdp"
-                        android:text="No of Boxe"
+                        android:text="No.of Boxes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold" />
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_8sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
                         android:layout_weight="1"
                         android:gravity="start"
-                        android:padding="@dimen/_5sdp"
+                        android:text="No.of Pallets"
+                        android:textColor="@color/black"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        />
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
                         android:singleLine="true"
-                        android:text="No of Pallet"
+                        android:text="No.of Devices"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold" />
+                        android:textSize="11sp"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:padding="@dimen/_5sdp"
-                        android:singleLine="true"
-                        android:text="No of Device"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold" />
+
                 </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_marginTop="-5dp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:orientation="horizontal"
-                    android:weightSum="1">
+                    android:weightSum="4">
 
                     <TextView
                         android:id="@+id/no_of_staff"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_weight=".25"
+                        android:layout_weight="1"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
@@ -323,7 +322,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_weight=".25"
+                        android:layout_weight="1"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
@@ -336,7 +335,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_weight=".25"
+                        android:layout_weight="1"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
@@ -348,19 +347,23 @@
                         android:id="@+id/noOfDevices"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".25"
+                        android:layout_weight="1"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text=""
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp" />
+
+
                 </LinearLayout>
+
 
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/vehicle_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -481,6 +484,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/supervisor_detals"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -509,30 +513,29 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="@dimen/_5sdp"
                         android:layout_weight=".5"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text="Name"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="12dp"
-                        android:layout_marginRight="@dimen/_5sdp"/>
+                        android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
 
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="@dimen/_10sdp"
                         android:layout_weight=".5"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text="Phone Number"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="@dimen/_10sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -548,29 +551,29 @@
                         android:id="@+id/name"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
                         android:layout_weight=".5"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_marginRight="@dimen/_5sdp"/>
+                        android:textSize="@dimen/_10sdp" />
 
                     <TextView
                         android:id="@+id/phone_no"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
                         android:layout_weight=".5"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text=""
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp"
-                        android:layout_marginLeft="@dimen/_5sdp"
-                        android:layout_marginRight="@dimen/_10sdp"/>
+                        android:textSize="@dimen/_10sdp" />
 
                 </LinearLayout>
 
@@ -586,17 +589,19 @@
                     android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
-                <TextView
+                <androidx.appcompat.widget.AppCompatCheckBox
+                    android:id="@+id/checkbox_remember"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_15sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    android:layout_marginRight="@dimen/_10sdp"
-                    android:text="@string/declair"
                     android:layout_marginTop="-5dp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:checked="false"
+                    android:text="@string/declair"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_10sdp"
-                   />
+                    android:textSize="10sp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -628,6 +633,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/Comment_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -661,47 +667,128 @@
                     android:inputType="textMultiLine"
                     android:maxLines="5"
                     android:padding="5dp"
-                    android:textSize="@dimen/_10sdp" />
-
+                    android:textSize="@dimen/_10sdp"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tv_reason_for_rejection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:padding="@dimen/_5sdp"
+                android:text="Reason for Rejection"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+            <LinearLayout
+                android:id="@+id/reason_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:gravity="center_vertical"
-                android:weightSum="1">
+                android:background="@drawable/edittext_bg"
+                android:elevation="@dimen/_5sdp"
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <Button
-                    android:id="@+id/btn_images"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/background_btn"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text="Shipment Images"
-                    android:textColor="@color/white"
+                <EditText
+                    android:id="@+id/reason_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/curveborder"
+                    android:gravity="top|start"
+                    android:hint=""
+                    android:inputType="textMultiLine"
+                    android:imeOptions="actionDone"
+                    android:drawableRight="@drawable/rejected_stamp"
+                    android:drawableEnd="@drawable/rejected_stamp"
+                    android:maxLines="5"
+                    android:padding="5dp"
                     android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_Download"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_40sdp"
-                    android:layout_margin="10dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/background_btn"
-                    android:paddingLeft="@dimen/_10sdp"
-                    android:paddingRight="@dimen/_10sdp"
-                    android:text="Download Receipt"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
-
+                    android:layout_margin="@dimen/_10sdp"
+                    />
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_images"
+                android:layout_width="270dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="10dp"
+                android:text="Shipment Images"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textAllCaps="false"
+                android:padding="@dimen/_10sdp"
+                android:background="@drawable/background_btn"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:textSize="@dimen/_18sdp"
+                />
+
+            <Button
+                android:id="@+id/btn_Download"
+                android:layout_width="270dp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_margin="10dp"
+                android:text="Download Receipt"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:padding="@dimen/_10sdp"
+                android:background="@drawable/background_btn"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:textSize="@dimen/_18sdp"
+                />
+
+
+
+            <!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="5dp"-->
+<!--                android:layout_marginBottom="@dimen/_10sdp"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:weightSum="1">-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btn_images"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:layout_weight="0.5"-->
+<!--                    android:background="@drawable/background_btn"-->
+<!--                    android:paddingLeft="@dimen/_10sdp"-->
+<!--                    android:paddingRight="@dimen/_10sdp"-->
+<!--                    android:text="Shipment Images"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold" />-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btn_Download"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_margin="10dp"-->
+<!--                    android:layout_weight="0.5"-->
+<!--                    android:background="@drawable/background_btn"-->
+<!--                    android:paddingLeft="@dimen/_10sdp"-->
+<!--                    android:paddingRight="@dimen/_10sdp"-->
+<!--                    android:text="Download Receipt"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold" />-->
+
+<!--            </LinearLayout>-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

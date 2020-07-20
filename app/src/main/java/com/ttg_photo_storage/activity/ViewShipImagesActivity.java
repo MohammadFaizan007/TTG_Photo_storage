@@ -58,7 +58,7 @@ public class ViewShipImagesActivity extends BaseActivity {
         setContentView(R.layout.activity_view_ship);
         ButterKnife.bind(this);
         rvPost.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        title.setText("Photo List");
+        title.setText("Shipment Images");
         SimpleDateFormat curFormater = new SimpleDateFormat("yyyy/MM/dd");
         dateStr = curFormater.format(new Date());
         Calendar cal = Calendar.getInstance();
@@ -105,12 +105,15 @@ public class ViewShipImagesActivity extends BaseActivity {
                     hideLoading();
                     LoggerUtil.logItem(response.body());
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
-                        if (response.body().getShipments() != null) {
+                        if (response.body().getShipments().getFiles()!= null) {
                             rvPost.setVisibility(View.VISIBLE);
                             txtNorecfound.setVisibility(View.GONE);
                             list = response.body().getShipments().getFiles();
                             ViewShipImagesAdapter adapter = new ViewShipImagesAdapter(context, list, ViewShipImagesActivity.this);
                             rvPost.setAdapter(adapter);
+                        }else {
+                            txtNorecfound.setVisibility(View.VISIBLE);
+                            rvPost.setVisibility(View.INVISIBLE);
                         }
                     }else {
                         txtNorecfound.setVisibility(View.VISIBLE);
@@ -143,13 +146,16 @@ public class ViewShipImagesActivity extends BaseActivity {
                     hideLoading();
                     LoggerUtil.logItem(response.body());
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
-                        if (response.body().getAllshipments() != null) {
+                        if (response.body().getAllshipments().getFiles() != null) {
                             rvPost.setVisibility(View.VISIBLE);
                             txtNorecfound.setVisibility(View.GONE);
                             allList = response.body().getAllshipments().getFiles();
                             ViewShipImagesSideAdapter adapterSide = new ViewShipImagesSideAdapter(context,allList,ViewShipImagesActivity.this);
                             rvPost.setAdapter(adapterSide);
-                            }
+                            }else {
+                            txtNorecfound.setVisibility(View.VISIBLE);
+                            rvPost.setVisibility(View.INVISIBLE);
+                        }
                     }else {
                         txtNorecfound.setVisibility(View.VISIBLE);
                         rvPost.setVisibility(View.INVISIBLE

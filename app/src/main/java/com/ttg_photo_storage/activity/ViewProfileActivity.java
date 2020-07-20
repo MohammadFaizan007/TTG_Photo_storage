@@ -67,7 +67,10 @@ public class ViewProfileActivity extends BaseActivity {
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")){
             change_btn.setVisibility(View.VISIBLE);
             btn_edit.setVisibility(View.VISIBLE);
-        }else {
+        }else if(PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
+            change_btn.setVisibility(View.VISIBLE);
+            btn_edit.setVisibility(View.VISIBLE);
+        }else{
             change_btn.setVisibility(View.GONE);
             btn_edit.setVisibility(View.GONE);
         }
@@ -113,15 +116,19 @@ public class ViewProfileActivity extends BaseActivity {
                         phone_no.setText(response.body().getCurrentUser().getMobile());
                         email_id.setText(response.body().getCurrentUser().getEmail());
                         user_name.setText(response.body().getCurrentUser().getName());
-                        prof_image.setImageDrawable(null);
-                        prof_image.setBackground(null);
-                        Glide.with(ViewProfileActivity.this)
-                                .load(BuildConfig.BASE_URL_FORIMAGE + response.body().getCurrentUser().getProfilePic())
-                                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                .skipMemoryCache(true)
+                        Glide.with(context).load(BuildConfig.BASE_URL_FORIMAGE + response.body().getCurrentUser().getProfilePic())
+                                .apply(new RequestOptions().diskCacheStrategy(AUTOMATIC).placeholder(R.drawable.user_new)
+                                        .error(R.drawable.user_new))
                                 .into(prof_image);
+//                        Glide.with(ViewProfileActivity.this)
+//                                .load(BuildConfig.BASE_URL_FORIMAGE+response.body().getCurrentUser().getProfilePic())
+//                                .skipMemoryCache(true)
+//                                .diskCacheStrategy(AUTOMATIC)
+//                                .into(prof_image);
+
+
 //                        Glide.with(getApplicationContext())
-//                                .load(BuildConfig.BASE_URL_FORIMAGE + response.body().getCurrentUser().getProfilePic())
+//                                .load(response.body().getCurrentUser().getProfilePic())
 //                                .apply(new RequestOptions()
 //                                        .diskCacheStrategy(NONE).placeholder(R.drawable.photo_view)
 //                                        .error(R.drawable.photo_view))

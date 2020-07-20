@@ -50,19 +50,28 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
             String timeString = "<b>" + "Time:  " + "</b> "  +list.get(listPosition).getShipTimeFormatted();
             String dateString = "<b>" + "Date:  " + "</b> "  +list.get(listPosition).getShipDateFormatted();
             String quality = "<b>"+"Packaging Quality :"+"</b>";
-            String condition ="<b>"+list.get(listPosition).getBoxCondition()+"</b>";
+            String condition ="<b>"+"Packaging Quality :"+list.get(listPosition).getBoxCondition()+"</b>";
+            String status1 = "<b>"+"Shipment Status : Accepted Shipment"+"</b>";
+            String status2 = "<b>"+"Shipment Status : Rejected Shipment"+"</b>";
             if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Good")){
-                holder.quality.setTextColor(mContext.getResources().getColor(R.color.success));
+                holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.success));
             }else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Poor")){
-                holder.quality.setTextColor(mContext.getResources().getColor(R.color.red));
+                holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.red));
             }else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Fair")){
-                holder.quality.setTextColor(mContext.getResources().getColor(R.color.yellow));
+                holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.yellow));
+            }
+            if (list.get(listPosition).getIsReject().equalsIgnoreCase("no")){
+                holder.status.setText(Html.fromHtml(status1));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.success));
+            }else if (list.get(listPosition).getIsReject().equalsIgnoreCase("yes")) {
+                holder.status.setText(Html.fromHtml(status2));
+                holder.status.setTextColor(mContext.getResources().getColor(R.color.red));
             }
             holder.crn_no.setText(Html.fromHtml(sourceString));
-            holder.tv_quality.setText(Html.fromHtml(quality));
+            holder.tv_quality.setText(Html.fromHtml(condition));
             holder.time.setText(Html.fromHtml(timeString));
             holder.date.setText(Html.fromHtml(dateString));
-            holder.quality.setText(Html.fromHtml(condition));
+//            holder.quality.setText(Html.fromHtml(condition));
             holder.asset_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -98,10 +107,12 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
         TextView date;
         @BindView(R.id.tv_quality)
         TextView tv_quality;
-        @BindView(R.id.quality)
-        TextView quality;
+//        @BindView(R.id.quality)
+//        TextView quality;
         @BindView(R.id.time)
         TextView time;
+        @BindView(R.id.status)
+        TextView status;
         @BindView(R.id.asset_ll)
         LinearLayout asset_ll;
 

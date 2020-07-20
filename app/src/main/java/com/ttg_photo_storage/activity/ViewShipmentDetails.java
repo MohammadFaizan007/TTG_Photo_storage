@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -83,6 +84,24 @@ public class ViewShipmentDetails extends BaseActivity {
     ImageView imge_signature;
     @BindView(R.id.tv_msge)
     TextView tv_msge;
+
+    @BindView(R.id.logistics_details)
+    LinearLayout logistics_details;
+    @BindView(R.id.vehicle_details)
+    LinearLayout vehicle_details;
+    @BindView(R.id.supervisor_detals)
+    LinearLayout supervisor_detals;
+    @BindView(R.id.Comment_ll)
+    LinearLayout Comment_ll;
+
+    @BindView(R.id.tv_reason_for_rejection)
+    TextView tv_reason_for_rejection;
+    @BindView(R.id.reason_ll)
+    LinearLayout reason_ll;
+    @BindView(R.id.reason_message)
+    TextView reason_message;
+
+
     @BindView(R.id.btn_images)
     Button btn_images;
     @BindView(R.id.btn_Download)
@@ -98,7 +117,7 @@ public class ViewShipmentDetails extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_ship_details);
         ButterKnife.bind(this);
-        title.setText("View Shipment");
+        title.setText("Shipment Receipt");
         hash = getIntent().getStringExtra("hash_id");
         crn = getIntent().getStringExtra("crn");
         SimpleDateFormat curFormater = new SimpleDateFormat("yyyy/MM/dd");
@@ -107,6 +126,7 @@ public class ViewShipmentDetails extends BaseActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         formattedDate = sdf.format(cal.getTime());
         currentTimeDate = (dateStr + " " + formattedDate);
+
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")) {
             if (NetworkUtils.getConnectivityStatus(context) != 0) {
                 getViewShipDetails();
@@ -155,7 +175,7 @@ public class ViewShipmentDetails extends BaseActivity {
     private void getViewShipDetails() {
         try {
             showLoading();
-            Call<ViewShipDetailsResponse> profileCall = apiServices.viewShipDetails("getship", PreferencesManager.getInstance(context).getToken(), crn, hash,currentTimeDate);
+            Call<ViewShipDetailsResponse> profileCall = apiServices.viewShipDetails("getship", PreferencesManager.getInstance(context).getToken(), crn, hash, currentTimeDate);
             profileCall.enqueue(new Callback<ViewShipDetailsResponse>() {
                 @Override
                 public void onResponse(Call<ViewShipDetailsResponse> call, Response<ViewShipDetailsResponse> response) {
@@ -163,6 +183,16 @@ public class ViewShipmentDetails extends BaseActivity {
                     LoggerUtil.logItem(response.body());
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         setUserProfile(response.body());
+                        if (response.body().getShipments().getIsReject().equalsIgnoreCase("yes")) {
+                            logistics_details.setVisibility(View.GONE);
+                            vehicle_details.setVisibility(View.GONE);
+                            supervisor_detals.setVisibility(View.GONE);
+                            Comment_ll.setVisibility(View.GONE);
+                            btn_Download.setVisibility(View.GONE);
+                            btn_images.setVisibility(View.GONE);
+                            tv_reason_for_rejection.setVisibility(View.VISIBLE);
+                            reason_ll.setVisibility(View.VISIBLE);
+                        }
                     } else {
                         showToastS(response.body().getStatus() + "\nInvalid Login Credential or Token");
                     }
@@ -182,13 +212,23 @@ public class ViewShipmentDetails extends BaseActivity {
     private void getViewShipDetailsShip() {
         try {
             showLoading();
-            Call<ResponseShipmentDetails> profileCall = apiServices.viewShipDetailsShip("getship", PreferencesManager.getInstance(context).getToken(),  hash,currentTimeDate);
+            Call<ResponseShipmentDetails> profileCall = apiServices.viewShipDetailsShip("getship", PreferencesManager.getInstance(context).getToken(), hash, currentTimeDate);
             profileCall.enqueue(new Callback<ResponseShipmentDetails>() {
                 @Override
                 public void onResponse(Call<ResponseShipmentDetails> call, Response<ResponseShipmentDetails> response) {
                     hideLoading();
                     LoggerUtil.logItem(response.body());
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
+                        if (response.body().getAllshipments().getIsReject().equalsIgnoreCase("yes")) {
+                            logistics_details.setVisibility(View.GONE);
+                            vehicle_details.setVisibility(View.GONE);
+                            supervisor_detals.setVisibility(View.GONE);
+                            Comment_ll.setVisibility(View.GONE);
+                            btn_Download.setVisibility(View.GONE);
+                            btn_images.setVisibility(View.GONE);
+                            tv_reason_for_rejection.setVisibility(View.VISIBLE);
+                            reason_ll.setVisibility(View.VISIBLE);
+                        }
                         setUserProfileShip(response.body());
 
 
@@ -213,6 +253,13 @@ public class ViewShipmentDetails extends BaseActivity {
         date.setText(client.getShipments().getShipDateFormatted());
         time.setText(client.getShipments().getShipTimeFormatted());
         logistics_company_name.setText(client.getShipments().getLogisticCompany());
+        if (client.getShipments().getBoxCondition().equalsIgnoreCase("Poor")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.red));
+        } else if (client.getShipments().getBoxCondition().equalsIgnoreCase("Fair")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.yellow));
+        } else if (client.getShipments().getBoxCondition().equalsIgnoreCase("Good")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.success));
+        }
         packageQuality.setText(client.getShipments().getBoxCondition());
         no_of_staff.setText(client.getShipments().getNoOfStaff());
         no_of_boxes.setText(client.getShipments().getNoOfBox());
@@ -227,6 +274,7 @@ public class ViewShipmentDetails extends BaseActivity {
                 .load(BuildConfig.BASE_URL_FORIMAGE + client.getShipments().getSupervisorSign())
                 .into(imge_signature);
         tv_msge.setText(client.getShipments().getNote());
+        reason_message.setText(client.getShipments().getNote());
         PDFURL = client.getShipments().getPdfurl();
     }
 
@@ -235,6 +283,13 @@ public class ViewShipmentDetails extends BaseActivity {
         date.setText(profile.getAllshipments().getShipDateFormatted());
         time.setText(profile.getAllshipments().getShipTimeFormatted());
         logistics_company_name.setText(profile.getAllshipments().getLogisticCompany());
+        if (profile.getAllshipments().getBoxCondition().equalsIgnoreCase("Poor")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.red));
+        } else if (profile.getAllshipments().getBoxCondition().equalsIgnoreCase("Fair")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.yellow));
+        } else if (profile.getAllshipments().getBoxCondition().equalsIgnoreCase("Good")) {
+            packageQuality.setTextColor(context.getResources().getColor(R.color.success));
+        }
         packageQuality.setText(profile.getAllshipments().getBoxCondition());
         no_of_staff.setText(profile.getAllshipments().getNoOfStaff());
         no_of_boxes.setText(profile.getAllshipments().getNoOfBox());
@@ -249,9 +304,11 @@ public class ViewShipmentDetails extends BaseActivity {
                 .load(BuildConfig.BASE_URL_FORIMAGE + profile.getAllshipments().getSupervisorSign())
                 .into(imge_signature);
         tv_msge.setText(profile.getAllshipments().getNote());
+        reason_message.setText(profile.getAllshipments().getNote());
         PDFURL = profile.getAllshipments().getPdfurl();
 
     }
+
     private void showError(String error_st, EditText editText) {
         Dialog error_dialog = new Dialog(context);
         error_dialog.setCanceledOnTouchOutside(false);
