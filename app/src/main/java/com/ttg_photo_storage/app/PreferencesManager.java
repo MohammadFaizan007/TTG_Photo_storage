@@ -29,11 +29,14 @@ public class PreferencesManager {
     private static final String VECHILE_NUMBER = "vechile_number";
     private static final String VECHILE_TYPE = "vechile_type";
     private static final String COMPANY_NAME = "company_name";
+    private static final String COMPANY_NAME_REJECT = "company_name_reject";
+    private static final String WAY_BIll = "way_bill";
     private static final String LOGISTIC_STAFF = "logistics_staff";
     private static final String NO_OF_BOXES = "no_Of_Boxes";
     private static final String NO_OF_PALLETS = "no_Of_pallets";
     private static final String NO_OF_DEVICES = "no_Of_devices";
     private static final String PACKAGING_QUALITY = "packaging_quality";
+    private static final String BOX_SEAL = "box_seal";
     private static final String SUPERVISOR_NAME = "supervisor_name";
     private static final String PHONE_NUMBER = "phone_number";
     private static final String MESSAGE = "message";
@@ -42,6 +45,7 @@ public class PreferencesManager {
     private static final String ACCEPT = "accept";
     private static final String POSITION_HASH = "position_hash";
     private static final String POSITION_CRN = "position_crn";
+    private static final String CHECK_TICK = "check_tick";
 
 
 
@@ -220,6 +224,25 @@ public class PreferencesManager {
         mPref.edit().putString(COMPANY_NAME, value).apply();
     }
 
+    public String getCompanyNameReject() {
+        return mPref.getString(COMPANY_NAME_REJECT, "");
+    }
+
+    public void setCompanyNameReject(String value) {
+        mPref.edit().putString(COMPANY_NAME_REJECT, value).apply();
+    }
+
+    public String getWAY_BIll() {
+        return mPref.getString(WAY_BIll, "");
+    }
+
+    public void setWAY_BIll(String value) {
+        mPref.edit().putString(WAY_BIll, value).apply();
+    }
+
+
+
+
     public String getLogistics_Staff() {
         return mPref.getString(LOGISTIC_STAFF, "");
     }
@@ -259,6 +282,16 @@ public class PreferencesManager {
 
     public void setPackagingQuality(String value) {
         mPref.edit().putString(PACKAGING_QUALITY, value).apply();
+    }
+
+
+    public String getBoxSeal() {
+        return mPref.getString(BOX_SEAL, "");
+
+    }
+
+    public void setBoxSeal(String value) {
+        mPref.edit().putString(BOX_SEAL, value).apply();
     }
 
     public String getSupervisorName() {
@@ -326,5 +359,14 @@ public class PreferencesManager {
     public void setPositionCrn(String value) {
         mPref.edit().putString(POSITION_CRN, value).apply();
     }
+
+    public String getCheckTick() {
+        return mPref.getString(CHECK_TICK, "");
+    }
+
+    public void setCheckTick(String value) {
+        mPref.edit().putString(CHECK_TICK, value).apply();
+    }
+
 
 }

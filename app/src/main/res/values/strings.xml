@@ -40,6 +40,7 @@
     <string name="dialog_heading"><b>TTG-Photo Storage</b></string>
     <string name="dialog_success">Photo Uploaded \n Successfully!</string>
     <string name="ship_success">Shipment Uploaded \n Successfully!</string>
+    <string name="radio_ship">Search Shipment by CRN .</string>
 
 
     <string name="dialog_body">Your previous Asset ID is</string>

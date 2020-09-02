@@ -1,11 +1,13 @@
 package com.ttg_photo_storage.Fragment;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -32,6 +34,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -44,9 +48,11 @@ import com.notbytes.barcode_reader.BarcodeReaderFragment;
 import com.ttg_photo_storage.R;
 import com.ttg_photo_storage.activity.AssetIDScanActivity;
 import com.ttg_photo_storage.activity.CrnResultActivity;
+import com.ttg_photo_storage.activity.Demo;
 import com.ttg_photo_storage.activity.ManualEntryActivity;
 import com.ttg_photo_storage.activity.PostResultActivity;
 import com.ttg_photo_storage.activity.UploadPhotoActivity;
+import com.ttg_photo_storage.activity.ViewShipmentActivity;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseFragment;
 import com.ttg_photo_storage.utils.NetworkUtils;
@@ -71,6 +77,8 @@ import ja.burhanrashid52.photoeditor.PhotoEditorView;
 
 public class Dashboard extends BaseFragment implements View.OnClickListener, BarcodeReaderFragment.BarcodeReaderListener {
     private static final int BARCODE_READER_ACTIVITY_REQUEST = 1208;
+    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final int STORAGE_PERMISSION_CODE = 101;
     @BindView(R.id.tapToScan)
     LinearLayout tapToScan;
     @BindView(R.id.tapToManually)
@@ -79,6 +87,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     EditText assedIDEt;
     @BindView(R.id.crnID_et)
     EditText crnID_et;
+    @BindView(R.id.crnIDShip_et)
+    EditText crnIDShip_et;
     @BindView(R.id.staff_layou)
     LinearLayout staff_layou;
     @BindView(R.id.clint_layout)
@@ -87,12 +97,15 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     Button searchbtn;
     @BindView(R.id.search_crn_btn)
     Button search_crn_btn;
+    @BindView(R.id.searchShip_crn_btn)
+    Button searchShip_crn_btn;
     @BindView(R.id.heading_staff)
     TextView heading_staff;
     @BindView(R.id.selectID_group)
     RadioGroup selectID_group;
     private String assetID_st = "";
     private String crnID_st = "";
+    private String crnIDShip_st = "";
 
     //    Shipment Module
     @BindView(R.id.main_shipmant)
@@ -117,6 +130,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     EditText vehicleType;
     @BindView(R.id.companyName)
     EditText companyName;
+    @BindView(R.id.waybill)
+    EditText waybill;
     @BindView(R.id.noOfLogisticsStaff)
     EditText noOfLogisticsStaff;
     @BindView(R.id.noOfBoxes)
@@ -127,6 +142,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     EditText noOfDevices;
     @BindView(R.id.packageQuality)
     EditText packageQuality;
+    @BindView(R.id.boxSeal)
+    EditText boxSeal;
     @BindView(R.id.supervisorName)
     EditText supervisorName;
     @BindView(R.id.phone_no)
@@ -139,6 +156,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     EditText et_message;
     @BindView(R.id.reason_message)
     EditText reason_message;
+    @BindView(R.id.companyName_reject)
+    EditText companyName_reject;
     @BindView(R.id.btn_Next)
     Button btn_Next;
     @BindView(R.id.btn_NextR)
@@ -167,8 +186,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     LinearLayout reason_ll;
     File IMAGE_SIGNATUREFile;
     private String edit_search_st = "", timeDate_st = "", noOfVechile_st = "", vehicleNumber_st = "", vehicleType_st = "",
-            companyName_st = "", noOfLogisticsStaff_st = "", noOfBoxes_st = "", noOfPallets_st = "", noOfDevices_st = "", packageQuality_st = "",
-            supervisorName_st = "", phone_no_st = "", et_message_st = "", reason_message_st = "", time_st = "";
+            companyName_st = "", waybill_st = "", noOfLogisticsStaff_st = "", noOfBoxes_st = "", noOfPallets_st = "", noOfDevices_st = "", packageQuality_st = "",
+            supervisorName_st = "", phone_no_st = "", et_message_st = "", reason_message_st = "", time_st = "", companyName_reject_st = "",box_seal_st = "";
     public String accept_st = "no";
     Unbinder unbinder;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -226,6 +245,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 logisticsSupervisorDetails_ll.setVisibility(View.GONE);
                 addComment_ll.setVisibility(View.GONE);
                 tv_reason_for_rejection.setVisibility(View.VISIBLE);
+                companyName_reject.setVisibility(View.VISIBLE);
                 reason_ll.setVisibility(View.VISIBLE);
                 btn_Next.setVisibility(View.GONE);
                 btn_NextR.setVisibility(View.VISIBLE);
@@ -247,6 +267,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 logisticsDetails_ll.setVisibility(View.VISIBLE);
                 logisticsSupervisorDetails_ll.setVisibility(View.VISIBLE);
                 addComment_ll.setVisibility(View.VISIBLE);
+                companyName_reject.setVisibility(View.GONE);
                 tv_reason_for_rejection.setVisibility(View.GONE);
                 reason_ll.setVisibility(View.GONE);
                 btn_Next.setVisibility(View.VISIBLE);
@@ -260,9 +281,11 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
         tapToManually.setOnClickListener(this);
         searchbtn.setOnClickListener(this);
         search_crn_btn.setOnClickListener(this);
+        searchShip_crn_btn.setOnClickListener(this);
         imge_scan.setOnClickListener(this);
         vehicleType.setOnClickListener(this);
         packageQuality.setOnClickListener(this);
+        boxSeal.setOnClickListener(this);
         imageSignature.setOnClickListener(this);
         btn_Next.setOnClickListener(this);
         btn_NextR.setOnClickListener(this);
@@ -275,15 +298,28 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 RadioButton rb = (RadioButton) radioGroup.findViewById(i);
                 if (rb.getText().toString().equalsIgnoreCase("Search Result by CRN.\n(Shipment Details also Available)")) {
                     crnID_et.setVisibility(View.VISIBLE);
+                    search_crn_btn.setVisibility(View.VISIBLE);
                     assedIDEt.setVisibility(View.GONE);
                     searchbtn.setVisibility(View.GONE);
-                    search_crn_btn.setVisibility(View.VISIBLE);
+                    crnIDShip_et.setVisibility(View.GONE);
+                    searchShip_crn_btn.setVisibility(View.GONE);
 
-                } else {
+
+                } else if (rb.getText().toString().equalsIgnoreCase("Search Shipment by CRN .")){
+                    crnID_et.setVisibility(View.GONE);
+                    assedIDEt.setVisibility(View.GONE);
+                    searchbtn.setVisibility(View.GONE);
+                    search_crn_btn.setVisibility(View.GONE);
+                    crnIDShip_et.setVisibility(View.VISIBLE);
+                    searchShip_crn_btn.setVisibility(View.VISIBLE);
+
+                }else {
                     crnID_et.setVisibility(View.GONE);
                     assedIDEt.setVisibility(View.VISIBLE);
                     searchbtn.setVisibility(View.VISIBLE);
                     search_crn_btn.setVisibility(View.GONE);
+                    crnIDShip_et.setVisibility(View.GONE);
+                    searchShip_crn_btn.setVisibility(View.GONE);
 
                 }
             }
@@ -355,6 +391,16 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 }
                 break;
 
+            case R.id.searchShip_crn_btn:
+                if (ValidationCrnShip()) {
+                    if (NetworkUtils.getConnectivityStatus(context) != 0) {
+                        goToActivity(ViewShipmentActivity.class, null);
+                    } else {
+                        showMessage(getResources().getString(R.string.alert_internet));
+                    }
+                }
+                break;
+
             case R.id.vehicleType:
                 PopupMenu damperPopUp = new PopupMenu(context, vehicleType);
                 damperPopUp.getMenuInflater().inflate(R.menu.vechicletype, damperPopUp.getMenu());
@@ -391,8 +437,36 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 packaging.show();
 
                 break;
+
+            case R.id.boxSeal:
+                PopupMenu seal = new PopupMenu(context,boxSeal);
+                seal.getMenuInflater().inflate(R.menu.box, seal.getMenu());
+                seal.setOnMenuItemClickListener(item -> {
+                    try {
+                        boxSeal.setText(item.getTitle());
+//                        if (packageQuality.getText().toString().equalsIgnoreCase("Poor")) {
+//                            packageQuality.setTextColor(context.getResources().getColor(R.color.red));
+//                        } else if (packageQuality.getText().toString().equalsIgnoreCase("Fair")) {
+//                            packageQuality.setTextColor(context.getResources().getColor(R.color.yellow));
+//                        } else if (packageQuality.getText().toString().equalsIgnoreCase("Good")) {
+//                            packageQuality.setTextColor(context.getResources().getColor(R.color.success));
+//                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                });
+
+                seal.show();
+
+
+                break;
             case R.id.imageSignature:
-                signatureDialog();
+//                signatureDialog();
+                checkPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        STORAGE_PERMISSION_CODE);
+
                 break;
 
             case R.id.date:
@@ -400,31 +474,48 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 break;
 
             case R.id.time:
-                calendar = Calendar.getInstance();
-                currentHour = calendar.get(Calendar.HOUR_OF_DAY);
-                currentMinute = calendar.get(Calendar.MINUTE);
-                currentMinute = calendar.get(Calendar.SECOND);
-                timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minutes) {
-                        if (hourOfDay >= 11) {
-                            hourOfDay = hourOfDay - 12;
-                            amPm = "PM";
-                        } else {
-                            amPm = "AM";
-                        }
-                        time.setText(String.format("%02d:%02d", hourOfDay, minutes) + amPm);
-                    }
-                }, currentHour, currentMinute, false);
 
+                final Calendar c = Calendar.getInstance();
+                mHour = c.get(Calendar.HOUR_OF_DAY);
+                mMinute = c.get(Calendar.MINUTE);
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(),
+                        new TimePickerDialog.OnTimeSetListener() {
+                            @Override
+                            public void onTimeSet(TimePicker view, int hourOfDay,
+                                                  int minute) {
+                                String format = "";
+                                if (hourOfDay == 0) {
+                                    hourOfDay += 12;
+                                    format = "AM";
+                                } else if (hourOfDay == 12) {
+                                    format = "PM";
+                                } else if (hourOfDay > 12) {
+                                    hourOfDay -= 12;
+                                    format = "PM";
+                                } else {
+                                    format = "AM";
+                                }
+
+                                time.setText(hourOfDay + ":" + minute + " " + format);
+                            }
+                        }, mHour, mMinute, false);
                 timePickerDialog.show();
-
                 break;
 
             case R.id.btn_Next:
                 if (ValidationShipment()) {
                     if (NetworkUtils.getConnectivityStatus(context) != 0) {
-                        goToActivity(UploadPhotoActivity.class, null);
+                        if (IMAGE_SIGNATUREFile != null) {
+                            Intent upload = new Intent(getActivity(), Demo.class);
+                            upload.putExtra("imageSignature", IMAGE_SIGNATUREFile.getAbsolutePath());
+                            startActivity(upload);
+                        } else {
+                            goToActivity(Demo.class, null);
+                        }
+
+
+//
+
                     } else {
                         showMessage(getResources().getString(R.string.alert_internet));
                     }
@@ -434,12 +525,20 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             case R.id.btn_NextR:
                 if (ValidationShipmentReject()) {
                     if (NetworkUtils.getConnectivityStatus(context) != 0) {
-                        goToActivity(UploadPhotoActivity.class, null);
+                        goToActivity(Demo.class, null);
                     } else {
                         showMessage(getResources().getString(R.string.alert_internet));
                     }
                 }
                 break;
+
+//            case R.id.checkbox_remember:
+//                if (checkbox_remember.isChecked()){
+//                    PreferencesManager.getInstance(context).setCheckTick("yes");
+//                }else {
+//                    PreferencesManager.getInstance(context).setCheckTick("no");
+//                }
+//                break;
 
 
         }
@@ -469,6 +568,56 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
 
         datePickerDialog.getDatePicker().setMaxDate(cal.getTimeInMillis());
         datePickerDialog.show();
+    }
+
+
+    // Function to check and request permission.
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(getActivity(), permission)
+                == PackageManager.PERMISSION_DENIED) {
+
+            // Requesting the permission
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{permission},
+                    requestCode);
+        } else {
+            signatureDialog();
+        }
+    }
+
+    // This function is called when the user accepts or decline the permission.
+    // Request Code is used to check which permission called this function.
+    // This request code is provided when the user is prompt for permission.
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                        permissions,
+                        grantResults);
+
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                signatureDialog();
+            } else {
+                Toast.makeText(getActivity(),
+                        "Camera Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                signatureDialog();
+            } else {
+                Toast.makeText(getActivity(),
+                        "Storage Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
     }
 
     @SuppressLint("ResourceAsColor")
@@ -540,7 +689,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
 //                            e.printStackTrace();
 //                        }
                         IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
-                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
+//                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
 
                     }
 
@@ -645,6 +794,23 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
         return true;
     }
 
+    private boolean ValidationCrnShip() {
+        try {
+            crnIDShip_st = crnIDShip_et.getText().toString().trim();
+            PreferencesManager.getInstance(context).setCrnID(crnIDShip_st);
+
+            if (crnIDShip_st.length() == 0) {
+                crnIDShip_st = "";
+                showError("Please enter crn ID", crnIDShip_et);
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
     private boolean Validation() {
         try {
             assetID_st = assedIDEt.getText().toString().trim();
@@ -671,14 +837,22 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             vehicleNumber_st = vehicleNumber.getText().toString();
             vehicleType_st = vehicleType.getText().toString();
             companyName_st = companyName.getText().toString();
+            waybill_st = waybill.getText().toString();
             noOfLogisticsStaff_st = noOfLogisticsStaff.getText().toString();
             noOfBoxes_st = noOfBoxes.getText().toString();
             noOfPallets_st = noOfPallets.getText().toString();
             noOfDevices_st = noOfDevices.getText().toString();
             packageQuality_st = packageQuality.getText().toString();
+            box_seal_st = boxSeal.getText().toString();
             supervisorName_st = supervisorName.getText().toString();
             phone_no_st = phone_no.getText().toString();
             et_message_st = et_message.getText().toString();
+            if (checkbox_remember.isChecked()) {
+                PreferencesManager.getInstance(context).setCheckTick("yes");
+            } else {
+                PreferencesManager.getInstance(context).setCheckTick("no");
+            }
+
 
             PreferencesManager.getInstance(context).setCrnID(edit_search_st);
             PreferencesManager.getInstance(context).setDate(timeDate_st);
@@ -687,11 +861,13 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             PreferencesManager.getInstance(context).setVechileNumber(vehicleNumber_st);
             PreferencesManager.getInstance(context).setVechileType(vehicleType_st);
             PreferencesManager.getInstance(context).setCompanyName(companyName_st);
+            PreferencesManager.getInstance(context).setWAY_BIll(waybill_st);
             PreferencesManager.getInstance(context).setLogistics_Staff(noOfLogisticsStaff_st);
             PreferencesManager.getInstance(context).setNoOfBoxes(noOfBoxes_st);
             PreferencesManager.getInstance(context).setNoOfPallets(noOfPallets_st);
             PreferencesManager.getInstance(context).setNoOfDevices(noOfDevices_st);
             PreferencesManager.getInstance(context).setPackagingQuality(packageQuality_st);
+            PreferencesManager.getInstance(context).setBoxSeal(box_seal_st);
             PreferencesManager.getInstance(context).setSupervisorName(supervisorName_st);
             PreferencesManager.getInstance(context).setPhoneNumber(phone_no_st);
             PreferencesManager.getInstance(context).setMessage(et_message_st);
@@ -771,18 +947,23 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
         try {
             edit_search_st = edit_search.getText().toString();
             timeDate_st = timeDate.getText().toString();
+            time_st = time.getText().toString();
             reason_message_st = reason_message.getText().toString();
             time_st = time.getText().toString();
+            companyName_reject_st = companyName_reject.getText().toString();
 
             PreferencesManager.getInstance(context).setCrnID(edit_search_st);
-            PreferencesManager.getInstance(context).setDate(timeDate_st);
+//            PreferencesManager.getInstance(context).setDate(timeDate_st);
             PreferencesManager.getInstance(context).setReasonMessage(reason_message_st);
+            PreferencesManager.getInstance(context).setCompanyNameReject(companyName_reject_st);
+            PreferencesManager.getInstance(context).setDate(timeDate_st);
+            PreferencesManager.getInstance(context).setTimeship(time_st);
 //
-            if (edit_search_st.length() == 0) {
-                edit_search_st = "";
-                showError("Please enter CRN", edit_search);
-                return false;
-            } else if (timeDate_st.length() == 0) {
+//            if (edit_search_st.length() == 0) {
+//                edit_search_st = "";
+//                showError("Please enter CRN", edit_search);
+//                return false;
+            if (timeDate_st.length() == 0) {
                 timeDate_st = "";
                 showError("Please enter date", timeDate);
                 return false;
@@ -790,11 +971,12 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 time_st = "";
                 showError("Please enter time", time);
                 return false;
-            } else if (reason_message_st.length() == 0) {
-                reason_message_st = "";
-                showError("Please enter reason", timeDate);
-                return false;
             }
+//            } else if (reason_message_st.length() == 0) {
+//                reason_message_st = "";
+//                showError("Please enter reason", timeDate);
+//                return false;
+//            }
 
 
         } catch (Exception e) {

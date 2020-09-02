@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.lang.UCharacter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.developers.imagezipper.ImageZipper;
+import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -47,6 +49,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import de.hdodenhof.circleimageview.CircleImageView;
+import iamutkarshtiwari.github.io.ananas.editimage.EditImageActivity;
+import iamutkarshtiwari.github.io.ananas.editimage.ImageEditorIntentBuilder;
 import id.zelory.compressor.Compressor;
 import model.login.editProfile.EditProfileResponse;
 import model.login.viewProfile.ViewProfileResponse;
@@ -61,7 +65,8 @@ import retrofit2.Response;
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.AUTOMATIC;
 
 
-public class EditProfileActivity extends BaseActivity implements IPickCancel, IPickResult {
+public class EditProfileActivity extends BaseActivity  {
+    private final int PHOTO_EDITOR_REQUEST_CODE = 231;
     @BindView(R.id.title)
     TextView title;
     @BindView(R.id.side_menu)
@@ -76,7 +81,7 @@ public class EditProfileActivity extends BaseActivity implements IPickCancel, IP
     Button save_btn;
     @BindView(R.id.profile_photo_lt)
     RelativeLayout profile_photo_lt;
-    private File Profilefile,ProfileFileCompress;
+    private File Profilefile, ProfileFileCompress;
     private String user_name_st = "", phone_no_st = "";
 
     @Override
@@ -125,78 +130,71 @@ public class EditProfileActivity extends BaseActivity implements IPickCancel, IP
         }
     }
 
-    @Override
-    public void onCancelClick() {
 
-    }
-
-    @Override
-    public void onPickResult(PickResult pickResult) {
-        if (pickResult.getError() == null) {
-            switch (selection) {
-                case PROFILE_IMAGE:
-                    CropImage.activity(pickResult.getUri()).setCropShape(CropImageView.CropShape.RECTANGLE)
-                            .setAspectRatio(1, 1)
-                            .start(context);
-                    break;
-            }
-        } else {
-            Log.e("RESULT", "ERROR = " + pickResult.getError());
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+        File outputFile = FileUtils.getFile(context, data.getData());
+        switch (selection) {
+            case PROFILE_IMAGE:
+                try {
+                    Intent intent = new ImageEditorIntentBuilder(this, data.getData().getPath(), outputFile.getAbsolutePath())
+                            .withRotateFeature()
+                            .withPaintFeature()
+                            .withCropFeature()
+                            .withStickerFeature()
+                            .forcePortrait(true)  // Add this to force portrait mode (It's set to false by default)
+                            .build();
+                    EditImageActivity.start(context, intent, PHOTO_EDITOR_REQUEST_CODE);
+
+                } catch (Exception e) {
+//                    Toast.makeText(this, R.string.iamutkarshtiwari_github_io_ananas_not_selected, Toast.LENGTH_SHORT).show();
+                    Log.e("Demo App", e.getMessage());
+                }
+                break;
+        }
+
+        if (requestCode == PHOTO_EDITOR_REQUEST_CODE) {
+            String newFilePath = data.getStringExtra(ImageEditorIntentBuilder.OUTPUT_PATH);
+            boolean isImageEdit = data.getBooleanExtra(EditImageActivity.IS_IMAGE_EDITED, false);
             switch (selection) {
-                case PROFILE_IMAGE:
-                    if (resultCode == RESULT_OK) {
-                        Profilefile = FileUtils.getFile(context, result.getUri());
-                        Bitmap bitmapImage = BitmapFactory.decodeFile(Profilefile.getAbsolutePath());
-                        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
-                        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
-                        profile_photo.setImageBitmap(scaled);
-                        try {
-                            ProfileFileCompress=new ImageZipper(EditProfileActivity.this)
-                                    .setQuality(90)
-                                    .setMaxWidth(520)
-                                    .setMaxHeight(720)
-                                    .compressToFile(Profilefile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-//                        ProfileFileCompress = Compressor.getDefault(this).compressToFile(Profilefile);
-                    } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                        Exception error = result.getError();
+            case PROFILE_IMAGE:
+                if (resultCode == RESULT_OK) {
+                    File Profilefile = new File(newFilePath);
+//                    Profilefile = FileUtils.getFile(context, result.getUri());
+                    Bitmap bitmapImage = BitmapFactory.decodeFile(Profilefile.getAbsolutePath());
+                    int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
+                    Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
+                    profile_photo.setImageBitmap(scaled);
+                    try {
+                        ProfileFileCompress = new ImageZipper(EditProfileActivity.this)
+                                .setQuality(90)
+                                .setMaxWidth(520)
+                                .setMaxHeight(720)
+                                .compressToFile(Profilefile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    break;
-            }
+//                        ProfileFileCompress = Compressor.getDefault(this).compressToFile(Profilefile);
+                } else if (resultCode == PHOTO_EDITOR_REQUEST_CODE) {
+                }
+                break;
         }
     }
+}
 
-    /*Selection Images*/
-    private enum SELECTION {
-        PROFILE_IMAGE
-    }
+/*Selection Images*/
+private enum SELECTION {
+    PROFILE_IMAGE
+}
 
     private SELECTION selection;
     private PickImageDialog dialog;
 
     void showDialog() {
-        PickSetup pickSetup = new PickSetup();
-        switch (selection) {
-            case PROFILE_IMAGE:
-                pickSetup.setTitle("Choose Profile Image");
-                break;
-        }
-        pickSetup.setGalleryIcon(com.vansuita.pickimage.R.mipmap.gallery_colored);
-        pickSetup.setCameraIcon(com.vansuita.pickimage.R.mipmap.camera_colored);
-        pickSetup.setCancelTextColor(R.color.colorAccent);
-        dialog = PickImageDialog.build(pickSetup);
-        dialog.setOnPickCancel(this);
-        dialog.show(this);
+        ImagePicker.Companion.with(this)
+                .start();
 
     }
 

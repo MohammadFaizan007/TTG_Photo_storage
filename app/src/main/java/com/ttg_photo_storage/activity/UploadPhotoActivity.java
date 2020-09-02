@@ -28,6 +28,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.bumptech.glide.Glide;
 import com.developers.imagezipper.ImageZipper;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.theartofdev.edmodo.cropper.CropImage;
 import com.ttg_photo_storage.R;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
@@ -38,6 +39,7 @@ import com.ttg_photo_storage.utils.Utils;
 import com.vansuita.pickimage.bean.PickResult;
 import com.vansuita.pickimage.bundle.PickSetup;
 import com.vansuita.pickimage.dialog.PickImageDialog;
+import com.vansuita.pickimage.enums.EPickType;
 import com.vansuita.pickimage.listeners.IPickCancel;
 import com.vansuita.pickimage.listeners.IPickResult;
 
@@ -148,21 +150,17 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
     EditText des_fourteen;
     @BindView(R.id.des_fifteen)
     EditText des_fifteen;
-
     @BindView(R.id.cardThirteen)
     ConstraintLayout cardThirteen;
     @BindView(R.id.cardFourteen)
     ConstraintLayout cardFourteen;
     @BindView(R.id.cardFifteen)
     ConstraintLayout cardFifteen;
-
-
     Unbinder unbinder;
     ArrayList<FilesAcceptedItem> list = new ArrayList<FilesAcceptedItem>();
     ProgressDialog pd;
     Bitmap alteredBitmap;
     private final int PHOTO_EDITOR_REQUEST_CODE = 231;
-
 
 
     private String desc1_st = "";
@@ -198,8 +196,15 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
     private File IMAGE_FIFTEENFile;
     private File SignatureFile;
     long time;
-    String formattedDate,dateStr ;
+    String formattedDate, dateStr;
     PhotoEditor mPhotoEditor;
+
+    private String imageOne_pic = "";
+    private String imageTwo_pic = "";
+    private String imageThree_pic = "";
+    private String imageFour_pic = "";
+    private String imageFive_pic = "";
+    private String imageSix_pic = "";
 
     private void showProgressDialog() {
         pd = new ProgressDialog(context);
@@ -218,13 +223,18 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_photo);
         ButterKnife.bind(this);
-        if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")){
+        if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
             title.setText("Upload Photo");
-        }else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")){
+        } else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
             title.setText("Add Shipment Image");
         }
-//        title.setText("Upload Photo");
-        String sourceString = "<u>"+"<b>" + "CRN:  " + "</b> " + PreferencesManager.getInstance(context).getCrnID()+"</u>";
+        if (getIntent().getStringExtra("imageSignature") != null) {
+            String signature_path = getIntent().getStringExtra("imageSignature");
+            SignatureFile = new File(signature_path);
+        } else {
+
+        }
+        String sourceString = "<u>" + "<b>" + "CRN:  " + "</b> " + PreferencesManager.getInstance(context).getCrnID() + "</u>";
         crnID.setText(Html.fromHtml(sourceString));
         String sourceString2 = "<b>" + "Asset ID:  " + "</b> " + PreferencesManager.getInstance(context).getUid();
         assedId.setText(Html.fromHtml(sourceString2));
@@ -244,16 +254,12 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             assedId.setVisibility(View.VISIBLE);
 
         }
-        SignatureFile = new File(PreferencesManager.getInstance(context).getSignatureImage());
+
         SimpleDateFormat curFormater = new SimpleDateFormat("yyyy/MM/dd");
-         dateStr = curFormater.format(new Date());
+        dateStr = curFormater.format(new Date());
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         formattedDate = sdf.format(cal.getTime());
-//        Log.e("LastTime>>>>>>>>>>>>",dateStr+"=="+formattedDate);
-//        Log.e("LastTimeback>>>>>>>>>>>>", PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
-
-
 
 
     }
@@ -299,7 +305,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View mView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image = (TextView) mView.findViewById(R.id.upload_image);
                 TextView view_image = (TextView) mView.findViewById(R.id.view_image);
-                TextView edit_image = (TextView) mView.findViewById(R.id.edit_image);
                 TextView remove_image = (TextView) mView.findViewById(R.id.remove_image);
                 alert.setView(mView);
                 final AlertDialog alertDialog = alert.create();
@@ -315,13 +320,11 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 });
                 if (IMAGE_ONEfile == null) {
                     view_image.setVisibility(View.GONE);
-//                    edit_image.setVisibility(View.GONE);
                     remove_image.setVisibility(View.GONE);
 
                 } else {
                     view_image.setVisibility(View.VISIBLE);
                     remove_image.setVisibility(View.VISIBLE);
-//                    edit_image.setVisibility(View.VISIBLE);
                 }
 //
 
@@ -336,7 +339,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         photoView.setImageBitmap(scaled);
-//                        Glide.with(context).load(scaled).into(photoView);
                         mBuilder.setView(mView);
                         AlertDialog mDialog = mBuilder.create();
                         mDialog.show();
@@ -382,10 +384,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View fView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image2 = (TextView) fView.findViewById(R.id.upload_image);
                 TextView view_image2 = (TextView) fView.findViewById(R.id.view_image);
-
-                TextView edit_image2 = (TextView) fView.findViewById(R.id.edit_image);
                 TextView remove_image2 = (TextView) fView.findViewById(R.id.remove_image);
-
                 alertsecond.setView(fView);
                 final AlertDialog alertDialog2 = alertsecond.create();
                 alertDialog2.setCanceledOnTouchOutside(true);
@@ -417,10 +416,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         photoView.setImageBitmap(scaled);
-//                        Glide.with(context).load(scaled).into(photoView);
-//                        Bitmap bitmap = Utils.getCompressedBitmap(IMAGE_TWOFile.getAbsolutePath());
-//                        photoView.setImageBitmap(bitmap);
-//                        Glide.with(context).load(bitmap).into(photoView);
                         mBuilder.setView(mView);
                         AlertDialog mDialog = mBuilder.create();
                         mDialog.show();
@@ -463,7 +458,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View hView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image3 = (TextView) hView.findViewById(R.id.upload_image);
                 TextView view_image3 = (TextView) hView.findViewById(R.id.view_image);
-                TextView edit_image3 = (TextView) hView.findViewById(R.id.edit_image);
                 TextView remove_image3 = (TextView) hView.findViewById(R.id.remove_image);
                 alert3.setView(hView);
                 final AlertDialog alertDialog3 = alert3.create();
@@ -540,7 +534,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View kView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image4 = (TextView) kView.findViewById(R.id.upload_image);
                 TextView view_image4 = (TextView) kView.findViewById(R.id.view_image);
-                TextView edit_image4 = (TextView) kView.findViewById(R.id.edit_image);
                 TextView remove_image4 = (TextView) kView.findViewById(R.id.remove_image);
                 alert4.setView(kView);
                 final AlertDialog alertDialog4 = alert4.create();
@@ -618,7 +611,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View pView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image5 = (TextView) pView.findViewById(R.id.upload_image);
                 TextView view_image5 = (TextView) pView.findViewById(R.id.view_image);
-                TextView edit_image5 = (TextView) pView.findViewById(R.id.edit_image);
                 TextView remove_image5 = (TextView) pView.findViewById(R.id.remove_image);
                 alert5.setView(pView);
                 final AlertDialog alertDialog5 = alert5.create();
@@ -651,7 +643,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         photoView.setImageBitmap(scaled);
-//                        Glide.with(context).load(scaled).into(photoView);
 
                         mBuilder.setView(mView);
                         AlertDialog mDialog = mBuilder.create();
@@ -695,7 +686,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View zView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image6 = (TextView) zView.findViewById(R.id.upload_image);
                 TextView view_image6 = (TextView) zView.findViewById(R.id.view_image);
-                TextView edit_image6 = (TextView) zView.findViewById(R.id.edit_image);
                 TextView remove_image6 = (TextView) zView.findViewById(R.id.remove_image);
                 alert6.setView(zView);
                 final AlertDialog alertDialog6 = alert6.create();
@@ -774,7 +764,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View seveenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image7 = (TextView) seveenView.findViewById(R.id.upload_image);
                 TextView view_image7 = (TextView) seveenView.findViewById(R.id.view_image);
-                TextView edit_image7 = (TextView) seveenView.findViewById(R.id.edit_image);
                 TextView remove_image7 = (TextView) seveenView.findViewById(R.id.remove_image);
                 alert7.setView(seveenView);
                 final AlertDialog alertDialog7 = alert7.create();
@@ -854,7 +843,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View eightView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image8 = (TextView) eightView.findViewById(R.id.upload_image);
                 TextView view_image8 = (TextView) eightView.findViewById(R.id.view_image);
-                TextView edit_image8 = (TextView) eightView.findViewById(R.id.edit_image);
                 TextView remove_image8 = (TextView) eightView.findViewById(R.id.remove_image);
                 alert8.setView(eightView);
                 final AlertDialog alertDialog8 = alert8.create();
@@ -934,7 +922,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View nineView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image9 = (TextView) nineView.findViewById(R.id.upload_image);
                 TextView view_image9 = (TextView) nineView.findViewById(R.id.view_image);
-                TextView edit_image9 = (TextView) nineView.findViewById(R.id.edit_image);
                 TextView remove_image9 = (TextView) nineView.findViewById(R.id.remove_image);
                 alert9.setView(nineView);
                 final AlertDialog alertDialog9 = alert9.create();
@@ -1014,7 +1001,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View tenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image10 = (TextView) tenView.findViewById(R.id.upload_image);
                 TextView view_image10 = (TextView) tenView.findViewById(R.id.view_image);
-                TextView edit_image10 = (TextView) tenView.findViewById(R.id.edit_image);
                 TextView remove_image10 = (TextView) tenView.findViewById(R.id.remove_image);
                 alert10.setView(tenView);
                 final AlertDialog alertDialog10 = alert10.create();
@@ -1094,7 +1080,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View elevenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image11 = (TextView) elevenView.findViewById(R.id.upload_image);
                 TextView view_image11 = (TextView) elevenView.findViewById(R.id.view_image);
-                TextView edit_image11 = (TextView) elevenView.findViewById(R.id.edit_image);
                 TextView remove_image11 = (TextView) elevenView.findViewById(R.id.remove_image);
                 alert11.setView(elevenView);
                 final AlertDialog alertDialog11 = alert11.create();
@@ -1174,7 +1159,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View twelveView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image12 = (TextView) twelveView.findViewById(R.id.upload_image);
                 TextView view_image12 = (TextView) twelveView.findViewById(R.id.view_image);
-                TextView edit_image12 = (TextView) twelveView.findViewById(R.id.edit_image);
                 TextView remove_image12 = (TextView) twelveView.findViewById(R.id.remove_image);
                 alert12.setView(twelveView);
                 final AlertDialog alertDialog12 = alert12.create();
@@ -1253,7 +1237,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View thirteenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image13 = (TextView) thirteenView.findViewById(R.id.upload_image);
                 TextView view_image13 = (TextView) thirteenView.findViewById(R.id.view_image);
-                TextView edit_image13 = (TextView) thirteenView.findViewById(R.id.edit_image);
                 TextView remove_image13 = (TextView) thirteenView.findViewById(R.id.remove_image);
                 alert13.setView(thirteenView);
                 final AlertDialog alertDialog13 = alert13.create();
@@ -1332,7 +1315,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View fourteenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image14 = (TextView) fourteenView.findViewById(R.id.upload_image);
                 TextView view_image14 = (TextView) fourteenView.findViewById(R.id.view_image);
-                TextView edit_image14 = (TextView) fourteenView.findViewById(R.id.edit_image);
                 TextView remove_image14 = (TextView) fourteenView.findViewById(R.id.remove_image);
                 alert14.setView(fourteenView);
                 final AlertDialog alertDialog14 = alert14.create();
@@ -1409,7 +1391,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 View fifteenView = getLayoutInflater().inflate(R.layout.custom_dialog_photo, null);
                 TextView upload_image15 = (TextView) fifteenView.findViewById(R.id.upload_image);
                 TextView view_image15 = (TextView) fifteenView.findViewById(R.id.view_image);
-                TextView edit_image15 = (TextView) fifteenView.findViewById(R.id.edit_image);
                 TextView remove_image15 = (TextView) fifteenView.findViewById(R.id.remove_image);
                 alert15.setView(fifteenView);
                 final AlertDialog alertDialog15 = alert15.create();
@@ -1485,7 +1466,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             case R.id.btn_submit:
                 if (Validation()) {
                     if (NetworkUtils.getConnectivityStatus(context) != 0) {
-                        getPhotoUpload();
+//                        getPhotoUpload();
                     } else {
                         showMessage(getResources().getString(R.string.alert_internet));
                     }
@@ -1494,14 +1475,11 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             case R.id.btn_submitShipment:
                 if (ValidationShip()) {
                     if (NetworkUtils.getConnectivityStatus(context) != 0) {
-                        if(PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("no")) {
+                        if (PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("no")) {
                             getShipUpload();
-                            Log.i("REjected======>>>",PreferencesManager.getInstance(context).getAccept());
-                        }else if (PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("yes")) {
-                            Log.i("REjected======>>>",PreferencesManager.getInstance(context).getAccept());
-                            getShipUploadReject();
+                        } else if (PreferencesManager.getInstance(context).getAccept().equalsIgnoreCase("yes")) {
+//                            getShipUploadReject();
                         }
-//                        getShipUpload();
                     } else {
                         showMessage(getResources().getString(R.string.alert_internet));
                     }
@@ -1544,7 +1522,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                                 .withRotateFeature()
                                 .withPaintFeature()
 //                                .withFilterFeature()
-//
                                 .withCropFeature()
 //                                .withBrightnessFeature()
 //                                .withSaturationFeature()
@@ -1574,13 +1551,13 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             switch (selection) {
                 case IMAGE_ONE:
                     if (resultCode == RESULT_OK) {
-                        File fileONE  = new File(newFilePath);
+                        File fileONE = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileONE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageOne.setImageBitmap(scaled);
                         try {
-                            IMAGE_ONEfile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_ONEfile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1588,9 +1565,13 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        imageOne_pic = "Image_one";
+
+                    } else if (resultCode == PHOTO_EDITOR_REQUEST_CODE) {
+//                        Exception error = newFilePath.getError();
+                    }
 //                        IMAGE_ONEfile = Compressor.getDefault(context).compressToFile(fileONE);
 
-                    }
                     break;
                 case IMAGE_TWO:
                     if (resultCode == RESULT_OK) {
@@ -1600,7 +1581,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSecond.setImageBitmap(scaled);
                         try {
-                            IMAGE_TWOFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_TWOFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1608,6 +1589,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        imageTwo_pic = "Image_two";
 //                        IMAGE_TWOFile = Compressor.getDefault(context).compressToFile(fileTWO);
                     }
                     break;
@@ -1619,7 +1601,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageThird.setImageBitmap(scaled);
                         try {
-                            IMAGE_THREEFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_THREEFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1627,19 +1609,18 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_THREEFile = Compressor.getDefault(context).compressToFile(fileTHREE);
-
+                        imageThree_pic = "Image_Three";
                     }
                     break;
                 case IMAGE_FOUR:
                     if (resultCode == RESULT_OK) {
-                        File fileFOUR  = new File(newFilePath);
+                        File fileFOUR = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileFOUR.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFourth.setImageBitmap(scaled);
                         try {
-                            IMAGE_FOURFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_FOURFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1647,19 +1628,19 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_FOURFile = Compressor.getDefault(context).compressToFile(fileFOUR);
+                        imageFour_pic = "Image_Four";
 
                     }
                     break;
                 case IMAGE_FIVE:
                     if (resultCode == RESULT_OK) {
-                        File fileFIVE  = new File(newFilePath);
+                        File fileFIVE = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileFIVE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFive.setImageBitmap(scaled);
                         try {
-                            IMAGE_FIVEFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_FIVEFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1667,7 +1648,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_FIVEFile = Compressor.getDefault(context).compressToFile(fileFIVE);
+                        imageFour_pic = "Image_Five";
                     }
                     break;
                 case IMAGE_SIX:
@@ -1678,7 +1659,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSix.setImageBitmap(scaled);
                         try {
-                            IMAGE_SIXFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_SIXFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1686,7 +1667,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_SIXFile = Compressor.getDefault(context).compressToFile(fileSIX);
                     }
                     break;
                 case IMAGE_SEVEN:
@@ -1697,7 +1677,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageSeven.setImageBitmap(scaled);
                         try {
-                            IMAGE_SEVENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_SEVENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1705,18 +1685,17 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_SEVENFile = Compressor.getDefault(context).compressToFile(fileSEVEN);
                     }
                     break;
                 case IMAGE_EIGHT:
                     if (resultCode == RESULT_OK) {
-                        File fileEIGHT  = new File(newFilePath);
+                        File fileEIGHT = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileEIGHT.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageEight.setImageBitmap(scaled);
                         try {
-                            IMAGE_EIGHTFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_EIGHTFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1724,18 +1703,17 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_EIGHTFile = Compressor.getDefault(context).compressToFile(fileEIGHT);
                     }
                     break;
                 case IMAGE_NINE:
                     if (resultCode == RESULT_OK) {
-                        File fileNINE  = new File(newFilePath);
+                        File fileNINE = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileNINE.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageNine.setImageBitmap(scaled);
                         try {
-                            IMAGE_NINEFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_NINEFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1743,19 +1721,18 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_NINEFile = Compressor.getDefault(context).compressToFile(fileNINE);
                     }
                     break;
 //
                 case IMAGE_TEN:
                     if (resultCode == RESULT_OK) {
-                        File fileTEN= new File(newFilePath);
+                        File fileTEN = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileTEN.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageTen.setImageBitmap(scaled);
                         try {
-                            IMAGE_TENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_TENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1763,18 +1740,17 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_TENFile = Compressor.getDefault(context).compressToFile(fileTEN);
                     }
                     break;
                 case IMAGE_ELEVEN:
                     if (resultCode == RESULT_OK) {
-                        File fileELEVEN  = new File(newFilePath);
+                        File fileELEVEN = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileELEVEN.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageEleven.setImageBitmap(scaled);
                         try {
-                            IMAGE_ELEVENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_ELEVENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1782,7 +1758,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_ELEVENFile = Compressor.getDefault(context).compressToFile(fileELEVEN);
                     }
                     break;
 //
@@ -1794,7 +1769,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageTwele.setImageBitmap(scaled);
                         try {
-                            IMAGE_TWELEFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_TWELEFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1802,7 +1777,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_TWELEFile = Compressor.getDefault(context).compressToFile(fileTWELE);
                     }
                     break;
 
@@ -1814,7 +1788,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageThirteen.setImageBitmap(scaled);
                         try {
-                            IMAGE_THIRTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_THIRTEENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1822,19 +1796,18 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_THIRTEENFile = Compressor.getDefault(context).compressToFile(fileThirteen);
 
                     }
                     break;
                 case IMAGE_FOURTEEN:
                     if (resultCode == RESULT_OK) {
-                        File fileFourteen   = new File(newFilePath);
+                        File fileFourteen = new File(newFilePath);
                         Bitmap bitmapImage = BitmapFactory.decodeFile(fileFourteen.getAbsolutePath());
                         int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFourteen.setImageBitmap(scaled);
                         try {
-                            IMAGE_FOURTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_FOURTEENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1842,7 +1815,6 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_FOURTEENFile = Compressor.getDefault(context).compressToFile(fileFourteen);
                     }
                     break;
 
@@ -1854,7 +1826,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
                         imageFifteen.setImageBitmap(scaled);
                         try {
-                            IMAGE_FIFTEENFile=new ImageZipper(UploadPhotoActivity.this)
+                            IMAGE_FIFTEENFile = new ImageZipper(UploadPhotoActivity.this)
                                     .setQuality(90)
                                     .setMaxWidth(520)
                                     .setMaxHeight(720)
@@ -1862,13 +1834,11 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-//                        IMAGE_FIFTEENFile = Compressor.getDefault(context).compressToFile(fileFifteen);
                     }
                     break;
             }
         }
     }
-
 
 
     /*Selection Images*/
@@ -1932,154 +1902,156 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
         pickSetup.setGalleryIcon(com.vansuita.pickimage.R.mipmap.gallery_colored);
         pickSetup.setCameraIcon(com.vansuita.pickimage.R.mipmap.camera_colored);
         pickSetup.setCancelTextColor(R.color.colorAccent);
+//        pickSetup.setFlip(false);
+//        pickSetup.setPickTypes(EPickType.GALLERY, EPickType.CAMERA);
         dialog = PickImageDialog.build(pickSetup);
         dialog.setOnPickCancel(this);
-        dialog.show(this);
+        dialog.show(UploadPhotoActivity.this);
 
     }
 
 
-    public void getPhotoUpload() {
-        try {
-            showProgressDialog();
-            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
-            RequestBody addpost = RequestBody.create(MediaType.parse("text/plain"), "addpost");
-            RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "details");
-
-            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
-                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null;
-            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
-                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null;
-
-            if (IMAGE_ONEfile != null) {
-                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
-                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
-                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
-            }
-            if (IMAGE_TWOFile != null) {
-                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
-                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
-                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
-            }
-            if (IMAGE_THREEFile != null) {
-                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
-                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
-                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
-            }
-            if (IMAGE_FOURFile != null) {
-                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
-                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
-                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
-            }
-            if (IMAGE_FIVEFile != null) {
-                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
-                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
-                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
-            }
-            if (IMAGE_SIXFile != null) {
-                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
-                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
-                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
-            }
-
-            if (IMAGE_SEVENFile != null) {
-                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
-                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
-                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
-            }
-
-            if (IMAGE_EIGHTFile != null) {
-                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
-                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
-                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
-            }
-
-            if (IMAGE_NINEFile != null) {
-                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
-                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
-                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
-            }
-
-            if (IMAGE_TENFile != null) {
-                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
-                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
-                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
-            }
-
-            if (IMAGE_ELEVENFile != null) {
-                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
-                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
-                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
-            }
-
-            if (IMAGE_TWELEFile != null) {
-                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
-                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
-                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
-            }
-            RequestBody uid = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getUid());
-            RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
-            Log.i("token>>>", token.toString());
-            Log.i("addpost>>", addpost.toString());
-            Log.i("description>>", description.toString());
-
-
-            Call<UploadPhotoResponse> photoCall = apiServices.UploadFile6(token
-                    , addpost, description,
-                    body, body2, body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, desc1, desc2, desc3, desc4,
-                    desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12,
-                    uid, crn);
-
-            photoCall.enqueue(new Callback<UploadPhotoResponse>() {
-                @Override
-                public void onResponse(Call<UploadPhotoResponse> call, Response<UploadPhotoResponse> response) {
-//                    hideLoading();
-                    pd.dismiss();
-                    LoggerUtil.logItem(response.body());
-                    if (response.body().getStatus().equalsIgnoreCase("success")) {
-                        PreferencesManager.getInstance(context).setFileDesc(response.body().getFilesDesc());
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
-                        ViewGroup viewGroup = findViewById(android.R.id.content);
-                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
-                        builder.setView(dialogView);
-                        TextView heading = dialogView.findViewById(R.id.heading);
-                        TextView body = dialogView.findViewById(R.id.body);
-                        TextView ok = dialogView.findViewById(R.id.buttonOk);
-                        heading.setText(R.string.dialog_heading);
-                        body.setText(R.string.ship_success);
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.setCanceledOnTouchOutside(false);
-                        alertDialog.show();
-                        ok.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                alertDialog.dismiss();
-                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
-                            }
-                        });
-
-
-                    } else {
-                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
-
-                }
-            });
-
-
-        } catch (
-                Exception e) {
-            showMessage("Something went wrong please check token");
-            e.printStackTrace();
-        }
-
-    }
+//    public void getPhotoUpload() {
+//        try {
+//            showProgressDialog();
+//            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
+//            RequestBody addpost = RequestBody.create(MediaType.parse("text/plain"), "addpost");
+//            RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "details");
+//
+//            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
+//                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null;
+//            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
+//                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null;
+//
+//            if (IMAGE_ONEfile != null) {
+//                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
+//                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
+//                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
+//            }
+//            if (IMAGE_TWOFile != null) {
+//                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
+//                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
+//                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
+//            }
+//            if (IMAGE_THREEFile != null) {
+//                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
+//                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
+//                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
+//            }
+//            if (IMAGE_FOURFile != null) {
+//                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
+//                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
+//                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
+//            }
+//            if (IMAGE_FIVEFile != null) {
+//                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
+//                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
+//                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
+//            }
+//            if (IMAGE_SIXFile != null) {
+//                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
+//                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
+//                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
+//            }
+//
+//            if (IMAGE_SEVENFile != null) {
+//                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
+//                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
+//                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
+//            }
+//
+//            if (IMAGE_EIGHTFile != null) {
+//                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
+//                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
+//                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
+//            }
+//
+//            if (IMAGE_NINEFile != null) {
+//                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
+//                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
+//                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
+//            }
+//
+//            if (IMAGE_TENFile != null) {
+//                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
+//                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
+//                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
+//            }
+//
+//            if (IMAGE_ELEVENFile != null) {
+//                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
+//                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
+//                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
+//            }
+//
+//            if (IMAGE_TWELEFile != null) {
+//                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
+//                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
+//                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
+//            }
+//            RequestBody uid = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getUid());
+//            RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
+//            Log.i("token>>>", token.toString());
+//            Log.i("addpost>>", addpost.toString());
+//            Log.i("description>>", description.toString());
+//
+//
+//            Call<UploadPhotoResponse> photoCall = apiServices.UploadFile6(token
+//                    , addpost, description,
+//                    body, body2, body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, desc1, desc2, desc3, desc4,
+//                    desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12,
+//                    uid, crn);
+//
+//            photoCall.enqueue(new Callback<UploadPhotoResponse>() {
+//                @Override
+//                public void onResponse(Call<UploadPhotoResponse> call, Response<UploadPhotoResponse> response) {
+////                    hideLoading();
+//                    pd.dismiss();
+//                    LoggerUtil.logItem(response.body());
+//                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+//                        PreferencesManager.getInstance(context).setFileDesc(response.body().getFilesDesc());
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
+//                        ViewGroup viewGroup = findViewById(android.R.id.content);
+//                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+//                        builder.setView(dialogView);
+//                        TextView heading = dialogView.findViewById(R.id.heading);
+//                        TextView body = dialogView.findViewById(R.id.body);
+//                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+//                        heading.setText(R.string.dialog_heading);
+//                        body.setText(R.string.dialog_success);
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.setCanceledOnTouchOutside(false);
+//                        alertDialog.show();
+//                        ok.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                alertDialog.dismiss();
+//                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
+//                            }
+//                        });
+//
+//
+//                    } else {
+//                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+//                    }
+//
+//                }
+//
+//                @Override
+//                public void onFailure(Call<UploadPhotoResponse> call, Throwable t) {
+//
+//                }
+//            });
+//
+//
+//        } catch (
+//                Exception e) {
+//            showMessage("Something went wrong please check token");
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     public void getShipUpload() {
         try {
@@ -2088,6 +2060,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
             RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
             RequestBody description = RequestBody.create(MediaType.parse("text/plain"), "");
+            RequestBody declr_tick = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCheckTick());
             MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
                     body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null, signatureBody = null;
             RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
@@ -2175,8 +2148,8 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                 desc15 = RequestBody.create(MediaType.parse("desc15"), desc15_st);
                 body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
             }
-            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " "+formattedDate);
-            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
+            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " " + formattedDate);
+            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() + " " + PreferencesManager.getInstance(context).getTimeship());
             RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCompanyName());
             RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getVechileType());
             RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
@@ -2197,13 +2170,15 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
             RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getNoOfVechile());
             RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getPhoneNumber());
             RequestBody is_reject = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getAccept());
+            RequestBody box_seal = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getBoxSeal());
+            RequestBody eWayBil = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getWAY_BIll());
 
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", action.toString());
-            Call<ShipUploadResponse> photocall = apiServices.ShipUpload(token, action, crn,description, body, body2
+            Call<ShipUploadResponse> photocall = apiServices.ShipUpload(token, action, crn, description, declr_tick, body, body2
                     , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
                     , input_time, ship_time, logistic_company, vahicle_type, vahicle_container, vahicle_number, box_condition, supervisor_name, signatureBody, note,
-                    no_of_staff, no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject);
+                    no_of_staff, no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject,box_seal,eWayBil);
             photocall.enqueue(new Callback<ShipUploadResponse>() {
                 @Override
                 public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
@@ -2255,178 +2230,178 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
 
     }
 
-    public void getShipUploadReject() {
-        try {
-            showProgressDialog();
-            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
-            RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
-            RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
-
-            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
-                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null, signatureBody = null;
-            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
-                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13 = null, desc14 = null, desc15 = null;
-
-            if (IMAGE_ONEfile != null) {
-                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
-                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
-                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
-            }
-            if (IMAGE_TWOFile != null) {
-                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
-                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
-                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
-            }
-            if (IMAGE_THREEFile != null) {
-                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
-                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
-                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
-            }
-            if (IMAGE_FOURFile != null) {
-                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
-                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
-                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
-            }
-            if (IMAGE_FIVEFile != null) {
-                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
-                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
-                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
-            }
-            if (IMAGE_SIXFile != null) {
-                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
-                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
-                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
-            }
-
-            if (IMAGE_SEVENFile != null) {
-                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
-                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
-                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
-            }
-
-            if (IMAGE_EIGHTFile != null) {
-                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
-                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
-                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
-            }
-
-            if (IMAGE_NINEFile != null) {
-                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
-                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
-                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
-            }
-
-            if (IMAGE_TENFile != null) {
-                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
-                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
-                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
-            }
-
-            if (IMAGE_ELEVENFile != null) {
-                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
-                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
-                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
-            }
-
-            if (IMAGE_TWELEFile != null) {
-                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
-                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
-                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
-            }
-            if (IMAGE_THIRTEENFile != null) {
-                RequestBody requestBody13 = RequestBody.create(MediaType.parse("file13/*"), IMAGE_THIRTEENFile);
-                desc13 = RequestBody.create(MediaType.parse("desc13"), desc13_st);
-                body13 = MultipartBody.Part.createFormData("file13", IMAGE_THIRTEENFile.getName(), requestBody13);
-            }
-
-            if (IMAGE_FOURTEENFile != null) {
-                RequestBody requestBody14 = RequestBody.create(MediaType.parse("file14/*"), IMAGE_FOURTEENFile);
-                desc14 = RequestBody.create(MediaType.parse("desc14"), desc14_st);
-                body14 = MultipartBody.Part.createFormData("file14", IMAGE_FOURTEENFile.getName(), requestBody14);
-            }
-            if (IMAGE_FIFTEENFile != null) {
-                RequestBody requestBody15 = RequestBody.create(MediaType.parse("file15/*"), IMAGE_FIFTEENFile);
-                desc15 = RequestBody.create(MediaType.parse("desc15"), desc15_st);
-                body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
-            }
-
-            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " "+formattedDate);
-            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() +" "+ PreferencesManager.getInstance(context).getTimeship());
-            RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody vahicle_number = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody box_condition = RequestBody.create(MediaType.parse("text/plain"),"");
-            RequestBody supervisor_name = RequestBody.create(MediaType.parse("text/plain"),"");
-//            if (SignatureFile != null) {
-//                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), SignatureFile);
-//                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", SignatureFile.getName(), requestBodySignature);
+//    public void getShipUploadReject() {
+//        try {
+//            showProgressDialog();
+//            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
+//            RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
+//            RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
 //
+//            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
+//                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null, signatureBody = null;
+//            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
+//                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13 = null, desc14 = null, desc15 = null;
+//
+//            if (IMAGE_ONEfile != null) {
+//                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
+//                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
+//                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
 //            }
-
-            RequestBody note = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getReasonMessage());
-            RequestBody no_of_box = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody no_of_pallets = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody no_of_devices = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), "");
-            RequestBody is_reject = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getAccept());
-
-            Log.i("token>>>", token.toString());
-            Log.i("addpost>>", action.toString());
-            Call<ShipUploadResponse> photocall = apiServices.ShipUploadResject(token, action, crn, body, body2
-                    , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
-                    , input_time, ship_time, logistic_company, vahicle_type, vahicle_container, vahicle_number, box_condition, supervisor_name, note,
-                    no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject);
-            photocall.enqueue(new Callback<ShipUploadResponse>() {
-                @Override
-                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
-                    pd.dismiss();
-                    LoggerUtil.logItem(response.body());
-                    if (response.body().getStatus().equalsIgnoreCase("success")) {
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
-                        ViewGroup viewGroup = findViewById(android.R.id.content);
-                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
-                        builder.setView(dialogView);
-                        TextView heading = dialogView.findViewById(R.id.heading);
-                        TextView body = dialogView.findViewById(R.id.body);
-                        TextView ok = dialogView.findViewById(R.id.buttonOk);
-                        heading.setText(R.string.dialog_heading);
-                        body.setText(R.string.dialog_success);
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.setCanceledOnTouchOutside(false);
-                        alertDialog.show();
-                        ok.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                alertDialog.dismiss();
-                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
-                            }
-                        });
-
-
-                    } else {
-                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
-                    }
-
-                }
-
-
-                @Override
-                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
-
-                }
-            });
-
-
-        } catch (
-                Exception e) {
-            showMessage("Something went wrong please check token");
-            e.printStackTrace();
-        }
-
-    }
+//            if (IMAGE_TWOFile != null) {
+//                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
+//                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
+//                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
+//            }
+//            if (IMAGE_THREEFile != null) {
+//                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
+//                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
+//                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
+//            }
+//            if (IMAGE_FOURFile != null) {
+//                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
+//                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
+//                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
+//            }
+//            if (IMAGE_FIVEFile != null) {
+//                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
+//                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
+//                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
+//            }
+//            if (IMAGE_SIXFile != null) {
+//                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
+//                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
+//                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
+//            }
+//
+//            if (IMAGE_SEVENFile != null) {
+//                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
+//                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
+//                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
+//            }
+//
+//            if (IMAGE_EIGHTFile != null) {
+//                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
+//                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
+//                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
+//            }
+//
+//            if (IMAGE_NINEFile != null) {
+//                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
+//                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
+//                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
+//            }
+//
+//            if (IMAGE_TENFile != null) {
+//                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
+//                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
+//                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
+//            }
+//
+//            if (IMAGE_ELEVENFile != null) {
+//                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
+//                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
+//                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
+//            }
+//
+//            if (IMAGE_TWELEFile != null) {
+//                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
+//                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
+//                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
+//            }
+//            if (IMAGE_THIRTEENFile != null) {
+//                RequestBody requestBody13 = RequestBody.create(MediaType.parse("file13/*"), IMAGE_THIRTEENFile);
+//                desc13 = RequestBody.create(MediaType.parse("desc13"), desc13_st);
+//                body13 = MultipartBody.Part.createFormData("file13", IMAGE_THIRTEENFile.getName(), requestBody13);
+//            }
+//
+//            if (IMAGE_FOURTEENFile != null) {
+//                RequestBody requestBody14 = RequestBody.create(MediaType.parse("file14/*"), IMAGE_FOURTEENFile);
+//                desc14 = RequestBody.create(MediaType.parse("desc14"), desc14_st);
+//                body14 = MultipartBody.Part.createFormData("file14", IMAGE_FOURTEENFile.getName(), requestBody14);
+//            }
+//            if (IMAGE_FIFTEENFile != null) {
+//                RequestBody requestBody15 = RequestBody.create(MediaType.parse("file15/*"), IMAGE_FIFTEENFile);
+//                desc15 = RequestBody.create(MediaType.parse("desc15"), desc15_st);
+//                body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
+//            }
+//
+//            RequestBody input_time = RequestBody.create(MediaType.parse("text/plain"), dateStr + " " + formattedDate);
+//            RequestBody ship_time = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getDate() + " " + PreferencesManager.getInstance(context).getTimeship());
+//            RequestBody logistic_company = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCompanyNameReject());
+//            RequestBody vahicle_type = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody vahicle_container = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody vahicle_number = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody box_condition = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody supervisor_name = RequestBody.create(MediaType.parse("text/plain"), "");
+////            if (SignatureFile != null) {
+////                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), SignatureFile);
+////                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", SignatureFile.getName(), requestBodySignature);
+////
+////            }
+//
+//            RequestBody note = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getReasonMessage());
+//            RequestBody no_of_box = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody no_of_pallets = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody no_of_devices = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody no_of_vahicle = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody supervisor_ph_no = RequestBody.create(MediaType.parse("text/plain"), "");
+//            RequestBody is_reject = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getAccept());
+//
+//            Log.i("token>>>", token.toString());
+//            Log.i("addpost>>", action.toString());
+//            Call<ShipUploadResponse> photocall = apiServices.ShipUploadResject(token, action, crn, body, body2
+//                    , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
+//                    , input_time, ship_time, logistic_company, vahicle_type, vahicle_container, vahicle_number, box_condition, supervisor_name, note,
+//                    no_of_box, no_of_pallets, no_of_devices, no_of_vahicle, supervisor_ph_no, is_reject);
+//            photocall.enqueue(new Callback<ShipUploadResponse>() {
+//                @Override
+//                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
+//                    pd.dismiss();
+//                    LoggerUtil.logItem(response.body());
+//                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+//
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(UploadPhotoActivity.this);
+//                        ViewGroup viewGroup = findViewById(android.R.id.content);
+//                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+//                        builder.setView(dialogView);
+//                        TextView heading = dialogView.findViewById(R.id.heading);
+//                        TextView body = dialogView.findViewById(R.id.body);
+//                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+//                        heading.setText(R.string.dialog_heading);
+//                        body.setText(R.string.ship_success);
+//                        AlertDialog alertDialog = builder.create();
+//                        alertDialog.setCanceledOnTouchOutside(false);
+//                        alertDialog.show();
+//                        ok.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                alertDialog.dismiss();
+//                                goToActivityWithFinish(UploadPhotoActivity.this, MainContainer.class, null);
+//                            }
+//                        });
+//
+//
+//                    } else {
+//                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+//                    }
+//
+//                }
+//
+//
+//                @Override
+//                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
+//
+//                }
+//            });
+//
+//
+//        } catch (
+//                Exception e) {
+//            showMessage("Something went wrong please check token");
+//            e.printStackTrace();
+//        }
+//
+//    }
 
 
     private boolean Validation() {
@@ -2460,6 +2435,7 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
         }
         return true;
     }
+
     private boolean ValidationShip() {
         try {
 

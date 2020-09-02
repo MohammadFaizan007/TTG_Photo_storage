@@ -115,7 +115,7 @@ public class ManualEntrySecondActivity extends BaseActivity {
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                goToActivity(ManualEntrySecondActivity.this, UploadPhotoActivity.class, null);
+                                goToActivity(ManualEntrySecondActivity.this, Demo.class, null);
                             }
                         });
 
@@ -129,7 +129,7 @@ public class ManualEntrySecondActivity extends BaseActivity {
                         });
 
                     }else {
-                        goToActivity(ManualEntrySecondActivity.this, UploadPhotoActivity.class, null);
+                        goToActivity(ManualEntrySecondActivity.this, Demo.class, null);
 
                     }
 

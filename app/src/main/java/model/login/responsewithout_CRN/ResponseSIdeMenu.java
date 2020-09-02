@@ -11,16 +11,8 @@ public class ResponseSIdeMenu{
 	@SerializedName("status")
 	private String status;
 
-	public void setAllshipments(List<AllshipmentsItem> allshipments){
-		this.allshipments = allshipments;
-	}
-
 	public List<AllshipmentsItem> getAllshipments(){
 		return allshipments;
-	}
-
-	public void setStatus(String status){
-		this.status = status;
 	}
 
 	public String getStatus(){

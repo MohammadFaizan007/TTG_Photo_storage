@@ -23,6 +23,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:orientation="vertical">
 
+
             <LinearLayout
                 android:id="@+id/tapToScan"
                 android:layout_width="match_parent"
@@ -177,7 +178,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="-3dp"
-                        android:layout_weight=".5"
+                        android:layout_weight=".65"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text="Logistics Company Name"
@@ -188,14 +189,15 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_weight=".5"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight=".35"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
                         android:text="Packaging Quality"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:singleLine="true"/>
                 </LinearLayout>
 
 
@@ -214,7 +216,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/_10sdp"
-                        android:layout_weight=".5"
+                        android:layout_weight=".65"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
@@ -226,7 +228,79 @@
                         android:id="@+id/packageQuality"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
+                        android:layout_weight=".35"
+                        android:background="@drawable/curveborder"
+                        android:gravity="start"
+                        android:padding="@dimen/_5sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="-3dp"
+                        android:layout_weight=".65"
+                        android:gravity="start"
+                        android:padding="@dimen/_5sdp"
+                        android:text="Logistics Cannote/Waybill"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_weight=".35"
+                        android:gravity="start"
+                        android:padding="@dimen/_5sdp"
+                        android:text="Box Seal"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold"
+                        android:singleLine="true"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/logistics_waybil"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:layout_weight=".65"
+                        android:background="@drawable/curveborder"
+                        android:gravity="start"
+                        android:padding="@dimen/_5sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <TextView
+                        android:id="@+id/boxSeal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".35"
                         android:background="@drawable/curveborder"
                         android:gravity="start"
                         android:padding="@dimen/_5sdp"
@@ -589,7 +663,7 @@
                     android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatCheckBox
+                <CheckBox
                     android:id="@+id/checkbox_remember"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -600,6 +674,10 @@
                     android:textColor="@color/black"
                     android:textSize="10sp"
                     android:layout_marginLeft="@dimen/_5sdp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
                     />
 
 

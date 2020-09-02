@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
+import com.ttg_photo_storage.activity.Demo;
 import com.ttg_photo_storage.activity.ViewShipmentDetails;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.retrofit.MvpView;
@@ -87,6 +90,18 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
                 }
             });
 
+            holder.btn_editImages.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, Demo.class);
+                    intent.putExtra("hash_id_ship", list.get(listPosition).getHash());
+                    PreferencesManager.getInstance(mContext).setPositionCrn(list.get(listPosition).getCrn());
+                    PreferencesManager.getInstance(mContext).setPositionHash(list.get(listPosition).getHash());
+                    mContext.startActivity(intent);
+
+                }
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,6 +132,8 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
         TextView status;
         @BindView(R.id.asset_ll)
         LinearLayout asset_ll;
+        @BindView(R.id.btn_editImages)
+        Button btn_editImages;
 
 
         ViewHolder(View view) {

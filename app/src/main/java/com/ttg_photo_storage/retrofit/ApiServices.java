@@ -9,6 +9,7 @@ import model.login.crn.CrnResultResponse;
 import model.login.detailsWithoutCrn.ResponseShipmentDetails;
 import model.login.editProfile.EditProfileResponse;
 import model.login.responsewithout_CRN.ResponseSIdeMenu;
+import model.login.shipImagesEdit.ShipImagesResponse;
 import model.login.shipUpload.ShipUploadResponse;
 import model.login.upload.UploadPhotoResponse;
 import model.login.viewProfile.ViewProfileResponse;
@@ -63,6 +64,27 @@ public interface ApiServices {
 
     @FormUrlEncoded
     @POST("api.php/")
+    Call<ViewShipResponse> viewShip(
+            @Field("action") String action,
+            @Field("token") String token,
+            @Field("crn") String crn,
+            @Field("input_time") String input_time
+
+    );
+
+    @FormUrlEncoded
+    @POST("api.php/")
+    Call<ShipImagesResponse> checkImages(
+            @Field("action") String action,
+            @Field("token") String token,
+            @Field("input_time") String input_time,
+            @Field("hash") String hash
+
+
+    );
+
+    @FormUrlEncoded
+    @POST("api.php/")
     Call<ViewProfileResponse> profile(
             @Field("action") String action,
             @Field("token") String token
@@ -109,7 +131,9 @@ public interface ApiServices {
             @Part("desc11") RequestBody desc11,
             @Part("desc12") RequestBody desc12,
             @Part("uid") RequestBody uid,
-            @Part("crn") RequestBody crn
+            @Part("crn") RequestBody crn,
+            @Part("device_type") RequestBody device_type,
+            @Part("defect") RequestBody defect
     );
 
     @Multipart
@@ -119,6 +143,67 @@ public interface ApiServices {
             @Part("action") RequestBody action,
             @Part("crn") RequestBody crn,
             @Part("description") RequestBody description,
+            @Part("declr_tick") RequestBody declr_tick,
+            @Part() MultipartBody.Part file1,
+            @Part() MultipartBody.Part file2,
+            @Part() MultipartBody.Part file3,
+            @Part() MultipartBody.Part file4,
+            @Part() MultipartBody.Part file5,
+            @Part() MultipartBody.Part file6,
+            @Part() MultipartBody.Part file7,
+            @Part() MultipartBody.Part file8,
+            @Part() MultipartBody.Part file9,
+            @Part() MultipartBody.Part file10,
+            @Part() MultipartBody.Part file11,
+            @Part() MultipartBody.Part file12,
+            @Part() MultipartBody.Part file13,
+            @Part() MultipartBody.Part file14,
+            @Part() MultipartBody.Part file15,
+            @Part("desc1") RequestBody desc1,
+            @Part("desc2") RequestBody desc2,
+            @Part("desc3") RequestBody desc3,
+            @Part("desc4") RequestBody desc4,
+            @Part("desc5") RequestBody desc5,
+            @Part("desc6") RequestBody desc6,
+            @Part("desc7") RequestBody desc7,
+            @Part("desc8") RequestBody desc8,
+            @Part("desc9") RequestBody desc9,
+            @Part("desc10") RequestBody desc10,
+            @Part("desc11") RequestBody desc11,
+            @Part("desc12") RequestBody desc12,
+            @Part("desc13") RequestBody desc13,
+            @Part("desc14") RequestBody desc14,
+            @Part("desc15") RequestBody desc15,
+            @Part("input_time") RequestBody input_time,
+            @Part("ship_time") RequestBody ship_time,
+            @Part("logistic_company") RequestBody logistic_company,
+            @Part("vahicle_type") RequestBody vahicle_type,
+            @Part("vahicle_container") RequestBody vahicle_container,
+            @Part("vahicle_number") RequestBody vahicle_number,
+            @Part("box_condition") RequestBody box_condition,
+            @Part("supervisor_name") RequestBody supervisor_name,
+            @Part() MultipartBody.Part supervisor_sign,
+            @Part("note") RequestBody note,
+            @Part("no_of_staff") RequestBody no_of_staff,
+            @Part("no_of_box") RequestBody no_of_box,
+            @Part("no_of_pallets") RequestBody no_of_pallets,
+            @Part("no_of_devices") RequestBody no_of_devices,
+            @Part("no_of_vahicle") RequestBody no_of_vahicle,
+            @Part("supervisor_ph_no") RequestBody supervisor_ph_no,
+            @Part("is_reject") RequestBody is_reject,
+            @Part("box_seal") RequestBody box_seal,
+            @Part("logistic_waybill") RequestBody logistic_waybill
+    );
+
+
+    @Multipart
+    @POST("api.php/")
+    Call<ShipUploadResponse> ShipUploadResject(
+            @Part("token") RequestBody token,
+            @Part("action") RequestBody action,
+            @Part("crn") RequestBody crn,
+            @Part("description") RequestBody description,
+            @Part("declr_tick") RequestBody declr_tick,
             @Part() MultipartBody.Part file1,
             @Part() MultipartBody.Part file2,
             @Part() MultipartBody.Part file3,
@@ -168,70 +253,18 @@ public interface ApiServices {
             @Part("is_reject") RequestBody is_reject
     );
 
-
     @Multipart
     @POST("api.php/")
-    Call<ShipUploadResponse> ShipUploadResject(
+    Call<ShipUploadResponse> ShipSignatureUpload(
             @Part("token") RequestBody token,
             @Part("action") RequestBody action,
-            @Part("crn") RequestBody crn,
-            @Part() MultipartBody.Part file1,
-            @Part() MultipartBody.Part file2,
-            @Part() MultipartBody.Part file3,
-            @Part() MultipartBody.Part file4,
-            @Part() MultipartBody.Part file5,
-            @Part() MultipartBody.Part file6,
-            @Part() MultipartBody.Part file7,
-            @Part() MultipartBody.Part file8,
-            @Part() MultipartBody.Part file9,
-            @Part() MultipartBody.Part file10,
-            @Part() MultipartBody.Part file11,
-            @Part() MultipartBody.Part file12,
-            @Part() MultipartBody.Part file13,
-            @Part() MultipartBody.Part file14,
-            @Part() MultipartBody.Part file15,
-            @Part("desc1") RequestBody desc1,
-            @Part("desc2") RequestBody desc2,
-            @Part("desc3") RequestBody desc3,
-            @Part("desc4") RequestBody desc4,
-            @Part("desc5") RequestBody desc5,
-            @Part("desc6") RequestBody desc6,
-            @Part("desc7") RequestBody desc7,
-            @Part("desc8") RequestBody desc8,
-            @Part("desc9") RequestBody desc9,
-            @Part("desc10") RequestBody desc10,
-            @Part("desc11") RequestBody desc11,
-            @Part("desc12") RequestBody desc12,
-            @Part("desc13") RequestBody desc13,
-            @Part("desc14") RequestBody desc14,
-            @Part("desc15") RequestBody desc15,
-            @Part("input_time") RequestBody input_time,
-            @Part("ship_time") RequestBody ship_time,
-            @Part("logistic_company") RequestBody logistic_company,
-            @Part("vahicle_type") RequestBody vahicle_type,
-            @Part("vahicle_container") RequestBody vahicle_container,
-            @Part("vahicle_number") RequestBody vahicle_number,
-            @Part("box_condition") RequestBody box_condition,
-            @Part("supervisor_name") RequestBody supervisor_name,
-//            @Part() MultipartBody.Part supervisor_sign,
-            @Part("note") RequestBody note,
-            @Part("no_of_box") RequestBody no_of_box,
-            @Part("no_of_pallets") RequestBody no_of_pallets,
-            @Part("no_of_devices") RequestBody no_of_devices,
-            @Part("no_of_vahicle") RequestBody no_of_vahicle,
-            @Part("supervisor_ph_no") RequestBody supervisor_ph_no,
-            @Part("is_reject") RequestBody is_reject
+            @Part("hash") RequestBody hash,
+            @Part("declr_tick") RequestBody declr_tick,
+            @Part() MultipartBody.Part supervisor_sign,
+            @Part("update") RequestBody update
     );
 
-    @FormUrlEncoded
-    @POST("api.php/")
-    Call<ViewShipResponse> viewShip(
-            @Field("action") String action,
-            @Field("token") String token,
-            @Field("crn") String crn,
-            @Field("input_time") String input_time
 
-    );
 
 //    @FormUrlEncoded
 //    @POST("api.php/")

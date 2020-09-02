@@ -116,23 +116,13 @@ public class ViewProfileActivity extends BaseActivity {
                         phone_no.setText(response.body().getCurrentUser().getMobile());
                         email_id.setText(response.body().getCurrentUser().getEmail());
                         user_name.setText(response.body().getCurrentUser().getName());
+                        PreferencesManager.getInstance(context).setNAME(response.body().getCurrentUser().getName());
+
+//                        PreferencesManager.getInstance(context).setProfilePic(response.body().getCurrentUser().getProfilePic());
                         Glide.with(context).load(BuildConfig.BASE_URL_FORIMAGE + response.body().getCurrentUser().getProfilePic())
                                 .apply(new RequestOptions().diskCacheStrategy(AUTOMATIC).placeholder(R.drawable.user_new)
                                         .error(R.drawable.user_new))
                                 .into(prof_image);
-//                        Glide.with(ViewProfileActivity.this)
-//                                .load(BuildConfig.BASE_URL_FORIMAGE+response.body().getCurrentUser().getProfilePic())
-//                                .skipMemoryCache(true)
-//                                .diskCacheStrategy(AUTOMATIC)
-//                                .into(prof_image);
-
-
-//                        Glide.with(getApplicationContext())
-//                                .load(response.body().getCurrentUser().getProfilePic())
-//                                .apply(new RequestOptions()
-//                                        .diskCacheStrategy(NONE).placeholder(R.drawable.photo_view)
-//                                        .error(R.drawable.photo_view))
-//                                .into(prof_image);
 
                     } else {
                         showToastS(response.body().getStatus() + "\nInvalid Login Credential or Token");

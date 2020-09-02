@@ -98,6 +98,13 @@ public class Allshipments{
 	@SerializedName("logistic_company")
 	private String logisticCompany;
 
+	@SerializedName("box_seal")
+	private String box_seal;
+
+	@SerializedName("logistic_waybill")
+	private String logistic_waybill;
+
+
 	public void setDate(String date){
 		this.date = date;
 	}
@@ -344,5 +351,22 @@ public class Allshipments{
 
 	public String getLogisticCompany(){
 		return logisticCompany;
+	}
+
+
+	public void setBox_seal(String box_seal){
+		this.box_seal = box_seal;
+	}
+
+	public String getBox_seal(){
+		return box_seal;
+	}
+
+	public void setLogistic_waybill(String logistic_waybill){
+		this.logistic_waybill = logistic_waybill;
+	}
+
+	public String getLogistic_waybill(){
+		return logistic_waybill;
 	}
 }

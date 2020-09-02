@@ -1,5 +1,6 @@
 package model.login.checkAssetID;
 
+import java.util.List;
 import com.google.gson.annotations.SerializedName;
 
 public class AssetIDResponse{
@@ -9,6 +10,9 @@ public class AssetIDResponse{
 
 	@SerializedName("exists")
 	private String exists;
+
+	@SerializedName("files")
+	private List<FilesItem> files;
 
 	@SerializedName("status")
 	private String status;
@@ -27,6 +31,14 @@ public class AssetIDResponse{
 
 	public String getExists(){
 		return exists;
+	}
+
+	public void setFiles(List<FilesItem> files){
+		this.files = files;
+	}
+
+	public List<FilesItem> getFiles(){
+		return files;
 	}
 
 	public void setStatus(String status){

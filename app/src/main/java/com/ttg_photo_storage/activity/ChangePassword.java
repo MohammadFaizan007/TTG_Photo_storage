@@ -1,10 +1,13 @@
 package com.ttg_photo_storage.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -134,17 +137,50 @@ public class ChangePassword extends BaseActivity {
 
     private boolean Validation() {
         if (etOldPswd.getText().toString().length() == 0) {
-            etOldPswd.setError("Please enter old password");
+            showError("Please enter old password", etOldPswd);
+//            etOldPswd.setError("Please enter old password");
             return false;
-        } else if (etNewPswd.getText().toString().length() == 0) {
-            etNewPswd.setError("Please enter new password");
+        } else if (etNewPswd.getText().toString().equals(etOldPswd.getText().toString())) {
+            showError("Old password and new password matched",etNewPswd);
             return false;
         } else if (!etNewPswd.getText().toString().equals(etConfrmPswd.getText().toString())) {
-            etConfrmPswd.setError("Password not matched");
-            etNewPswd.setError("Password not matched");
+            showError("New password and confirm password not matched",etNewPswd);
+//            etNewPswd.setError("Password not matched");
             return false;
         }
         return true;
     }
+
+    private void showError(String error_st, EditText editText) {
+        try {
+            Dialog error_dialog = new Dialog(this);
+            error_dialog.setCanceledOnTouchOutside(false);
+            error_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            error_dialog.setContentView(R.layout.error_dialoge);
+            int width = (int) (getResources().getDisplayMetrics().widthPixels * 0.90);
+            int height = (int) (getResources().getDisplayMetrics().heightPixels * 0.90);
+            error_dialog.getWindow().setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+            error_dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            TextView error_text = error_dialog.findViewById(R.id.error_text);
+            Button ok_btn = error_dialog.findViewById(R.id.ok_btn);
+            error_text.setText(error_st);
+            error_dialog.show();
+            ok_btn.setOnClickListener(view -> {
+                error_dialog.dismiss();
+                requestFocus(editText);
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void requestFocus(View view) {
+        if (view.requestFocus()) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
+    }
+
 
 }

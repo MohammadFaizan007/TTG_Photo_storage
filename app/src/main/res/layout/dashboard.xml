@@ -28,8 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
         android:orientation="vertical"
-        android:visibility="visible"
-    >
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/my_network"
@@ -171,6 +170,16 @@
                     android:text="@string/radio_asset"
                     android:textColor="@color/text_color"
                     android:textSize="@dimen/_12sdp" />
+
+                <RadioButton
+                    android:id="@+id/radio_ship"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:padding="@dimen/_5sdp"
+                    android:text="@string/radio_ship"
+                    android:textColor="@color/text_color"
+                    android:textSize="@dimen/_12sdp" />
             </RadioGroup>
 
             <EditText
@@ -191,6 +200,7 @@
                 android:textSize="16sp"
                 android:visibility="gone" />
 
+
             <EditText
                 android:id="@+id/assedID_et"
                 android:layout_width="match_parent"
@@ -201,6 +211,24 @@
                 android:background="@drawable/login_bck"
                 android:elevation="5dp"
                 android:hint="Type Asset ID here"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:paddingStart="20dp"
+                android:paddingLeft="20dp"
+                android:textAllCaps="true"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <EditText
+                android:id="@+id/crnIDShip_et"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="50dp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:background="@drawable/login_bck"
+                android:elevation="5dp"
+                android:hint="Type CRN here"
                 android:imeOptions="actionNext"
                 android:inputType="text"
                 android:paddingStart="20dp"
@@ -232,6 +260,25 @@
 
             <Button
                 android:id="@+id/search_crn_btn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="100dp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:background="@drawable/background_btn"
+                android:drawableLeft="@drawable/search"
+                android:drawablePadding="-100dp"
+                android:drawableTint="@color/white"
+                android:gravity="center"
+                android:paddingLeft="@dimen/_70sdp"
+                android:text="Search"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+            <Button
+                android:id="@+id/searchShip_crn_btn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_45sdp"
                 android:layout_marginStart="@dimen/_35sdp"
@@ -428,7 +475,28 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="RtlSymmetry" />
+
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/companyName_reject"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:inputType="text"
+                android:background="@drawable/curveborder"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                android:hint="Logistics Company Name"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="RtlSymmetry"
+                android:visibility="gone"/>
 
 <!--            <EditText-->
 <!--                android:id="@+id/date"-->
@@ -476,22 +544,74 @@
             android:elevation="@dimen/_5sdp"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/noOfVechile"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="@dimen/_10sdp"
-                android:inputType="text"
-                android:background="@drawable/curveborder"
-                android:focusableInTouchMode="true"
-                android:gravity="center_vertical"
-                android:hint="No. of Vehicle"
-                android:imeOptions="actionNext"
-                android:maxLines="1"
-                android:paddingLeft="@dimen/_10sdp"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                tools:ignore="RtlSymmetry" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:weightSum="1">
+
+                <EditText
+                    android:id="@+id/noOfVechile"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:background="@drawable/curveborder"
+                    android:focusableInTouchMode="true"
+                    android:inputType="number"
+                    android:gravity="center_vertical"
+                    android:hint="No. of Vehicle"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/vehicleType"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:background="@drawable/curveborder"
+                    android:inputType="number"
+                    android:gravity="center_vertical"
+                    android:hint="Vehicle Type"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/down_arrow"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:paddingEnd="10dp"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+<!--            <EditText-->
+<!--                android:id="@+id/noOfVechile"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_margin="@dimen/_10sdp"-->
+<!--                android:inputType="text"-->
+<!--                android:background="@drawable/curveborder"-->
+<!--                android:focusableInTouchMode="true"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:hint="No. of Vehicle"-->
+<!--                android:imeOptions="actionNext"-->
+<!--                android:maxLines="1"-->
+<!--                android:paddingLeft="@dimen/_10sdp"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_12sdp"-->
+<!--                tools:ignore="RtlSymmetry" />-->
 
             <EditText
                 android:id="@+id/vehicleNumber"
@@ -500,6 +620,7 @@
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:paddingLeft="@dimen/_10sdp"
                 android:inputType="text"
                 android:background="@drawable/curveborder"
@@ -512,30 +633,30 @@
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="RtlSymmetry"/>
 
-            <EditText
-                android:id="@+id/vehicleType"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:paddingLeft="@dimen/_10sdp"
-                android:inputType="text"
-                android:background="@drawable/curveborder"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:imeOptions="actionNext"
-                android:hint="Vehicle Type"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:drawableEnd="@drawable/down_arrow"
-                android:ems="10"
-                android:focusable="false"
-                android:paddingEnd="10dp"
-                android:focusableInTouchMode="false"
-                tools:ignore="RtlSymmetry"/>
+<!--            <EditText-->
+<!--                android:id="@+id/vehicleType"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="@dimen/_10sdp"-->
+<!--                android:layout_marginRight="@dimen/_10sdp"-->
+<!--                android:layout_marginBottom="@dimen/_10sdp"-->
+<!--                android:paddingLeft="@dimen/_10sdp"-->
+<!--                android:inputType="text"-->
+<!--                android:background="@drawable/curveborder"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:maxLines="1"-->
+<!--                android:imeOptions="actionNext"-->
+<!--                android:hint="Vehicle Type"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_12sdp"-->
+<!--                android:clickable="false"-->
+<!--                android:cursorVisible="false"-->
+<!--                android:drawableEnd="@drawable/down_arrow"-->
+<!--                android:ems="10"-->
+<!--                android:focusable="false"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:focusableInTouchMode="false"-->
+<!--                tools:ignore="RtlSymmetry"/>-->
 
 
 
@@ -580,6 +701,25 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/waybill"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:inputType="text"
+                android:background="@drawable/curveborder"
+                android:focusableInTouchMode="true"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:imeOptions="actionNext"
+                android:hint="Logistics Connote/Waybill"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="RtlSymmetry"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -671,28 +811,87 @@
                     android:textSize="@dimen/_10sdp"
                     tools:ignore="RtlSymmetry" />
             </LinearLayout>
-            <EditText
-                android:id="@+id/packageQuality"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_margin="@dimen/_10sdp"
-                android:paddingLeft="@dimen/_10sdp"
-                android:background="@drawable/curveborder"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:inputType="text"
-                android:imeOptions="actionNext"
-                android:hint="Packaging Quality"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:clickable="false"
-                android:cursorVisible="false"
-                android:drawableEnd="@drawable/down_arrow"
-                android:ems="10"
-                android:focusable="false"
-                android:paddingEnd="10dp"
-                android:focusableInTouchMode="false"
-                tools:ignore="RtlSymmetry"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:weightSum="1">
+
+                <EditText
+                    android:id="@+id/boxSeal"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:background="@drawable/curveborder"
+                    android:inputType="number"
+                    android:gravity="center_vertical"
+                    android:hint="Box Seal"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/down_arrow"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:paddingEnd="10dp"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="RtlSymmetry" />
+
+                <EditText
+                    android:id="@+id/packageQuality"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0.5"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:background="@drawable/curveborder"
+                    android:inputType="number"
+                    android:gravity="center_vertical"
+                    android:hint="Packaging Quality"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:paddingLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/down_arrow"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:paddingEnd="10dp"
+                    android:focusableInTouchMode="false"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+<!--            <EditText-->
+<!--                android:id="@+id/packageQuality"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_margin="@dimen/_10sdp"-->
+<!--                android:paddingLeft="@dimen/_10sdp"-->
+<!--                android:background="@drawable/curveborder"-->
+<!--                android:gravity="center_vertical"-->
+<!--                android:maxLines="1"-->
+<!--                android:inputType="text"-->
+<!--                android:imeOptions="actionNext"-->
+<!--                android:hint="Packaging Quality"-->
+<!--                android:textColor="@color/black"-->
+<!--                android:textSize="@dimen/_12sdp"-->
+<!--                android:clickable="false"-->
+<!--                android:cursorVisible="false"-->
+<!--                android:drawableEnd="@drawable/down_arrow"-->
+<!--                android:ems="10"-->
+<!--                android:focusable="false"-->
+<!--                android:paddingEnd="10dp"-->
+<!--                android:focusableInTouchMode="false"-->
+<!--                tools:ignore="RtlSymmetry"/>-->
         </LinearLayout>
 
         <TextView
@@ -802,7 +1001,7 @@
                 android:textStyle="bold" />
 
 
-            <androidx.appcompat.widget.AppCompatCheckBox
+            <CheckBox
                 android:id="@+id/checkbox_remember"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

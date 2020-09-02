@@ -184,7 +184,7 @@ public class AssetIDScanActivity extends BaseActivity implements View.OnClickLis
                         ok.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                goToActivity(AssetIDScanActivity.this, UploadPhotoActivity.class, null);
+                                goToActivity(AssetIDScanActivity.this, Demo.class, null);
                             }
                         });
 
@@ -197,7 +197,7 @@ public class AssetIDScanActivity extends BaseActivity implements View.OnClickLis
                         });
 
                     }else {
-                        goToActivity(AssetIDScanActivity.this, UploadPhotoActivity.class, null);
+                        goToActivity(AssetIDScanActivity.this, Demo.class, null);
 
                     }
 

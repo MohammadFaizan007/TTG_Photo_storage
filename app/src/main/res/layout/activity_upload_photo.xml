@@ -14,7 +14,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-
     <TextView
         android:id="@+id/crnID"
         android:layout_width="0dp"
@@ -45,7 +44,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/crnID" />
-
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -114,9 +112,9 @@
                         android:layout_marginBottom="4dp"
                         android:background="@null"
                         android:gravity="center_vertical"
+                        android:hint="Type any comment here"
                         android:maxLines="2"
                         android:padding="@dimen/_5sdp"
-                        android:hint="Type any comment here"
                         android:textColor="@color/text_color"
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -189,6 +187,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardSecond">
+
                     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/imageThird"
                         android:layout_width="70dp"
@@ -290,6 +289,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardFourth">
+
                     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/imageFive"
                         android:layout_width="70dp"
@@ -377,6 +377,7 @@
                         app:layout_constraintStart_toEndOf="@+id/imageSix"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardSeven"
                     android:layout_width="match_parent"
@@ -529,6 +530,7 @@
                         app:layout_constraintStart_toEndOf="@+id/imageNine"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardTen"
                     android:layout_width="match_parent"
@@ -681,6 +683,220 @@
                         app:layout_constraintStart_toEndOf="@+id/imageTwele"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/defect_Details_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/curveborder"
+                    android:elevation="@dimen/_5sdp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardTwelve">
+
+                    <EditText
+                        android:id="@+id/defectDescribe"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="@dimen/_10sdp"
+                        android:background="@drawable/curveborder"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:drawableEnd="@drawable/down_arrow"
+                        android:ems="10"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:gravity="center_vertical"
+                        android:hint="Describe Defect"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:paddingLeft="@dimen/_10sdp"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        tools:ignore="RtlSymmetry" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/defectDescribe">
+
+
+                    <LinearLayout
+                        android:id="@+id/first_layer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_10sdp">
+
+                        <CheckBox
+                            android:id="@+id/motherboard_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Motherboard Faulty"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+                        <CheckBox
+                            android:id="@+id/chassis_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Chassis Broken"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/chassis2_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Chassis Broken/Craked"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+
+                        <CheckBox
+                            android:id="@+id/permanentMarking_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Permanent Marking/Stained/Discolor"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+                        <CheckBox
+                            android:id="@+id/secreenSpot_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Screen Spots/Blemish"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/otherDefect_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Other Defects"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/second_layer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_10sdp">
+
+                        <CheckBox
+                            android:id="@+id/cpuMissing_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="CPU Missing/Faulty"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/part_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Parts Missing/Faulty"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/chassisCracked_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Chassis Cracked"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/screenBrokrn_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Screen Broken/Line/Missing"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/biosLocked_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="BIOS Locked"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+                        <CheckBox
+                            android:id="@+id/engraving_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="Engraving/Scratcch"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/noDefects_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:checked="false"
+                            android:text="No Defect Found"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+
+                </LinearLayout>
+
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cardThirteen"
                     android:layout_width="match_parent"
@@ -836,6 +1052,7 @@
                         app:layout_constraintStart_toEndOf="@+id/imageFifteen"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <Button
                     android:id="@+id/btn_submit"
                     android:layout_width="250dp"
@@ -853,7 +1070,7 @@
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cardTwelve" />
+                    app:layout_constraintTop_toBottomOf="@+id/defect_Details_ll" />
 
                 <Button
                     android:id="@+id/btn_submitShipment"
@@ -866,6 +1083,26 @@
                     android:background="@drawable/background_btn"
                     android:gravity="center"
                     android:text="Submit"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_22sdp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardFifteen" />
+
+                <Button
+                    android:id="@+id/btn_updateShipment"
+                    android:layout_width="250dp"
+                    android:layout_height="@dimen/_55sdp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/background_btn"
+                    android:gravity="center"
+                    android:text="Update"
                     android:textAllCaps="false"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_22sdp"

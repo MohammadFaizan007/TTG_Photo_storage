@@ -1,23 +1,38 @@
 package com.ttg_photo_storage.activity;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.ttg_photo_storage.BuildConfig;
@@ -28,7 +43,9 @@ import com.ttg_photo_storage.utils.LoggerUtil;
 import com.ttg_photo_storage.utils.NetworkUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
@@ -41,13 +58,23 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import id.zelory.compressor.Compressor;
+import ja.burhanrashid52.photoeditor.PhotoEditor;
+import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import model.login.detailsWithoutCrn.ResponseShipmentDetails;
+import model.login.shipUpload.ShipUploadResponse;
 import model.login.viewShipDetails.ViewShipDetailsResponse;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ViewShipmentDetails extends BaseActivity {
+    private static final int BARCODE_READER_ACTIVITY_REQUEST = 1208;
+    private static final int CAMERA_PERMISSION_CODE = 100;
+    private static final int STORAGE_PERMISSION_CODE = 101;
     @BindView(R.id.side_menu)
     ImageView sideMenu;
     @BindView(R.id.title)
@@ -62,6 +89,10 @@ public class ViewShipmentDetails extends BaseActivity {
     TextView logistics_company_name;
     @BindView(R.id.packageQuality)
     TextView packageQuality;
+    @BindView(R.id.logistics_waybil)
+    TextView logistics_waybil;
+    @BindView(R.id.boxSeal)
+    TextView boxSeal;
     @BindView(R.id.no_of_staff)
     TextView no_of_staff;
     @BindView(R.id.no_of_boxes)
@@ -96,26 +127,57 @@ public class ViewShipmentDetails extends BaseActivity {
 
     @BindView(R.id.tv_reason_for_rejection)
     TextView tv_reason_for_rejection;
+    @BindView(R.id.logistics_tv)
+    TextView logistics_tv;
+    @BindView(R.id.vehicle_tv)
+    TextView vehicle_tv;
+    @BindView(R.id.supervisor_tv)
+    TextView supervisor_tv;
+    @BindView(R.id.logistics_img)
+    ImageView logistics_img;
+    @BindView(R.id.vehicle_img)
+    ImageView vehicle_img;
+    @BindView(R.id.supervisor_imge)
+    ImageView supervisor_imge;
+
     @BindView(R.id.reason_ll)
     LinearLayout reason_ll;
     @BindView(R.id.reason_message)
     TextView reason_message;
+    @BindView(R.id.checkbox_remember)
+    CheckBox checkbox_remember;
 
 
     @BindView(R.id.btn_images)
     Button btn_images;
     @BindView(R.id.btn_Download)
     Button btn_Download;
+    @BindView(R.id.btn_images_reject)
+    Button btn_images_reject;
+    @BindView(R.id.btn_Download_reject)
+    Button btn_Download_reject;
     String hash = "";
     String crn = "";
     String PDFURL = "";
     Unbinder unbinder;
     String formattedDate, dateStr, currentTimeDate;
+    File IMAGE_SIGNATUREFile;
+    ProgressDialog pd;
+
+    private void showProgressDialog() {
+        pd = new ProgressDialog(context);
+        pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd.setTitle("Uploading Signature...");
+        pd.setMessage("Please wait.");
+        pd.setCancelable(false);
+        pd.setMax(100);
+        pd.show();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.view_ship_details);
+        setContentView(R.layout.view_ship_details_new);
         ButterKnife.bind(this);
         title.setText("Shipment Receipt");
         hash = getIntent().getStringExtra("hash_id");
@@ -142,7 +204,7 @@ public class ViewShipmentDetails extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.side_menu, R.id.btn_images, R.id.btn_Download})
+    @OnClick({R.id.side_menu, R.id.btn_images,R.id.btn_images_reject, R.id.btn_Download,R.id.btn_Download_reject,R.id.imge_signature})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.side_menu:
@@ -158,10 +220,26 @@ public class ViewShipmentDetails extends BaseActivity {
                     showMessage(getResources().getString(R.string.alert_internet));
                 }
                 break;
+            case R.id.btn_images_reject:
+                if (NetworkUtils.getConnectivityStatus(context) != 0) {
+                    goToActivity(ViewShipmentDetails.this, ViewShipImagesActivity.class, null);
+                } else {
+                    showMessage(getResources().getString(R.string.alert_internet));
+                }
+                break;
             case R.id.btn_Download:
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PDFURL)));
 
                 break;
+            case R.id.btn_Download_reject:
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PDFURL)));
+                break;
+            case R.id.imge_signature:
+                checkPermission(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        STORAGE_PERMISSION_CODE);
+                break;
+
 
         }
     }
@@ -188,10 +266,18 @@ public class ViewShipmentDetails extends BaseActivity {
                             vehicle_details.setVisibility(View.GONE);
                             supervisor_detals.setVisibility(View.GONE);
                             Comment_ll.setVisibility(View.GONE);
-                            btn_Download.setVisibility(View.GONE);
-                            btn_images.setVisibility(View.GONE);
                             tv_reason_for_rejection.setVisibility(View.VISIBLE);
                             reason_ll.setVisibility(View.VISIBLE);
+                            logistics_tv.setVisibility(View.GONE);
+                            vehicle_tv.setVisibility(View.GONE);
+                            supervisor_tv.setVisibility(View.GONE);
+                            logistics_img.setVisibility(View.GONE);
+                            vehicle_img.setVisibility(View.GONE);
+                            supervisor_imge.setVisibility(View.GONE);
+                            btn_images.setVisibility(View.GONE);
+                            btn_Download.setVisibility(View.GONE);
+                            btn_images_reject.setVisibility(View.VISIBLE);
+                            btn_Download_reject.setVisibility(View.VISIBLE);
                         }
                     } else {
                         showToastS(response.body().getStatus() + "\nInvalid Login Credential or Token");
@@ -224,10 +310,19 @@ public class ViewShipmentDetails extends BaseActivity {
                             vehicle_details.setVisibility(View.GONE);
                             supervisor_detals.setVisibility(View.GONE);
                             Comment_ll.setVisibility(View.GONE);
-                            btn_Download.setVisibility(View.GONE);
-                            btn_images.setVisibility(View.GONE);
                             tv_reason_for_rejection.setVisibility(View.VISIBLE);
                             reason_ll.setVisibility(View.VISIBLE);
+                            logistics_tv.setVisibility(View.GONE);
+                            vehicle_tv.setVisibility(View.GONE);
+                            supervisor_tv.setVisibility(View.GONE);
+                            logistics_img.setVisibility(View.GONE);
+                            vehicle_img.setVisibility(View.GONE);
+                            supervisor_imge.setVisibility(View.GONE);
+
+                            btn_images.setVisibility(View.GONE);
+                            btn_Download.setVisibility(View.GONE);
+                            btn_images_reject.setVisibility(View.VISIBLE);
+                            btn_Download_reject.setVisibility(View.VISIBLE);
                         }
                         setUserProfileShip(response.body());
 
@@ -253,6 +348,8 @@ public class ViewShipmentDetails extends BaseActivity {
         date.setText(client.getShipments().getShipDateFormatted());
         time.setText(client.getShipments().getShipTimeFormatted());
         logistics_company_name.setText(client.getShipments().getLogisticCompany());
+        logistics_waybil.setText(client.getShipments().getLogistic_waybill());
+        boxSeal.setText(client.getShipments().getBox_seal());
         if (client.getShipments().getBoxCondition().equalsIgnoreCase("Poor")) {
             packageQuality.setTextColor(context.getResources().getColor(R.color.red));
         } else if (client.getShipments().getBoxCondition().equalsIgnoreCase("Fair")) {
@@ -276,6 +373,11 @@ public class ViewShipmentDetails extends BaseActivity {
         tv_msge.setText(client.getShipments().getNote());
         reason_message.setText(client.getShipments().getNote());
         PDFURL = client.getShipments().getPdfurl();
+        if (client.getShipments().getDeclrTick().equalsIgnoreCase("yes")) {
+            checkbox_remember.setChecked(true);
+        } else {
+            checkbox_remember.setChecked(false);
+        }
     }
 
     private void setUserProfileShip(ResponseShipmentDetails profile) {
@@ -283,6 +385,8 @@ public class ViewShipmentDetails extends BaseActivity {
         date.setText(profile.getAllshipments().getShipDateFormatted());
         time.setText(profile.getAllshipments().getShipTimeFormatted());
         logistics_company_name.setText(profile.getAllshipments().getLogisticCompany());
+        logistics_waybil.setText(profile.getAllshipments().getLogistic_waybill());
+        boxSeal.setText(profile.getAllshipments().getBox_seal());
         if (profile.getAllshipments().getBoxCondition().equalsIgnoreCase("Poor")) {
             packageQuality.setTextColor(context.getResources().getColor(R.color.red));
         } else if (profile.getAllshipments().getBoxCondition().equalsIgnoreCase("Fair")) {
@@ -306,8 +410,270 @@ public class ViewShipmentDetails extends BaseActivity {
         tv_msge.setText(profile.getAllshipments().getNote());
         reason_message.setText(profile.getAllshipments().getNote());
         PDFURL = profile.getAllshipments().getPdfurl();
+        if (profile.getAllshipments().getDeclrTick().equalsIgnoreCase("yes")) {
+            checkbox_remember.setChecked(true);
+        } else {
+            checkbox_remember.setChecked(false);
+        }
 
     }
+
+    public void checkPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
+                == PackageManager.PERMISSION_DENIED) {
+
+            // Requesting the permission
+            ActivityCompat.requestPermissions((Activity) getApplicationContext(),
+                    new String[]{permission},
+                    requestCode);
+        } else {
+            if (checkbox_remember.isChecked()) {
+                signatureDialog();
+            }else{
+                showToastS("Please tick check box");
+
+            }
+        }
+    }
+
+    // This function is called when the user accepts or decline the permission.
+    // Request Code is used to check which permission called this function.
+    // This request code is provided when the user is prompt for permission.
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
+
+        if (requestCode == CAMERA_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (checkbox_remember.isChecked()) {
+                    signatureDialog();
+                }else{
+                    showToastS("Please tick check box");
+
+                }
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Camera Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        } else if (requestCode == STORAGE_PERMISSION_CODE) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (checkbox_remember.isChecked()) {
+                    signatureDialog();
+                }else{
+                    showToastS("Please tick check box");
+
+                }
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "Storage Permission Denied",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+    }
+
+    @SuppressLint("ResourceAsColor")
+    public void signatureDialog() {
+        PhotoEditor mPhotoEditor;
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_signature);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        int width = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.95);
+        int height = (int) (context.getResources().getDisplayMetrics().heightPixels * 0.95);
+        dialog.getWindow().setLayout(width, height);
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogTheme;
+        dialog.setCancelable(true);
+        Button clear = (Button) dialog.findViewById(R.id.clear);
+        Button save_btn = (Button) dialog.findViewById(R.id.save_btn);
+        Button mCancel = (Button) dialog.findViewById(R.id.cancel);
+        PhotoEditorView mPhotoEditorView = (PhotoEditorView) dialog.findViewById(R.id.photoEditorView);
+        mPhotoEditorView.getSource().setImageResource(R.drawable.white_image);
+        mPhotoEditor = new PhotoEditor.Builder(context, mPhotoEditorView)
+                .setPinchTextScalable(true)
+                .build();
+        mPhotoEditor = new PhotoEditor.Builder(getApplicationContext(), mPhotoEditorView)
+                .setPinchTextScalable(true) // set flag to make text scalable when pinch
+                .build(); // build photo editor sdk
+        mPhotoEditor.setBrushDrawingMode(true);
+        mPhotoEditor.setBrushColor(R.color.red);
+        mPhotoEditor.setBrushSize(5);
+        dialog.show();
+        Bitmap bitMap = BitmapFactory.decodeResource(getResources(), R.id.photoEditorView);
+        File mFile1 = Environment.getExternalStorageDirectory();
+        String fileName = "img1.png";
+        File signatureFile = new File(mFile1, fileName);
+        try {
+            FileOutputStream outStream;
+            outStream = new FileOutputStream(signatureFile);
+            outStream.flush();
+            outStream.close();
+
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        String sdPath = mFile1.getAbsolutePath().toString() + "/" + fileName;
+        PhotoEditor finalMPhotoEditor = mPhotoEditor;
+        save_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                finalMPhotoEditor.saveAsFile(sdPath, new PhotoEditor.OnSaveListener() {
+                    @Override
+                    public void onSuccess(@NonNull String signaturePath) {
+                        File signatureFile = new File(signaturePath);
+                        Bitmap bitmapImage = BitmapFactory.decodeFile(signatureFile.getAbsolutePath());
+                        int nh = (int) (bitmapImage.getHeight() * (512.0 / bitmapImage.getWidth()));
+                        Bitmap scaled = Bitmap.createScaledBitmap(bitmapImage, 512, nh, true);
+                        imge_signature.setImageBitmap(scaled);
+//                        try {
+//                            IMAGE_SIGNATUREFile=new ImageZipper(getActivity())
+//                                    .setQuality(90)
+//                                    .setMaxWidth(520)
+//                                    .setMaxHeight(720)
+//                                    .compressToFile(signatureFile);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+                        IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
+                                updateSignature();
+
+//                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
+
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+
+                    }
+                });
+
+            }
+        });
+        mCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        PhotoEditor finalMPhotoEditor1 = mPhotoEditor;
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finalMPhotoEditor1.undo();
+            }
+        });
+
+
+    }
+
+    public void updateSignature() {
+        try {
+            showProgressDialog();
+            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
+            RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
+            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),"" );
+            RequestBody declr_tick = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCheckTick());
+            MultipartBody.Part  signatureBody = null;
+
+            if (IMAGE_SIGNATUREFile != null) {
+                RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), IMAGE_SIGNATUREFile);
+                signatureBody = MultipartBody.Part.createFormData("supervisor_sign", IMAGE_SIGNATUREFile.getName(), requestBodySignature);
+
+            }
+            RequestBody update = RequestBody.create(MediaType.parse("text/plain"), "true");
+
+
+
+            Log.i("token>>>", token.toString());
+            Log.i("addpost>>", action.toString());
+            Call<ShipUploadResponse> photocall = apiServices.ShipSignatureUpload(token, action, hash,  declr_tick,  signatureBody,update);
+            photocall.enqueue(new Callback<ShipUploadResponse>() {
+                @Override
+                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
+                    pd.dismiss();
+                    LoggerUtil.logItem(response.body());
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ViewShipmentDetails.this);
+                        ViewGroup viewGroup = findViewById(android.R.id.content);
+                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+                        builder.setView(dialogView);
+                        TextView heading = dialogView.findViewById(R.id.heading);
+                        TextView body = dialogView.findViewById(R.id.body);
+                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+                        heading.setText(R.string.dialog_heading);
+                        body.setText(R.string.ship_success);
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                goToActivityWithFinish(ViewShipmentDetails.this, MainContainer.class, null);
+                            }
+                        });
+
+
+                    } else {
+                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
+
+                }
+            });
+
+
+        } catch (
+                Exception e) {
+            showMessage("Something went wrong please check token");
+            e.printStackTrace();
+        }
+
+    }
+//    private boolean Validation() {
+//        try {
+//            if (!checkbox_remember.isChecked()){
+//                showToastS("Please tick check box");
+//                return false;
+//            }
+//
+////            if (userName_st.length() == 0) {
+////                userName_st = "";
+////                showError("Please enter Email ID", usernameEt);
+////                return false;
+////            }
+////            if (password_st.length() == 0) {
+////                password_st = "";
+////                showError(getResources().getString(R.string.enter_pswd_err), passwordEt);
+////                return false;
+////            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return true;
+//    }
 
     private void showError(String error_st, EditText editText) {
         Dialog error_dialog = new Dialog(context);

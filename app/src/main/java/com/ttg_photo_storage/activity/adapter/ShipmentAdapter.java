@@ -49,7 +49,6 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
             String sourceString = "<b>" + "CRN:  " + "</b> "  +list.get(listPosition).getCrn();
             String timeString = "<b>" + "Time:  " + "</b> "  +list.get(listPosition).getShipTimeFormatted();
             String dateString = "<b>" + "Date:  " + "</b> "  +list.get(listPosition).getShipDateFormatted();
-            String quality = "<b>"+"Packaging Quality :"+"</b>";
             String condition ="<b>"+"Packaging Quality :"+list.get(listPosition).getBoxCondition()+"</b>";
             String status1 = "<b>"+"Shipment Status : Accepted Shipment"+"</b>";
             String status2 = "<b>"+"Shipment Status : Rejected Shipment"+"</b>";
@@ -71,7 +70,6 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
             holder.tv_quality.setText(Html.fromHtml(condition));
             holder.time.setText(Html.fromHtml(timeString));
             holder.date.setText(Html.fromHtml(dateString));
-//            holder.quality.setText(Html.fromHtml(condition));
             holder.asset_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,7 +79,6 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
                     PreferencesManager.getInstance(mContext).setPositionCrn(list.get(listPosition).getCrn());
                     PreferencesManager.getInstance(mContext).setPositionHash(list.get(listPosition).getHash());
                     mContext.startActivity(intent);
-//                    mContext.finish();
                 }
             });
 
@@ -107,8 +104,6 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
         TextView date;
         @BindView(R.id.tv_quality)
         TextView tv_quality;
-//        @BindView(R.id.quality)
-//        TextView quality;
         @BindView(R.id.time)
         TextView time;
         @BindView(R.id.status)

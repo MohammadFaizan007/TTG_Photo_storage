@@ -54,19 +54,6 @@
         android:textSize="16sp"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/edit_image"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit Image"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textAlignment="textStart"
-        android:padding="@dimen/_5sdp"
-        android:textColor="@color/text_color"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/remove_image"

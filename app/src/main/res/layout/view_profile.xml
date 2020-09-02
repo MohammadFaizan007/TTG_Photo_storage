@@ -9,174 +9,141 @@
         android:id="@+id/app_bar"
         layout="@layout/custom_header" />
 
-
-    <RelativeLayout
-        android:id="@+id/profile_photo_lt"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="@dimen/_25sdp"
-        android:background="@drawable/circle_yellow"
-        android:layout_gravity="center">
-
-<!--        <de.hdodenhof.circleimageview.CircleImageView-->
-<!--            android:id="@+id/prof_image"-->
-<!--            android:layout_width="100dp"-->
-<!--            android:layout_height="100dp"-->
-<!--            android:layout_centerInParent="true"-->
-<!--            android:layout_marginLeft="10dp"-->
-<!--            android:scaleType="fitXY"-->
-<!--            android:src="@drawable/user_new" />-->
-
-<!--        <ImageView-->
-<!--            android:layout_width="25dp"-->
-<!--            android:layout_height="25dp"-->
-<!--            android:layout_alignParentRight="true"-->
-<!--            android:layout_marginTop="55dp"-->
-<!--            android:scaleType="centerCrop"-->
-<!--            android:src="@drawable/user_new" />-->
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/prof_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:layout_gravity="center"
-            android:src="@drawable/user_new"
-            android:background="@drawable/white_circle_new"
-            app:civ_border_color="@color/navyBlue"
-            app:civ_border_width="1dp" />
-
-
-    </RelativeLayout>
-
-
-
-
-
-    <TextView
-        android:id="@+id/user_name"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
-        android:layout_marginStart="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_35sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/login_bck"
-        android:gravity="center_vertical"
-        android:paddingStart="15dp"
-        android:paddingEnd="0dp"
-        android:textColor="@color/text_color"
-        android:textSize="16sp"
-        android:elevation="5dp"/>
-
-    <TextView
-        android:id="@+id/email_id"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
-        android:layout_marginStart="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_35sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/login_bck"
-        android:gravity="center_vertical"
-        android:paddingStart="15dp"
-        android:paddingEnd="0dp"
-        android:textColor="@color/text_color"
-        android:textSize="16sp"
-        android:elevation="5dp"/>
-
-    <TextView
-        android:id="@+id/phone_no"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
-        android:layout_marginStart="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_35sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/login_bck"
-        android:gravity="center_vertical"
-        android:paddingStart="15dp"
-        android:paddingEnd="0dp"
-        android:textColor="@color/text_color"
-        android:textSize="16sp"
-        android:elevation="5dp"/>
-
-    <TextView
-        android:id="@+id/country"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_marginStart="@dimen/_35sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_35sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:background="@drawable/login_bck"
-        android:gravity="center_vertical"
-        android:paddingStart="15dp"
-        android:paddingEnd="0dp"
-        android:textColor="@color/text_color"
-        android:textSize="16sp"
-        android:elevation="5dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:background="@color/white"
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <RelativeLayout
+                android:id="@+id/profile_photo_lt"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:background="@drawable/circle_yellow">
 
 
-    <!--    <Button-->
-    <!--        android:id="@+id/change_btn"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="@dimen/_50sdp"-->
-    <!--        android:layout_marginStart="@dimen/_35sdp"-->
-    <!--        android:layout_marginTop="@dimen/_15sdp"-->
-    <!--        android:layout_marginEnd="@dimen/_35sdp"-->
-    <!--        android:background="@drawable/background_btn"-->
-    <!--        android:drawablePadding="-40dp"-->
-    <!--        android:drawableTint="@color/white"-->
-    <!--        android:gravity="center"-->
-    <!--        android:paddingEnd="10dp"-->
-    <!--        android:layout_gravity="end"-->
-    <!--        android:paddingRight="10dp"-->
-    <!--        android:text="Change Password"-->
-    <!--        android:textAllCaps="false"-->
-    <!--        android:textStyle="bold"-->
-    <!--        android:textColor="@color/white"-->
-    <!--        android:textSize="18sp"/>-->
-
-        <Button
-            android:id="@+id/btn_edit"
-            android:layout_width="270dp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_margin="10dp"
-            android:text="Edit Profile"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:textAllCaps="false"
-            android:background="@drawable/background_btn"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
-            android:textSize="@dimen/_18sdp"
-            />
-
-        <Button
-            android:id="@+id/change_btn"
-            android:layout_width="270dp"
-            android:layout_height="@dimen/_50sdp"
-            android:layout_margin="5dp"
-            android:text="Change Password"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:layout_gravity="center"
-            android:padding="@dimen/_10sdp"
-            android:textAllCaps="false"
-            android:background="@drawable/background_btn"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
-            android:textSize="@dimen/_18sdp"
-            />
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/prof_image"
+                    android:layout_width="110dp"
+                    android:layout_height="110dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/white_circle_new"
+                    android:src="@drawable/user_new"
+                    app:civ_border_color="@color/navyBlue"
+                    app:civ_border_width="1dp" />
 
 
+            </RelativeLayout>
 
 
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/login_bck"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
 
+            <TextView
+                android:id="@+id/email_id"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/login_bck"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/phone_no"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/login_bck"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/country"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_35sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:background="@drawable/login_bck"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:paddingStart="15dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="270dp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:background="@drawable/background_btn"
+                android:padding="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:text="Edit Profile"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/change_btn"
+                android:layout_width="270dp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:background="@drawable/background_btn"
+                android:padding="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:text="Change Password"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_18sdp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
+
+
 
 
 
