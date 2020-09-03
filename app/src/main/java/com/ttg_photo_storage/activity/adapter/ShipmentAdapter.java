@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
+import com.ttg_photo_storage.activity.Demo;
 import com.ttg_photo_storage.activity.ViewShipmentDetails;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.retrofit.MvpView;
@@ -70,7 +72,7 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
             holder.tv_quality.setText(Html.fromHtml(condition));
             holder.time.setText(Html.fromHtml(timeString));
             holder.date.setText(Html.fromHtml(dateString));
-            holder.asset_ll.setOnClickListener(new View.OnClickListener() {
+            holder.view_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ViewShipmentDetails.class);
@@ -81,6 +83,20 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
                     mContext.startActivity(intent);
                 }
             });
+
+            holder.edit_images.setVisibility(View.INVISIBLE);
+
+//            holder.btn_editImages.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    Intent intent = new Intent(mContext, Demo.class);
+//                    intent.putExtra("hash_id_ship", list.get(listPosition).getHash());
+//                    PreferencesManager.getInstance(mContext).setPositionCrn(list.get(listPosition).getCrn());
+//                    PreferencesManager.getInstance(mContext).setPositionHash(list.get(listPosition).getHash());
+//                    mContext.startActivity(intent);
+//
+//                }
+//            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,6 +124,10 @@ public class ShipmentAdapter extends RecyclerView.Adapter<ShipmentAdapter.ViewHo
         TextView time;
         @BindView(R.id.status)
         TextView status;
+        @BindView(R.id.edit_images)
+        TextView edit_images;
+        @BindView(R.id.view_details)
+        TextView view_details;
         @BindView(R.id.asset_ll)
         LinearLayout asset_ll;
 

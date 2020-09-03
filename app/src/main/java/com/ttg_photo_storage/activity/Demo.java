@@ -92,6 +92,7 @@ import model.login.checkAssetID.AssetIDResponse;
 import model.login.checkAssetID.FilesItem;
 import model.login.shipImagesEdit.ShipImagesResponse;
 import model.login.shipUpload.ShipUploadResponse;
+import model.login.shipUpload.updateShip.UpdateImagesResponse;
 import model.login.upload.FilesAcceptedItem;
 import model.login.upload.UploadPhotoResponse;
 import okhttp3.MediaType;
@@ -314,11 +315,11 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
         }
 
 
-        if (hash!=null) {
+        if (hash != null) {
             checkImages();
             btn_updateShipment.setVisibility(View.VISIBLE);
             btn_submitShipment.setVisibility(View.GONE);
-        }else {
+        } else {
             btn_updateShipment.setVisibility(View.GONE);
             btn_submitShipment.setVisibility(View.VISIBLE);
         }
@@ -1629,6 +1630,13 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                 }
                 break;
             case R.id.btn_updateShipment:
+                if (ValidationShip()) {
+                    if (NetworkUtils.getConnectivityStatus(context) != 0) {
+                        getShipUpdated(hash);
+                    } else {
+                        showMessage(getResources().getString(R.string.alert_internet));
+                    }
+                }
                 break;
         }
 
@@ -3551,7 +3559,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                 hideLoading();
                 LoggerUtil.logItem(response.body());
                 if (response.body().getStatus().equalsIgnoreCase("success")) {
-                    if (response.body().getAllshipments().getFiles() != null) {
+                   if (response.body().getAllshipments().getFiles() != null) {
                         imageListShip = response.body().getAllshipments().getFiles();
                         LoggerUtil.logItem(imageListShip);
                         for (int i = 0; i < imageListShip.size(); i++) {
@@ -4394,6 +4402,159 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
             }
         });
+
+    }
+
+
+    public void getShipUpdated(String key) {
+        try {
+            showProgressDialog();
+            RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
+            RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
+            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),key );
+            MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
+                    body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null;
+            RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
+                    desc7 = null, desc8 = null, desc9 = null, desc10 = null, desc11 = null, desc12 = null, desc13 = null, desc14 = null, desc15 = null;
+
+            if (IMAGE_ONEfile != null) {
+                RequestBody requestBody = RequestBody.create(MediaType.parse("file1/*"), IMAGE_ONEfile);
+                desc1 = RequestBody.create(MediaType.parse("desc1"), desc1_st);
+                body = MultipartBody.Part.createFormData("file1", IMAGE_ONEfile.getName(), requestBody);
+            }
+            if (IMAGE_TWOFile != null) {
+                RequestBody requestBody2 = RequestBody.create(MediaType.parse("file2/*"), IMAGE_TWOFile);
+                desc2 = RequestBody.create(MediaType.parse("desc2"), desc2_st);
+                body2 = MultipartBody.Part.createFormData("file2", IMAGE_TWOFile.getName(), requestBody2);
+            }
+            if (IMAGE_THREEFile != null) {
+                RequestBody requestBody3 = RequestBody.create(MediaType.parse("file3/*"), IMAGE_THREEFile);
+                desc3 = RequestBody.create(MediaType.parse("desc3"), desc3_st);
+                body3 = MultipartBody.Part.createFormData("file3", IMAGE_THREEFile.getName(), requestBody3);
+            }
+            if (IMAGE_FOURFile != null) {
+                RequestBody requestBody4 = RequestBody.create(MediaType.parse("file4/*"), IMAGE_FOURFile);
+                desc4 = RequestBody.create(MediaType.parse("desc4"), desc4_st);
+                body4 = MultipartBody.Part.createFormData("file4", IMAGE_FOURFile.getName(), requestBody4);
+            }
+            if (IMAGE_FIVEFile != null) {
+                RequestBody requestBody5 = RequestBody.create(MediaType.parse("file5/*"), IMAGE_FIVEFile);
+                desc5 = RequestBody.create(MediaType.parse("desc5"), desc5_st);
+                body5 = MultipartBody.Part.createFormData("file5", IMAGE_FIVEFile.getName(), requestBody5);
+            }
+            if (IMAGE_SIXFile != null) {
+                RequestBody requestBody6 = RequestBody.create(MediaType.parse("file6/*"), IMAGE_SIXFile);
+                desc6 = RequestBody.create(MediaType.parse("desc6"), desc6_st);
+                body6 = MultipartBody.Part.createFormData("file6", IMAGE_SIXFile.getName(), requestBody6);
+            }
+
+            if (IMAGE_SEVENFile != null) {
+                RequestBody requestBody7 = RequestBody.create(MediaType.parse("file7/*"), IMAGE_SEVENFile);
+                desc7 = RequestBody.create(MediaType.parse("desc7"), desc7_st);
+                body7 = MultipartBody.Part.createFormData("file7", IMAGE_SEVENFile.getName(), requestBody7);
+            }
+
+            if (IMAGE_EIGHTFile != null) {
+                RequestBody requestBody8 = RequestBody.create(MediaType.parse("file8/*"), IMAGE_EIGHTFile);
+                desc8 = RequestBody.create(MediaType.parse("desc8"), desc8_st);
+                body8 = MultipartBody.Part.createFormData("file8", IMAGE_EIGHTFile.getName(), requestBody8);
+            }
+
+            if (IMAGE_NINEFile != null) {
+                RequestBody requestBody9 = RequestBody.create(MediaType.parse("file9/*"), IMAGE_NINEFile);
+                desc9 = RequestBody.create(MediaType.parse("desc9"), desc9_st);
+                body9 = MultipartBody.Part.createFormData("file9", IMAGE_NINEFile.getName(), requestBody9);
+            }
+
+            if (IMAGE_TENFile != null) {
+                RequestBody requestBody10 = RequestBody.create(MediaType.parse("file10/*"), IMAGE_TENFile);
+                desc10 = RequestBody.create(MediaType.parse("desc10"), desc10_st);
+                body10 = MultipartBody.Part.createFormData("file10", IMAGE_TENFile.getName(), requestBody10);
+            }
+
+            if (IMAGE_ELEVENFile != null) {
+                RequestBody requestBody11 = RequestBody.create(MediaType.parse("file11/*"), IMAGE_ELEVENFile);
+                desc11 = RequestBody.create(MediaType.parse("desc11"), desc11_st);
+                body11 = MultipartBody.Part.createFormData("file11", IMAGE_ELEVENFile.getName(), requestBody11);
+            }
+
+            if (IMAGE_TWELEFile != null) {
+                RequestBody requestBody12 = RequestBody.create(MediaType.parse("file12/*"), IMAGE_TWELEFile);
+                desc12 = RequestBody.create(MediaType.parse("desc12"), desc12_st);
+                body12 = MultipartBody.Part.createFormData("file12", IMAGE_TWELEFile.getName(), requestBody12);
+            }
+            if (IMAGE_THIRTEENFile != null) {
+                RequestBody requestBody13 = RequestBody.create(MediaType.parse("file13/*"), IMAGE_THIRTEENFile);
+                desc13 = RequestBody.create(MediaType.parse("desc13"), desc13_st);
+                body13 = MultipartBody.Part.createFormData("file13", IMAGE_THIRTEENFile.getName(), requestBody13);
+            }
+
+            if (IMAGE_FOURTEENFile != null) {
+                RequestBody requestBody14 = RequestBody.create(MediaType.parse("file14/*"), IMAGE_FOURTEENFile);
+                desc14 = RequestBody.create(MediaType.parse("desc14"), desc14_st);
+                body14 = MultipartBody.Part.createFormData("file14", IMAGE_FOURTEENFile.getName(), requestBody14);
+            }
+            if (IMAGE_FIFTEENFile != null) {
+                RequestBody requestBody15 = RequestBody.create(MediaType.parse("file15/*"), IMAGE_FIFTEENFile);
+                desc15 = RequestBody.create(MediaType.parse("desc15"), desc15_st);
+                body15 = MultipartBody.Part.createFormData("file15", IMAGE_FIFTEENFile.getName(), requestBody15);
+            }
+            RequestBody update = RequestBody.create(MediaType.parse("text/plain"), "true");
+
+            Log.i("token>>>", token.toString());
+            Log.i("addpost>>", action.toString());
+            Call<UpdateImagesResponse> updatecall = apiServices.ShipUpdated(token, action, hash,  body, body2
+                    , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
+                    , update
+                   );
+            updatecall.enqueue(new Callback<UpdateImagesResponse>() {
+                @Override
+                public void onResponse(Call<UpdateImagesResponse> call, Response<UpdateImagesResponse> response) {
+                    pd.dismiss();
+                    LoggerUtil.logItem(response.body());
+                    if (response.body().getStatus().equalsIgnoreCase("success")) {
+//                        PreferencesManager.getInstance(context).setFileDesc(response.body().getFilesDesc());
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Demo.this);
+                        ViewGroup viewGroup = findViewById(android.R.id.content);
+                        View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
+                        builder.setView(dialogView);
+                        TextView heading = dialogView.findViewById(R.id.heading);
+                        TextView body = dialogView.findViewById(R.id.body);
+                        TextView ok = dialogView.findViewById(R.id.buttonOk);
+                        heading.setText(R.string.dialog_heading);
+                        body.setText("Images Updated Successfully");
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.setCanceledOnTouchOutside(false);
+                        alertDialog.show();
+                        ok.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                alertDialog.dismiss();
+                                goToActivityWithFinish(Demo.this, MainContainer.class, null);
+                            }
+                        });
+
+
+                    } else {
+                        showToastS(response.body().getStatus() + "\nInvalid Token Credential");
+                    }
+
+                }
+
+
+                @Override
+                public void onFailure(Call<UpdateImagesResponse> call, Throwable t) {
+
+                }
+            });
+
+
+        } catch (
+                Exception e) {
+            showMessage("Something went wrong please check token");
+            e.printStackTrace();
+        }
 
     }
 

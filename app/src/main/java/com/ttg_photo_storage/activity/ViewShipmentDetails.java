@@ -63,6 +63,7 @@ import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import model.login.detailsWithoutCrn.ResponseShipmentDetails;
 import model.login.shipUpload.ShipUploadResponse;
+import model.login.shipUpload.updateShip.UpdateShipResponse;
 import model.login.viewShipDetails.ViewShipDetailsResponse;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -144,6 +145,8 @@ public class ViewShipmentDetails extends BaseActivity {
     LinearLayout reason_ll;
     @BindView(R.id.reason_message)
     TextView reason_message;
+    @BindView(R.id.declair_et)
+    EditText declair_et;
     @BindView(R.id.checkbox_remember)
     CheckBox checkbox_remember;
 
@@ -204,7 +207,7 @@ public class ViewShipmentDetails extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.side_menu, R.id.btn_images,R.id.btn_images_reject, R.id.btn_Download,R.id.btn_Download_reject,R.id.imge_signature})
+    @OnClick({R.id.side_menu, R.id.btn_images,R.id.btn_images_reject, R.id.btn_Download,R.id.btn_Download_reject,R.id.imge_signature,R.id.checkbox_remember})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.side_menu:
@@ -235,13 +238,27 @@ public class ViewShipmentDetails extends BaseActivity {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PDFURL)));
                 break;
             case R.id.imge_signature:
-                checkPermission(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        STORAGE_PERMISSION_CODE);
+                if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
+                    checkPermission(
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            STORAGE_PERMISSION_CODE);
+                }else {
+                    imge_signature.setEnabled(false);
+                }
                 break;
+            case R.id.checkbox_remember:
+                if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
+                    checkbox_remember.setEnabled(true);
+                }else {
+                    checkbox_remember.setClickable(false);
+                    checkbox_remember.setFocusable(false);
+                    checkbox_remember.setCursorVisible(false);
+                    checkbox_remember.setFocusableInTouchMode(false);
+                }
 
 
-        }
+
+                }
     }
 
 
@@ -430,7 +447,8 @@ public class ViewShipmentDetails extends BaseActivity {
             if (checkbox_remember.isChecked()) {
                 signatureDialog();
             }else{
-                showToastS("Please tick check box");
+                showError("Please tick check box",declair_et);
+//                showToastS("Please tick check box");
 
             }
         }
@@ -454,7 +472,8 @@ public class ViewShipmentDetails extends BaseActivity {
                 if (checkbox_remember.isChecked()) {
                     signatureDialog();
                 }else{
-                    showToastS("Please tick check box");
+                    showError("Please tick check box",declair_et);
+//                    showToastS("Please tick check box");
 
                 }
             } else {
@@ -469,7 +488,8 @@ public class ViewShipmentDetails extends BaseActivity {
                 if (checkbox_remember.isChecked()) {
                     signatureDialog();
                 }else{
-                    showToastS("Please tick check box");
+                    showError("Please tick check box",declair_et);
+//                    showToastS("Please tick check box");
 
                 }
             } else {
@@ -550,7 +570,7 @@ public class ViewShipmentDetails extends BaseActivity {
 //                            e.printStackTrace();
 //                        }
                         IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
-                                updateSignature();
+                                updateSignature(hash);
 
 //                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
 
@@ -582,13 +602,13 @@ public class ViewShipmentDetails extends BaseActivity {
 
     }
 
-    public void updateSignature() {
+    public void updateSignature(String key) {
         try {
             showProgressDialog();
             RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
             RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
-            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),"" );
-            RequestBody declr_tick = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCheckTick());
+            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),key );
+            RequestBody declr_tick = RequestBody.create(MediaType.parse("text/plain"), "yes");
             MultipartBody.Part  signatureBody = null;
 
             if (IMAGE_SIGNATUREFile != null) {
@@ -602,14 +622,13 @@ public class ViewShipmentDetails extends BaseActivity {
 
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", action.toString());
-            Call<ShipUploadResponse> photocall = apiServices.ShipSignatureUpload(token, action, hash,  declr_tick,  signatureBody,update);
-            photocall.enqueue(new Callback<ShipUploadResponse>() {
+            Call<UpdateShipResponse> photocall = apiServices.ShipSignatureUpload(token, action, hash,  declr_tick,  signatureBody,update);
+            photocall.enqueue(new Callback<UpdateShipResponse>() {
                 @Override
-                public void onResponse(Call<ShipUploadResponse> call, Response<ShipUploadResponse> response) {
+                public void onResponse(Call<UpdateShipResponse> call, Response<UpdateShipResponse> response) {
                     pd.dismiss();
                     LoggerUtil.logItem(response.body());
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
-
                         AlertDialog.Builder builder = new AlertDialog.Builder(ViewShipmentDetails.this);
                         ViewGroup viewGroup = findViewById(android.R.id.content);
                         View dialogView = LayoutInflater.from(getApplicationContext()).inflate(R.layout.customview, viewGroup, false);
@@ -618,7 +637,7 @@ public class ViewShipmentDetails extends BaseActivity {
                         TextView body = dialogView.findViewById(R.id.body);
                         TextView ok = dialogView.findViewById(R.id.buttonOk);
                         heading.setText(R.string.dialog_heading);
-                        body.setText(R.string.ship_success);
+                        body.setText("Signature Updated Successfully");
                         AlertDialog alertDialog = builder.create();
                         alertDialog.setCanceledOnTouchOutside(false);
                         alertDialog.show();
@@ -639,7 +658,7 @@ public class ViewShipmentDetails extends BaseActivity {
 
 
                 @Override
-                public void onFailure(Call<ShipUploadResponse> call, Throwable t) {
+                public void onFailure(Call<UpdateShipResponse> call, Throwable t) {
 
                 }
             });

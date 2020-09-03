@@ -767,7 +767,8 @@
 
                     </LinearLayout>
 
-                    <TextView
+                    <EditText
+                        android:id="@+id/declair_et"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="12dp"
@@ -777,7 +778,12 @@
                         android:text="Declaration"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:clickable="false"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:background="@null"/>
 
                     <CheckBox
                         android:id="@+id/checkbox_remember"

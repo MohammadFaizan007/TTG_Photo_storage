@@ -50,24 +50,24 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
     public void onBindViewHolder(@NonNull final ViewHolder holder, int listPosition) {
         try {
 
-            String sourceString = "<b>" + "CRN:  " + "</b> "  +list.get(listPosition).getCrn();
-            String timeString = "<b>" + "Time:  " + "</b> "  +list.get(listPosition).getShipTimeFormatted();
-            String dateString = "<b>" + "Date:  " + "</b> "  +list.get(listPosition).getShipDateFormatted();
-            String quality = "<b>"+"Packaging Quality :"+"</b>";
-            String condition ="<b>"+"Packaging Quality :"+list.get(listPosition).getBoxCondition()+"</b>";
-            String status1 = "<b>"+"Shipment Status : Accepted Shipment"+"</b>";
-            String status2 = "<b>"+"Shipment Status : Rejected Shipment"+"</b>";
-            if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Good")){
+            String sourceString = "<b>" + "CRN:  " + "</b> " + list.get(listPosition).getCrn();
+            String timeString = "<b>" + "Time:  " + "</b> " + list.get(listPosition).getShipTimeFormatted();
+            String dateString = "<b>" + "Date:  " + "</b> " + list.get(listPosition).getShipDateFormatted();
+            String quality = "<b>" + "Packaging Quality :" + "</b>";
+            String condition = "<b>" + "Packaging Quality :" + list.get(listPosition).getBoxCondition() + "</b>";
+            String status1 = "<b>" + "Shipment Status : Accepted Shipment" + "</b>";
+            String status2 = "<b>" + "Shipment Status : Rejected Shipment" + "</b>";
+            if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Good")) {
                 holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.success));
-            }else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Poor")){
+            } else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Poor")) {
                 holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.red));
-            }else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Fair")){
+            } else if (list.get(listPosition).getBoxCondition().equalsIgnoreCase("Fair")) {
                 holder.tv_quality.setTextColor(mContext.getResources().getColor(R.color.yellow));
             }
-            if (list.get(listPosition).getIsReject().equalsIgnoreCase("no")){
+            if (list.get(listPosition).getIsReject().equalsIgnoreCase("no")) {
                 holder.status.setText(Html.fromHtml(status1));
                 holder.status.setTextColor(mContext.getResources().getColor(R.color.success));
-            }else if (list.get(listPosition).getIsReject().equalsIgnoreCase("yes")) {
+            } else if (list.get(listPosition).getIsReject().equalsIgnoreCase("yes")) {
                 holder.status.setText(Html.fromHtml(status2));
                 holder.status.setTextColor(mContext.getResources().getColor(R.color.red));
             }
@@ -77,7 +77,7 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
             holder.date.setText(Html.fromHtml(dateString));
 //            holder.quality.setText(Html.fromHtml(condition));
 
-            holder.asset_ll.setOnClickListener(new View.OnClickListener() {
+            holder.view_details.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ViewShipmentDetails.class);
@@ -90,7 +90,7 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
                 }
             });
 
-            holder.btn_editImages.setOnClickListener(new View.OnClickListener() {
+            holder.edit_images.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, Demo.class);
@@ -106,6 +106,7 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
             e.printStackTrace();
         }
     }
+
     @Override
     public int getItemCount() {
         return list.size();
@@ -126,14 +127,16 @@ public class SideShipmentAdapter extends RecyclerView.Adapter<SideShipmentAdapte
         TextView time;
         @BindView(R.id.tv_quality)
         TextView tv_quality;
-//        @BindView(R.id.quality)
+        //        @BindView(R.id.quality)
 //        TextView quality;
+        @BindView(R.id.edit_images)
+        TextView edit_images;
+        @BindView(R.id.view_details)
+        TextView view_details;
         @BindView(R.id.status)
         TextView status;
         @BindView(R.id.asset_ll)
         LinearLayout asset_ll;
-        @BindView(R.id.btn_editImages)
-        Button btn_editImages;
 
 
         ViewHolder(View view) {

@@ -11,6 +11,8 @@ import model.login.editProfile.EditProfileResponse;
 import model.login.responsewithout_CRN.ResponseSIdeMenu;
 import model.login.shipImagesEdit.ShipImagesResponse;
 import model.login.shipUpload.ShipUploadResponse;
+import model.login.shipUpload.updateShip.UpdateImagesResponse;
+import model.login.shipUpload.updateShip.UpdateShipResponse;
 import model.login.upload.UploadPhotoResponse;
 import model.login.viewProfile.ViewProfileResponse;
 import model.login.viewShipDetails.ViewShipDetailsResponse;
@@ -255,7 +257,7 @@ public interface ApiServices {
 
     @Multipart
     @POST("api.php/")
-    Call<ShipUploadResponse> ShipSignatureUpload(
+    Call<UpdateShipResponse> ShipSignatureUpload(
             @Part("token") RequestBody token,
             @Part("action") RequestBody action,
             @Part("hash") RequestBody hash,
@@ -263,6 +265,46 @@ public interface ApiServices {
             @Part() MultipartBody.Part supervisor_sign,
             @Part("update") RequestBody update
     );
+
+    @Multipart
+    @POST("api.php/")
+    Call<UpdateImagesResponse> ShipUpdated(
+            @Part("token") RequestBody token,
+            @Part("action") RequestBody action,
+            @Part("hash") RequestBody hash,
+            @Part() MultipartBody.Part file1,
+            @Part() MultipartBody.Part file2,
+            @Part() MultipartBody.Part file3,
+            @Part() MultipartBody.Part file4,
+            @Part() MultipartBody.Part file5,
+            @Part() MultipartBody.Part file6,
+            @Part() MultipartBody.Part file7,
+            @Part() MultipartBody.Part file8,
+            @Part() MultipartBody.Part file9,
+            @Part() MultipartBody.Part file10,
+            @Part() MultipartBody.Part file11,
+            @Part() MultipartBody.Part file12,
+            @Part() MultipartBody.Part file13,
+            @Part() MultipartBody.Part file14,
+            @Part() MultipartBody.Part file15,
+            @Part("desc1") RequestBody desc1,
+            @Part("desc2") RequestBody desc2,
+            @Part("desc3") RequestBody desc3,
+            @Part("desc4") RequestBody desc4,
+            @Part("desc5") RequestBody desc5,
+            @Part("desc6") RequestBody desc6,
+            @Part("desc7") RequestBody desc7,
+            @Part("desc8") RequestBody desc8,
+            @Part("desc9") RequestBody desc9,
+            @Part("desc10") RequestBody desc10,
+            @Part("desc11") RequestBody desc11,
+            @Part("desc12") RequestBody desc12,
+            @Part("desc13") RequestBody desc13,
+            @Part("desc14") RequestBody desc14,
+            @Part("desc15") RequestBody desc15,
+            @Part("update") RequestBody update
+    );
+
 
 
 
