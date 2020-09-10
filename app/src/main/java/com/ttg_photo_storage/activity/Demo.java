@@ -224,6 +224,16 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
     CheckBox engraving_check;
     @BindView(R.id.chassis2_check)
     CheckBox chassis2_check;
+    @BindView(R.id.biosLockedType_check)
+    CheckBox biosLockedType_check;
+    @BindView(R.id.doesNotPoweUp_check)
+    CheckBox doesNotPoweUp_check;
+    @BindView(R.id.keyBoard_key_missising_check)
+    CheckBox keyBoard_key_missising_check;
+    @BindView(R.id.keyboard_pannel_missing_check)
+    CheckBox keyboard_pannel_missing_check;
+    @BindView(R.id.BrokenCraked_check)
+    CheckBox BrokenCraked_check;
 
 
     Unbinder unbinder;
@@ -253,9 +263,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
     private String motherboard_check_st = "", chassis_check_st = "", permanentMarking_check_st = "", secreenSpot_check_st = "", otherDefect_check_st = "",
             cpuMissing_check_st = "", chassisCracked_check_st = "", screenBrokrn_check_st = "", biosLocked_check_st = "", noDefects_check_st = "",
-            part_check_st = "", engraving_check_st = "", chassis2_check_st = "";
-
-
+            part_check_st = "", engraving_check_st = "", chassis2_check_st = "", biosLockedType_check_st = "", doesNotPoweUp_check_st = "", keyBoard_key_missising_check_st = "", keyboard_pannel_missing_check_st = "",BrokenCraked_check_st = "";
     private File IMAGE_ONEfile;
     private File IMAGE_TWOFile;
     private File IMAGE_THREEFile;
@@ -301,6 +309,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
         currentTimeDate = (dateStr + " " + formattedDate);
         Log.e("TIME======>", currentTimeDate.toString());
 
+
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
             title.setText("Upload Photo");
             if (NetworkUtils.getConnectivityStatus(context) != 0) {
@@ -313,8 +322,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             title.setText("Add Shipment Image");
 
         }
-
-
         if (hash != null) {
             checkImages();
             btn_updateShipment.setVisibility(View.VISIBLE);
@@ -323,7 +330,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             btn_updateShipment.setVisibility(View.GONE);
             btn_submitShipment.setVisibility(View.VISIBLE);
         }
-
 
         if (getIntent().getStringExtra("imageSignature") != null) {
             String signature_path = getIntent().getStringExtra("imageSignature");
@@ -354,6 +360,35 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
         }
 
+        final CheckBox checkBox = (CheckBox) findViewById(R.id.noDefects_check);
+        checkBox.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (checkBox.isChecked()) {
+                    part_check.setChecked(false);
+                    chassis2_check.setChecked(false);
+                    chassis2_check.setChecked(false);
+                    engraving_check.setChecked(false);
+                    biosLocked_check.setChecked(false);
+                    screenBrokrn_check.setChecked(false);
+                    chassisCracked_check.setChecked(false);
+                    cpuMissing_check.setChecked(false);
+                    otherDefect_check.setChecked(false);
+                    secreenSpot_check.setChecked(false);
+                    permanentMarking_check.setChecked(false);
+                    chassis_check.setChecked(false);
+                    motherboard_check.setChecked(false);
+                    biosLockedType_check.setChecked(false);
+                    doesNotPoweUp_check.setChecked(false);
+                    keyBoard_key_missising_check.setChecked(false);
+                    keyboard_pannel_missing_check.setChecked(false);
+                    BrokenCraked_check.setChecked(false);
+                }
+
+            }
+        });
+
     }
 
     @Override
@@ -363,8 +398,9 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
 
     @OnClick({R.id.side_menu, R.id.imageOne, R.id.imageSecond, R.id.imageThird, R.id.imageFourth, R.id.imageFive, R.id.imageSix,
-            R.id.imageSeven, R.id.imageEight, R.id.imageNine, R.id.imageTen, R.id.imageEleven, R.id.imageTwele,
-            R.id.btn_submit, R.id.imageThirteen, R.id.imageFourteen, R.id.imageFifteen, R.id.btn_submitShipment, R.id.btn_updateShipment, R.id.defectDescribe})
+            R.id.imageSeven, R.id.imageEight, R.id.imageNine, R.id.imageTen, R.id.imageEleven, R.id.imageTwele, R.id.noDefects_check,
+            R.id.btn_submit, R.id.imageThirteen, R.id.imageFourteen, R.id.imageFifteen, R.id.btn_submitShipment, R.id.btn_updateShipment, R.id.defectDescribe,
+    })
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.side_menu:
@@ -373,13 +409,35 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
                 break;
 
+
             case R.id.defectDescribe:
                 PopupMenu defectPopUp = new PopupMenu(context, defectDescribe);
                 defectPopUp.getMenuInflater().inflate(R.menu.defecttype, defectPopUp.getMenu());
                 defectPopUp.setOnMenuItemClickListener(item -> {
                     try {
                         defectDescribe.setText(item.getTitle());
-                        if (defectDescribe.getText().toString().equalsIgnoreCase("Notebook")) {
+                        if (defectDescribe.getText().toString().equalsIgnoreCase("Desktop")) {
+                            first_layer.setVisibility(View.VISIBLE);
+                            second_layer.setVisibility(View.VISIBLE);
+                            motherboard_check.setVisibility(View.VISIBLE);
+                            cpuMissing_check.setVisibility(View.VISIBLE);
+                            secreenSpot_check.setVisibility(View.GONE);
+                            screenBrokrn_check.setVisibility(View.GONE);
+                            biosLocked_check.setVisibility(View.GONE);
+                            otherDefect_check.setVisibility(View.VISIBLE);
+                            permanentMarking_check.setVisibility(View.VISIBLE);
+                            chassisCracked_check.setVisibility(View.GONE);
+                            part_check.setVisibility(View.GONE);
+                            biosLocked_check.setVisibility(View.GONE);
+                            chassis2_check.setVisibility(View.VISIBLE);
+                            chassis_check.setVisibility(View.GONE);
+                            engraving_check.setVisibility(View.VISIBLE);
+                            noDefects_check.setVisibility(View.VISIBLE);
+                            keyBoard_key_missising_check.setVisibility(View.GONE);
+                            keyboard_pannel_missing_check.setVisibility(View.GONE);
+                            BrokenCraked_check.setVisibility(View.GONE);
+
+                        } else if (defectDescribe.getText().toString().equalsIgnoreCase("Notebook")) {
                             first_layer.setVisibility(View.VISIBLE);
                             second_layer.setVisibility(View.VISIBLE);
                             motherboard_check.setVisibility(View.VISIBLE);
@@ -396,25 +454,11 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                             chassis_check.setVisibility(View.VISIBLE);
                             engraving_check.setVisibility(View.VISIBLE);
                             otherDefect_check.setVisibility(View.VISIBLE);
-
-                        } else if (defectDescribe.getText().toString().equalsIgnoreCase("Desktop")) {
-                            first_layer.setVisibility(View.VISIBLE);
-                            second_layer.setVisibility(View.VISIBLE);
-                            motherboard_check.setVisibility(View.VISIBLE);
-                            cpuMissing_check.setVisibility(View.VISIBLE);
-                            secreenSpot_check.setVisibility(View.GONE);
-                            screenBrokrn_check.setVisibility(View.GONE);
-                            biosLocked_check.setVisibility(View.VISIBLE);
-                            otherDefect_check.setVisibility(View.VISIBLE);
-                            permanentMarking_check.setVisibility(View.VISIBLE);
-                            chassisCracked_check.setVisibility(View.GONE);
-                            part_check.setVisibility(View.GONE);
-                            biosLocked_check.setVisibility(View.VISIBLE);
-                            chassis2_check.setVisibility(View.VISIBLE);
-                            chassis_check.setVisibility(View.GONE);
-                            engraving_check.setVisibility(View.GONE);
-                            noDefects_check.setVisibility(View.VISIBLE);
-
+                            biosLockedType_check.setVisibility(View.VISIBLE);
+                            doesNotPoweUp_check.setVisibility(View.VISIBLE);
+                            keyBoard_key_missising_check.setVisibility(View.VISIBLE);
+                            keyboard_pannel_missing_check.setVisibility(View.VISIBLE);
+                            BrokenCraked_check.setVisibility(View.GONE);
                         } else if (defectDescribe.getText().toString().equalsIgnoreCase("Other Device")) {
                             first_layer.setVisibility(View.VISIBLE);
                             second_layer.setVisibility(View.VISIBLE);
@@ -435,7 +479,12 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                             chassis_check.setVisibility(View.GONE);
                             chassisCracked_check.setVisibility(View.GONE);
                             noDefects_check.setVisibility(View.VISIBLE);
+                            keyBoard_key_missising_check.setVisibility(View.GONE);
+                            keyboard_pannel_missing_check.setVisibility(View.GONE);
+                            biosLockedType_check.setVisibility(View.GONE);
+                            BrokenCraked_check.setVisibility(View.VISIBLE);
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1639,8 +1688,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                 }
                 break;
         }
-
-
     }
 
     /*Selection Images*/
@@ -2068,7 +2115,8 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             RequestBody crn = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getCrnID());
             RequestBody device_type = RequestBody.create(MediaType.parse("text/plain"), describeDefect_st);
             RequestBody defect = RequestBody.create(MediaType.parse("text/plain"), motherboard_check_st + " " + chassis_check_st + " " + permanentMarking_check_st + " " + secreenSpot_check_st + " " + otherDefect_check_st
-                    + " " + cpuMissing_check_st + " " + chassisCracked_check_st + " " + screenBrokrn_check_st + " " + biosLocked_check_st + " " + noDefects_check_st + "" + engraving_check_st + "" + chassis2_check_st + "" + part_check_st);
+                    + " " + cpuMissing_check_st + " " + chassisCracked_check_st + " " + screenBrokrn_check_st + " " + biosLocked_check_st + " " + noDefects_check_st + "" + engraving_check_st + "" + chassis2_check_st + "" + part_check_st+""+
+                    biosLockedType_check_st +""+ doesNotPoweUp_check +""+keyBoard_key_missising_check_st + ""+keyboard_pannel_missing_check_st+""+BrokenCraked_check_st);
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", addpost.toString());
             Log.i("description>>", description.toString());
@@ -2502,6 +2550,10 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             desc14_st = des_fourteen.getText().toString().trim();
             desc15_st = des_fifteen.getText().toString().trim();
             describeDefect_st = defectDescribe.getText().toString();
+            biosLockedType_check_st = biosLockedType_check.getText().toString();
+            doesNotPoweUp_check_st = doesNotPoweUp_check.getText().toString();
+            keyBoard_key_missising_check_st = keyBoard_key_missising_check.getText().toString();
+            keyboard_pannel_missing_check_st = keyboard_pannel_missing_check.getText().toString();
 
 
             if (motherboard_check.isChecked()) {
@@ -2532,9 +2584,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             if (biosLocked_check.isChecked()) {
                 biosLocked_check_st = "BIOS Locked ,";
             }
-            if (noDefects_check.isChecked()) {
-                noDefects_check_st = "No Defect Found ,";
-            }
+
             if (engraving_check.isChecked()) {
                 engraving_check_st = "Engraving/Scratch ,";
             }
@@ -2545,6 +2595,27 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             if (part_check.isChecked()) {
                 part_check_st = "Parts Missing faulty ,";
             }
+            if (noDefects_check.isChecked()) {
+                noDefects_check_st = "No Defect Found ,";
+            }
+
+            if (biosLockedType_check.isChecked()) {
+                biosLockedType_check_st = "Bios Locked/Security Feature Type ,";
+            }
+            if (doesNotPoweUp_check.isChecked()) {
+                doesNotPoweUp_check_st = "Does Not Power Up ,";
+            }
+            if (keyBoard_key_missising_check.isChecked()) {
+                keyBoard_key_missising_check_st = "Keyboard Faulty/Key Missing ,";
+            }
+            if (keyboard_pannel_missing_check.isChecked()) {
+                keyboard_pannel_missing_check_st = "Keyboard Panel Missing ,";
+            }
+
+            if (BrokenCraked_check.isChecked()){
+                BrokenCraked_check_st="Broken/Cracked ,";
+            }
+
 
             if (IMAGE_ONEfile == null && IMAGE_TWOFile == null && IMAGE_THREEFile == null && IMAGE_FOURFile == null
                     && IMAGE_FIVEFile == null && IMAGE_SIXFile == null && IMAGE_SEVENFile == null && IMAGE_EIGHTFile == null
@@ -3559,7 +3630,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                 hideLoading();
                 LoggerUtil.logItem(response.body());
                 if (response.body().getStatus().equalsIgnoreCase("success")) {
-                   if (response.body().getAllshipments().getFiles() != null) {
+                    if (response.body().getAllshipments().getFiles() != null) {
                         imageListShip = response.body().getAllshipments().getFiles();
                         LoggerUtil.logItem(imageListShip);
                         for (int i = 0; i < imageListShip.size(); i++) {
@@ -4411,7 +4482,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             showProgressDialog();
             RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
             RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
-            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),key );
+            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"), key);
             MultipartBody.Part body = null, body2 = null, body3 = null, body4 = null, body5 = null, body6 = null, body7 = null,
                     body8 = null, body9 = null, body10 = null, body11 = null, body12 = null, body13 = null, body14 = null, body15 = null;
             RequestBody desc1 = null, desc2 = null, desc3 = null, desc4 = null, desc5 = null, desc6 = null,
@@ -4503,10 +4574,10 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", action.toString());
-            Call<UpdateImagesResponse> updatecall = apiServices.ShipUpdated(token, action, hash,  body, body2
+            Call<UpdateImagesResponse> updatecall = apiServices.ShipUpdated(token, action, hash, body, body2
                     , body3, body4, body5, body6, body7, body8, body9, body10, body11, body12, body13, body14, body15, desc1, desc2, desc3, desc4, desc5, desc6, desc7, desc8, desc9, desc10, desc11, desc12, desc13, desc14, desc15
                     , update
-                   );
+            );
             updatecall.enqueue(new Callback<UpdateImagesResponse>() {
                 @Override
                 public void onResponse(Call<UpdateImagesResponse> call, Response<UpdateImagesResponse> response) {

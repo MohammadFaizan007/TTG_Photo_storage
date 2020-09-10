@@ -193,21 +193,28 @@ public class ViewShipmentDetails extends BaseActivity {
         currentTimeDate = (dateStr + " " + formattedDate);
 
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")) {
+            checkbox_remember.setClickable(false);
+            checkbox_remember.setFocusable(false);
+            checkbox_remember.setCursorVisible(false);
+            checkbox_remember.setFocusableInTouchMode(false);
             if (NetworkUtils.getConnectivityStatus(context) != 0) {
                 getViewShipDetails();
             } else {
                 showMessage(getResources().getString(R.string.alert_internet));
             }
         } else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
+            checkbox_remember.setEnabled(true);
             if (NetworkUtils.getConnectivityStatus(context) != 0) {
                 getViewShipDetailsShip();
             } else {
                 showMessage(getResources().getString(R.string.alert_internet));
             }
         }
+
+
     }
 
-    @OnClick({R.id.side_menu, R.id.btn_images,R.id.btn_images_reject, R.id.btn_Download,R.id.btn_Download_reject,R.id.imge_signature,R.id.checkbox_remember})
+    @OnClick({R.id.side_menu, R.id.btn_images, R.id.btn_images_reject, R.id.btn_Download, R.id.btn_Download_reject, R.id.imge_signature, R.id.checkbox_remember})
     public void onViewClicked(View v) {
         switch (v.getId()) {
             case R.id.side_menu:
@@ -242,23 +249,12 @@ public class ViewShipmentDetails extends BaseActivity {
                     checkPermission(
                             Manifest.permission.WRITE_EXTERNAL_STORAGE,
                             STORAGE_PERMISSION_CODE);
-                }else {
+                } else {
                     imge_signature.setEnabled(false);
                 }
                 break;
-            case R.id.checkbox_remember:
-                if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
-                    checkbox_remember.setEnabled(true);
-                }else {
-                    checkbox_remember.setClickable(false);
-                    checkbox_remember.setFocusable(false);
-                    checkbox_remember.setCursorVisible(false);
-                    checkbox_remember.setFocusableInTouchMode(false);
-                }
 
-
-
-                }
+        }
     }
 
 
@@ -446,9 +442,8 @@ public class ViewShipmentDetails extends BaseActivity {
         } else {
             if (checkbox_remember.isChecked()) {
                 signatureDialog();
-            }else{
-                showError("Please tick check box",declair_et);
-//                showToastS("Please tick check box");
+            } else {
+                showError("Please tick check box", declair_et);
 
             }
         }
@@ -471,8 +466,8 @@ public class ViewShipmentDetails extends BaseActivity {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (checkbox_remember.isChecked()) {
                     signatureDialog();
-                }else{
-                    showError("Please tick check box",declair_et);
+                } else {
+                    showError("Please tick check box", declair_et);
 //                    showToastS("Please tick check box");
 
                 }
@@ -487,8 +482,8 @@ public class ViewShipmentDetails extends BaseActivity {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (checkbox_remember.isChecked()) {
                     signatureDialog();
-                }else{
-                    showError("Please tick check box",declair_et);
+                } else {
+                    showError("Please tick check box", declair_et);
 //                    showToastS("Please tick check box");
 
                 }
@@ -570,7 +565,7 @@ public class ViewShipmentDetails extends BaseActivity {
 //                            e.printStackTrace();
 //                        }
                         IMAGE_SIGNATUREFile = Compressor.getDefault(context).compressToFile(signatureFile);
-                                updateSignature(hash);
+                        updateSignature(hash);
 
 //                        PreferencesManager.getInstance(context).setSignatureImage(IMAGE_SIGNATUREFile.getAbsolutePath());
 
@@ -607,9 +602,9 @@ public class ViewShipmentDetails extends BaseActivity {
             showProgressDialog();
             RequestBody token = RequestBody.create(MediaType.parse("text/plain"), PreferencesManager.getInstance(context).getToken());
             RequestBody action = RequestBody.create(MediaType.parse("text/plain"), "addship");
-            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"),key );
+            RequestBody hash = RequestBody.create(MediaType.parse("text/plain"), key);
             RequestBody declr_tick = RequestBody.create(MediaType.parse("text/plain"), "yes");
-            MultipartBody.Part  signatureBody = null;
+            MultipartBody.Part signatureBody = null;
 
             if (IMAGE_SIGNATUREFile != null) {
                 RequestBody requestBodySignature = RequestBody.create(MediaType.parse("file15/*"), IMAGE_SIGNATUREFile);
@@ -619,10 +614,9 @@ public class ViewShipmentDetails extends BaseActivity {
             RequestBody update = RequestBody.create(MediaType.parse("text/plain"), "true");
 
 
-
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", action.toString());
-            Call<UpdateShipResponse> photocall = apiServices.ShipSignatureUpload(token, action, hash,  declr_tick,  signatureBody,update);
+            Call<UpdateShipResponse> photocall = apiServices.ShipSignatureUpload(token, action, hash, declr_tick, signatureBody, update);
             photocall.enqueue(new Callback<UpdateShipResponse>() {
                 @Override
                 public void onResponse(Call<UpdateShipResponse> call, Response<UpdateShipResponse> response) {

@@ -794,7 +794,9 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:text="@string/declair"
                         android:textColor="@color/black"
-                        android:textSize="10sp" />
+                        android:textSize="10sp"
+
+                        />
 
 
                     <TextView
