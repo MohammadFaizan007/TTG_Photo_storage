@@ -246,9 +246,7 @@ public class ViewShipmentDetails extends BaseActivity {
                 break;
             case R.id.imge_signature:
                 if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
-                    checkPermission(
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            STORAGE_PERMISSION_CODE);
+                    checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE_PERMISSION_CODE);
                 } else {
                     imge_signature.setEnabled(false);
                 }
@@ -432,19 +430,23 @@ public class ViewShipmentDetails extends BaseActivity {
     }
 
     public void checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), permission)
-                == PackageManager.PERMISSION_DENIED) {
-
-            // Requesting the permission
-            ActivityCompat.requestPermissions((Activity) getApplicationContext(),
-                    new String[]{permission},
-                    requestCode);
-        } else {
-            if (checkbox_remember.isChecked()) {
-                signatureDialog();
+        if (ContextCompat.checkSelfPermission(ViewShipmentDetails.this, permission) == PackageManager.PERMISSION_DENIED) {
+            // Checking if permission is not granted
+            if (ContextCompat.checkSelfPermission(
+                    ViewShipmentDetails.this,
+                    permission)
+                    == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat
+                        .requestPermissions(
+                                ViewShipmentDetails.this,
+                                new String[]{permission},
+                                requestCode);
             } else {
-                showError("Please tick check box", declair_et);
-
+                Toast
+                        .makeText(ViewShipmentDetails.this,
+                                "Permission already granted",
+                                Toast.LENGTH_SHORT)
+                        .show();
             }
         }
     }
@@ -639,7 +641,7 @@ public class ViewShipmentDetails extends BaseActivity {
                             @Override
                             public void onClick(View v) {
                                 alertDialog.dismiss();
-                                goToActivityWithFinish(ViewShipmentDetails.this, MainContainer.class, null);
+//                                goToActivityWithFinish(ViewShipmentDetails.this, MainContainer.class, null);
                             }
                         });
 

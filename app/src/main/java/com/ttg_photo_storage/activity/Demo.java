@@ -360,12 +360,11 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
         }
 
-        final CheckBox checkBox = (CheckBox) findViewById(R.id.noDefects_check);
-        checkBox.setOnClickListener(new View.OnClickListener() {
+        noDefects_check.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if (checkBox.isChecked()) {
+                if (noDefects_check.isChecked()) {
                     part_check.setChecked(false);
                     chassis2_check.setChecked(false);
                     chassis2_check.setChecked(false);
@@ -398,7 +397,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
 
     @OnClick({R.id.side_menu, R.id.imageOne, R.id.imageSecond, R.id.imageThird, R.id.imageFourth, R.id.imageFive, R.id.imageSix,
-            R.id.imageSeven, R.id.imageEight, R.id.imageNine, R.id.imageTen, R.id.imageEleven, R.id.imageTwele, R.id.noDefects_check,
+            R.id.imageSeven, R.id.imageEight, R.id.imageNine, R.id.imageTen, R.id.imageEleven, R.id.imageTwele,
             R.id.btn_submit, R.id.imageThirteen, R.id.imageFourteen, R.id.imageFifteen, R.id.btn_submitShipment, R.id.btn_updateShipment, R.id.defectDescribe,
     })
     public void onViewClicked(View view) {
@@ -2116,7 +2115,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             RequestBody device_type = RequestBody.create(MediaType.parse("text/plain"), describeDefect_st);
             RequestBody defect = RequestBody.create(MediaType.parse("text/plain"), motherboard_check_st + " " + chassis_check_st + " " + permanentMarking_check_st + " " + secreenSpot_check_st + " " + otherDefect_check_st
                     + " " + cpuMissing_check_st + " " + chassisCracked_check_st + " " + screenBrokrn_check_st + " " + biosLocked_check_st + " " + noDefects_check_st + "" + engraving_check_st + "" + chassis2_check_st + "" + part_check_st+""+
-                    biosLockedType_check_st +""+ doesNotPoweUp_check +""+keyBoard_key_missising_check_st + ""+keyboard_pannel_missing_check_st+""+BrokenCraked_check_st);
+                    biosLockedType_check_st +""+ doesNotPoweUp_check_st +""+keyBoard_key_missising_check_st + ""+keyboard_pannel_missing_check_st+""+BrokenCraked_check_st);
             Log.i("token>>>", token.toString());
             Log.i("addpost>>", addpost.toString());
             Log.i("description>>", description.toString());
@@ -2549,11 +2548,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             desc13_st = des_thirteen.getText().toString().trim();
             desc14_st = des_fourteen.getText().toString().trim();
             desc15_st = des_fifteen.getText().toString().trim();
-            describeDefect_st = defectDescribe.getText().toString();
-            biosLockedType_check_st = biosLockedType_check.getText().toString();
-            doesNotPoweUp_check_st = doesNotPoweUp_check.getText().toString();
-            keyBoard_key_missising_check_st = keyBoard_key_missising_check.getText().toString();
-            keyboard_pannel_missing_check_st = keyboard_pannel_missing_check.getText().toString();
+            describeDefect_st = defectDescribe.getText().toString().trim();
 
 
             if (motherboard_check.isChecked()) {
@@ -2615,8 +2610,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             if (BrokenCraked_check.isChecked()){
                 BrokenCraked_check_st="Broken/Cracked ,";
             }
-
-
             if (IMAGE_ONEfile == null && IMAGE_TWOFile == null && IMAGE_THREEFile == null && IMAGE_FOURFile == null
                     && IMAGE_FIVEFile == null && IMAGE_SIXFile == null && IMAGE_SEVENFile == null && IMAGE_EIGHTFile == null
                     && IMAGE_NINEFile == null && IMAGE_TENFile == null && IMAGE_ELEVENFile == null && IMAGE_TWELEFile == null) {

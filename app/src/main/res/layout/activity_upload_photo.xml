@@ -790,15 +790,7 @@
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             />
-                        <CheckBox
-                            android:id="@+id/otherDefect_check"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="Other Defects"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            />
+
 
                         <CheckBox
                             android:id="@+id/biosLockedType_check"
@@ -825,6 +817,15 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
                             android:text="Broken/Cracked"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            />
+                        <CheckBox
+                            android:id="@+id/otherDefect_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:text="Other Defects"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             />
@@ -896,16 +897,7 @@
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             />
-                        <CheckBox
-                            android:id="@+id/noDefects_check"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="No Defect Found"
-                            android:textColor="@color/black"
-                            android:textSize="12sp"
-                            android:onClick="onViewClicked"
-                            />
+
 
                         <CheckBox
                             android:id="@+id/keyBoard_key_missising_check"
@@ -915,7 +907,6 @@
                             android:text="Keyboard Faulty/Key Missing"
                             android:textColor="@color/black"
                             android:textSize="12sp"
-                            android:onClick="onViewClicked"
                             />
 
                         <CheckBox
@@ -926,7 +917,15 @@
                             android:text="Keyboard Panel Missing"
                             android:textColor="@color/black"
                             android:textSize="12sp"
-                            android:onClick="onViewClicked"
+                            />
+                        <CheckBox
+                            android:id="@+id/noDefects_check"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:text="No Defect Found"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
                             />
 
                     </LinearLayout>
