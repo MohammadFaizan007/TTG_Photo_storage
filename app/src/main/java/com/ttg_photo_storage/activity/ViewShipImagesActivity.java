@@ -1,8 +1,6 @@
 package com.ttg_photo_storage.activity;
 
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,9 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
-import com.ttg_photo_storage.activity.adapter.PostResultAdapter;
-import com.ttg_photo_storage.activity.adapter.ViewShipImagesAdapter;
-import com.ttg_photo_storage.activity.adapter.ViewShipImagesSideAdapter;
+import com.ttg_photo_storage.adapter.ViewShipImagesAdapter;
+import com.ttg_photo_storage.adapter.ViewShipImagesSideAdapter;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
 import com.ttg_photo_storage.utils.LoggerUtil;
@@ -28,7 +25,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import model.login.client.UIdResponse;
 import model.login.detailsWithoutCrn.ResponseShipmentDetails;
 import model.login.viewShipDetails.FilesItem;
 import model.login.viewShipDetails.ViewShipDetailsResponse;
@@ -65,7 +61,6 @@ public class ViewShipImagesActivity extends BaseActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         formattedDate = sdf.format(cal.getTime());
         currentTimeDate = (dateStr + " " + formattedDate);
-        Log.e("DateAndTime=========>", currentTimeDate);
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("client")) {
             if (NetworkUtils.getConnectivityStatus(context) != 0) {
                 getViewShipDetails();

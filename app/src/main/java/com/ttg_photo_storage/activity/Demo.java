@@ -307,7 +307,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         formattedDate = sdf.format(cal.getTime());
         currentTimeDate = (dateStr + " " + formattedDate);
-        Log.e("TIME======>", currentTimeDate.toString());
 
 
         if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("staff")) {
@@ -366,23 +365,125 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
             public void onClick(View v) {
                 if (noDefects_check.isChecked()) {
                     part_check.setChecked(false);
+                    part_check.setClickable(false);
+                    part_check.setFocusable(false);
+                    part_check.setCursorVisible(false);
                     chassis2_check.setChecked(false);
-                    chassis2_check.setChecked(false);
+                    chassis2_check.setClickable(false);
+                    chassis2_check.setFocusable(false);
+                    chassis2_check.setCursorVisible(false);
                     engraving_check.setChecked(false);
+                    engraving_check.setClickable(false);
+                    engraving_check.setFocusable(false);
+                    engraving_check.setCursorVisible(false);
                     biosLocked_check.setChecked(false);
+                    biosLocked_check.setClickable(false);
+                    biosLocked_check.setFocusable(false);
+                    biosLocked_check.setCursorVisible(false);
                     screenBrokrn_check.setChecked(false);
+                    screenBrokrn_check.setClickable(false);
+                    screenBrokrn_check.setFocusable(false);
+                    screenBrokrn_check.setCursorVisible(false);
                     chassisCracked_check.setChecked(false);
+                    chassisCracked_check.setClickable(false);
+                    chassisCracked_check.setFocusable(false);
+                    chassisCracked_check.setCursorVisible(false);
                     cpuMissing_check.setChecked(false);
+                    cpuMissing_check.setClickable(false);
+                    cpuMissing_check.setFocusable(false);
+                    cpuMissing_check.setCursorVisible(false);
                     otherDefect_check.setChecked(false);
+                    otherDefect_check.setClickable(false);
+                    otherDefect_check.setFocusable(false);
+                    otherDefect_check.setCursorVisible(false);
                     secreenSpot_check.setChecked(false);
+                    secreenSpot_check.setClickable(false);
+                    secreenSpot_check.setFocusable(false);
+                    secreenSpot_check.setCursorVisible(false);
                     permanentMarking_check.setChecked(false);
+                    permanentMarking_check.setClickable(false);
+                    permanentMarking_check.setFocusable(false);
+                    permanentMarking_check.setCursorVisible(false);
                     chassis_check.setChecked(false);
+                    chassis_check.setClickable(false);
+                    chassis_check.setFocusable(false);
+                    chassis_check.setCursorVisible(false);
                     motherboard_check.setChecked(false);
+                    motherboard_check.setClickable(false);
+                    motherboard_check.setFocusable(false);
+                    motherboard_check.setCursorVisible(false);
                     biosLockedType_check.setChecked(false);
+                    biosLockedType_check.setClickable(false);
+                    biosLockedType_check.setFocusable(false);
+                    biosLockedType_check.setCursorVisible(false);
                     doesNotPoweUp_check.setChecked(false);
+                    doesNotPoweUp_check.setClickable(false);
+                    doesNotPoweUp_check.setFocusable(false);
+                    doesNotPoweUp_check.setCursorVisible(false);
                     keyBoard_key_missising_check.setChecked(false);
+                    keyBoard_key_missising_check.setClickable(false);
+                    keyBoard_key_missising_check.setFocusable(false);
+                    keyBoard_key_missising_check.setCursorVisible(false);
                     keyboard_pannel_missing_check.setChecked(false);
+                    keyboard_pannel_missing_check.setClickable(false);
+                    keyboard_pannel_missing_check.setFocusable(false);
+                    keyboard_pannel_missing_check.setCursorVisible(false);
                     BrokenCraked_check.setChecked(false);
+                    BrokenCraked_check.setClickable(false);
+                    BrokenCraked_check.setFocusable(false);
+                    BrokenCraked_check.setCursorVisible(false);
+                }else{
+                    part_check.setClickable(true);
+                    part_check.setFocusable(true);
+                    part_check.setCursorVisible(true);
+                    chassis2_check.setClickable(true);
+                    chassis2_check.setFocusable(true);
+                    chassis2_check.setCursorVisible(true);
+                    engraving_check.setClickable(true);
+                    engraving_check.setFocusable(true);
+                    engraving_check.setCursorVisible(true);
+                    biosLocked_check.setClickable(true);
+                    biosLocked_check.setFocusable(true);
+                    biosLocked_check.setCursorVisible(true);
+                    screenBrokrn_check.setClickable(true);
+                    screenBrokrn_check.setFocusable(true);
+                    screenBrokrn_check.setCursorVisible(true);
+                    chassisCracked_check.setClickable(true);
+                    chassisCracked_check.setFocusable(true);
+                    chassisCracked_check.setCursorVisible(true);
+                    cpuMissing_check.setClickable(true);
+                    cpuMissing_check.setFocusable(true);
+                    cpuMissing_check.setCursorVisible(true);
+                    otherDefect_check.setClickable(true);
+                    otherDefect_check.setFocusable(true);
+                    otherDefect_check.setCursorVisible(true);
+                    secreenSpot_check.setClickable(true);
+                    secreenSpot_check.setFocusable(true);
+                    secreenSpot_check.setCursorVisible(true);
+                    permanentMarking_check.setClickable(true);
+                    permanentMarking_check.setFocusable(true);
+                    permanentMarking_check.setCursorVisible(true);
+                    chassis_check.setClickable(true);
+                    chassis_check.setFocusable(true);
+                    chassis_check.setCursorVisible(true);
+                    motherboard_check.setClickable(true);
+                    motherboard_check.setFocusable(true);
+                    motherboard_check.setCursorVisible(true);
+                    biosLockedType_check.setClickable(true);
+                    biosLockedType_check.setFocusable(true);
+                    biosLockedType_check.setCursorVisible(true);
+                    doesNotPoweUp_check.setClickable(true);
+                    doesNotPoweUp_check.setFocusable(true);
+                    doesNotPoweUp_check.setCursorVisible(true);
+                    keyBoard_key_missising_check.setClickable(true);
+                    keyBoard_key_missising_check.setFocusable(true);
+                    keyBoard_key_missising_check.setCursorVisible(true);
+                    keyboard_pannel_missing_check.setClickable(true);
+                    keyboard_pannel_missing_check.setFocusable(true);
+                    keyboard_pannel_missing_check.setCursorVisible(true);
+                    BrokenCraked_check.setClickable(true);
+                    BrokenCraked_check.setFocusable(true);
+                    BrokenCraked_check.setCursorVisible(true);
                 }
 
             }
@@ -1736,7 +1837,7 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
                     EditImageActivity.start(context, intent, PHOTO_EDITOR_REQUEST_CODE);
                 } catch (Exception e) {
 //                    Toast.makeText(this, R.string.iamutkarshtiwari_github_io_ananas_not_selected, Toast.LENGTH_SHORT).show();
-                    Log.e("Demo App", e.getMessage());
+                    Log.i("Demo App", e.getMessage());
                 }
                 break;
         }
@@ -3613,7 +3714,6 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
     }
 
     public void checkImages() {
-        Log.e("PARAM==>", this.currentTimeDate + ",," + this.hash);
         showLoading();
         Call<ShipImagesResponse> call = apiServices.checkImages("getship", PreferencesManager.getInstance(context).getToken(), currentTimeDate, hash);
 
@@ -5640,10 +5740,3 @@ public class Demo extends BaseActivity /*implements IPickCancel, IPickResult*/ {
 
 
 }
-
-
-
-
-
-
-

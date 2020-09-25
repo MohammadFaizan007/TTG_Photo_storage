@@ -1532,12 +1532,12 @@ public class UploadPhotoActivity extends BaseActivity implements IPickCancel, IP
                         EditImageActivity.start(context, intent, PHOTO_EDITOR_REQUEST_CODE);
                     } catch (Exception e) {
                         Toast.makeText(this, R.string.iamutkarshtiwari_github_io_ananas_not_selected, Toast.LENGTH_SHORT).show();
-                        Log.e("Demo App", e.getMessage());
+                        Log.i("Demo App", e.getMessage());
                     }
                     break;
             }
         } else {
-            Log.e("RESULT", "ERROR = " + pickResult.getError());
+            Log.i("RESULT", "ERROR = " + pickResult.getError());
         }
     }
 

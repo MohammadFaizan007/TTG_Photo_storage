@@ -68,8 +68,6 @@ public class CntactUsActivity extends BaseActivity {
         webview.getSettings().setDatabaseEnabled(true);
         webview.getSettings().setLoadWithOverviewMode(true);
         webview.getSettings().setAppCacheEnabled(true);
-//        webview.getSettings().setPluginState(WebSettings.PluginState.ON);
-//        Log.e("Link==>", param.getString("link"));
         loadLink(url);
 
 

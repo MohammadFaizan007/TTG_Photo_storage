@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
-import com.ttg_photo_storage.activity.adapter.CrnResultAdapter;
-import com.ttg_photo_storage.activity.adapter.PostResultAdapter;
+import com.ttg_photo_storage.adapter.CrnResultAdapter;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
 import com.ttg_photo_storage.utils.LoggerUtil;
@@ -24,8 +23,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import model.login.client.FilesItem;
-import model.login.client.UIdResponse;
 import model.login.crn.CrnResultResponse;
 import model.login.crn.UidsItem;
 import retrofit2.Call;

@@ -1,7 +1,6 @@
 package com.ttg_photo_storage.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
-import com.ttg_photo_storage.activity.adapter.ShipmentAdapter;
-import com.ttg_photo_storage.activity.adapter.SideShipmentAdapter;
+import com.ttg_photo_storage.adapter.ShipmentAdapter;
+import com.ttg_photo_storage.adapter.SideShipmentAdapter;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
 import com.ttg_photo_storage.utils.LoggerUtil;
@@ -30,8 +29,6 @@ import model.login.ViewShip.ShipmentsItem;
 import model.login.ViewShip.ViewShipResponse;
 import model.login.responsewithout_CRN.AllshipmentsItem;
 import model.login.responsewithout_CRN.ResponseSIdeMenu;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

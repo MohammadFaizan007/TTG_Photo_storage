@@ -1,37 +1,26 @@
-package com.ttg_photo_storage.activity.adapter;
+package com.ttg_photo_storage.adapter;
 
 import android.app.Activity;
-import android.app.UiAutomation;
 import android.content.Intent;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.ttg_photo_storage.BuildConfig;
 import com.ttg_photo_storage.R;
-import com.ttg_photo_storage.activity.FullScreenImageActivity;
-import com.ttg_photo_storage.activity.PostResultActivity;
 import com.ttg_photo_storage.activity.PostResultSecondActivity;
-import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.retrofit.MvpView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import model.login.client.FilesItem;
 import model.login.crn.UidsItem;
-
-import static com.bumptech.glide.load.engine.DiskCacheStrategy.AUTOMATIC;
 
 public class CrnResultAdapter extends RecyclerView.Adapter<CrnResultAdapter.ViewHolder> {
     private Activity mContext;
@@ -93,11 +82,6 @@ public class CrnResultAdapter extends RecyclerView.Adapter<CrnResultAdapter.View
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-//            btnTeanandbusiness.setOnClickListener(v -> {
-//                Log.e("MEMBER ID", "= " + list.get(getAdapterPosition()).getMemberId());
-//                mvpView.getMyClickPosition(list.get(getAdapterPosition()).getFirstName() + " " + list.get(getAdapterPosition()).getLastName(), String.valueOf(list.get(getAdapterPosition()).getMemberId()));
-//
-//            });
 
         }
     }

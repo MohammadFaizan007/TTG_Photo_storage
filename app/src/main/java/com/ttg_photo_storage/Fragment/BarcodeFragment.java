@@ -46,14 +46,12 @@ public class BarcodeFragment extends Fragment implements BarcodeReaderFragment.B
 
     @Override
     public void onScanned(final Barcode barcode) {
-        Log.e(TAG, "onScanned: " + barcode.displayValue);
         barcodeReader.playBeep();
         Toast.makeText(getActivity(), "Barcode: " + barcode.displayValue, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onScannedMultiple(List<Barcode> barcodes) {
-        Log.e(TAG, "onScannedMultiple: " + barcodes.size());
 
         String codes = "";
         for (Barcode barcode : barcodes) {
@@ -71,7 +69,7 @@ public class BarcodeFragment extends Fragment implements BarcodeReaderFragment.B
 
     @Override
     public void onScanError(String errorMessage) {
-        Log.e(TAG, "onScanError: " + errorMessage);
+        Log.i(TAG, "onScanError: " + errorMessage);
     }
 
     @Override

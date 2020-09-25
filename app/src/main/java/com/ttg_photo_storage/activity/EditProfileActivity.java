@@ -150,7 +150,7 @@ public class EditProfileActivity extends BaseActivity  {
 
                 } catch (Exception e) {
 //                    Toast.makeText(this, R.string.iamutkarshtiwari_github_io_ananas_not_selected, Toast.LENGTH_SHORT).show();
-                    Log.e("Demo App", e.getMessage());
+                    Log.i("Demo App", e.getMessage());
                 }
                 break;
         }

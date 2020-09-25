@@ -893,7 +893,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:text="Engraving/Scratcch"
+                            android:text="Engraving/Scratch"
                             android:textColor="@color/black"
                             android:textSize="12sp"
                             />

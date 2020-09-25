@@ -1,4 +1,4 @@
-package com.ttg_photo_storage.activity.adapter;
+package com.ttg_photo_storage.adapter;
 
 
 
@@ -24,17 +24,17 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import model.login.detailsWithoutCrn.FilesItem;
+import model.login.viewShipDetails.FilesItem;
 
 import static com.bumptech.glide.load.engine.DiskCacheStrategy.AUTOMATIC;
 
 
-public class ViewShipImagesSideAdapter extends RecyclerView.Adapter<ViewShipImagesSideAdapter.ViewHolder> {
+public class ViewShipImagesAdapter extends RecyclerView.Adapter<ViewShipImagesAdapter.ViewHolder> {
     private Activity mContext;
     private List<FilesItem> list;
     private MvpView mvpView;
 
-    public ViewShipImagesSideAdapter(Activity context, List<FilesItem> list, MvpView mvp) {
+    public ViewShipImagesAdapter(Activity context, List<FilesItem> list, MvpView mvp) {
         mContext = context;
         this.list = list;
         mvpView = mvp;
@@ -44,7 +44,7 @@ public class ViewShipImagesSideAdapter extends RecyclerView.Adapter<ViewShipImag
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.getpost_adapter, parent, false);
-        return new ViewShipImagesSideAdapter.ViewHolder(view);
+        return new ViewShipImagesAdapter.ViewHolder(view);
     }
 
     @Override
@@ -91,11 +91,6 @@ public class ViewShipImagesSideAdapter extends RecyclerView.Adapter<ViewShipImag
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-//            btnTeanandbusiness.setOnClickListener(v -> {
-//                Log.e("MEMBER ID", "= " + list.get(getAdapterPosition()).getMemberId());
-//                mvpView.getMyClickPosition(list.get(getAdapterPosition()).getFirstName() + " " + list.get(getAdapterPosition()).getLastName(), String.valueOf(list.get(getAdapterPosition()).getMemberId()));
-//
-//            });
 
         }
     }

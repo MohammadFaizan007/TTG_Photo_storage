@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.ttg_photo_storage.R;
-import com.ttg_photo_storage.activity.adapter.PostResultAdapter;
+import com.ttg_photo_storage.adapter.PostResultAdapter;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
 import com.ttg_photo_storage.utils.LoggerUtil;
