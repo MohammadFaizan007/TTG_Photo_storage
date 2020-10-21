@@ -187,7 +187,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
     File IMAGE_SIGNATUREFile;
     private String edit_search_st = "", timeDate_st = "", noOfVechile_st = "", vehicleNumber_st = "", vehicleType_st = "",
             companyName_st = "", waybill_st = "", noOfLogisticsStaff_st = "", noOfBoxes_st = "", noOfPallets_st = "", noOfDevices_st = "", packageQuality_st = "",
-            supervisorName_st = "", phone_no_st = "", et_message_st = "", reason_message_st = "", time_st = "", companyName_reject_st = "",box_seal_st = "";
+            supervisorName_st = "", phone_no_st = "", et_message_st = "", reason_message_st = "", time_st = "", companyName_reject_st = "", box_seal_st = "";
     public String accept_st = "no";
     Unbinder unbinder;
     private int mYear, mMonth, mDay, mHour, mMinute;
@@ -305,7 +305,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                     searchShip_crn_btn.setVisibility(View.GONE);
 
 
-                } else if (rb.getText().toString().equalsIgnoreCase("Search Shipment by CRN .")){
+                } else if (rb.getText().toString().equalsIgnoreCase("Search Shipment by CRN .")) {
                     crnID_et.setVisibility(View.GONE);
                     assedIDEt.setVisibility(View.GONE);
                     searchbtn.setVisibility(View.GONE);
@@ -313,7 +313,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                     crnIDShip_et.setVisibility(View.VISIBLE);
                     searchShip_crn_btn.setVisibility(View.VISIBLE);
 
-                }else {
+                } else {
                     crnID_et.setVisibility(View.GONE);
                     assedIDEt.setVisibility(View.VISIBLE);
                     searchbtn.setVisibility(View.VISIBLE);
@@ -439,7 +439,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 break;
 
             case R.id.boxSeal:
-                PopupMenu seal = new PopupMenu(context,boxSeal);
+                PopupMenu seal = new PopupMenu(context, boxSeal);
                 seal.getMenuInflater().inflate(R.menu.box, seal.getMenu());
                 seal.setOnMenuItemClickListener(item -> {
                     try {
@@ -463,8 +463,7 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                 break;
             case R.id.imageSignature:
 //                signatureDialog();
-                checkPermission(
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         STORAGE_PERMISSION_CODE);
 
                 break;
@@ -594,8 +593,8 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode,
-                        permissions,
-                        grantResults);
+                permissions,
+                grantResults);
 
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0
@@ -671,6 +670,16 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 finalMPhotoEditor.saveAsFile(sdPath, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String signaturePath) {

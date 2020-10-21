@@ -27,7 +27,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.ttg_photo_storage.BuildConfig;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -35,7 +35,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
-import com.ttg_photo_storage.BuildConfig;
 import com.ttg_photo_storage.R;
 import com.ttg_photo_storage.app.PreferencesManager;
 import com.ttg_photo_storage.constants.BaseActivity;
@@ -46,10 +45,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,7 +57,6 @@ import id.zelory.compressor.Compressor;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 import ja.burhanrashid52.photoeditor.PhotoEditorView;
 import model.login.detailsWithoutCrn.ResponseShipmentDetails;
-import model.login.shipUpload.ShipUploadResponse;
 import model.login.shipUpload.updateShip.UpdateShipResponse;
 import model.login.viewShipDetails.ViewShipDetailsResponse;
 import okhttp3.MediaType;
@@ -429,31 +423,90 @@ public class ViewShipmentDetails extends BaseActivity {
 
     }
 
+    //    public void checkPermission(String permission, int requestCode) {
+//        if (ContextCompat.checkSelfPermission(ViewShipmentDetails.this, permission) == PackageManager.PERMISSION_DENIED) {
+//            // Checking if permission is not granted
+//            if (ContextCompat.checkSelfPermission(
+//                    ViewShipmentDetails.this,
+//                    permission)
+//                    == PackageManager.PERMISSION_DENIED) {
+//                ActivityCompat
+//                        .requestPermissions(
+//                                ViewShipmentDetails.this,
+//                                new String[]{permission},
+//                                requestCode);
+//            } else {
+//                Toast
+//                        .makeText(ViewShipmentDetails.this,
+//                                "Permission already granted",
+//                                Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        }
+//    }
     public void checkPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(ViewShipmentDetails.this, permission) == PackageManager.PERMISSION_DENIED) {
-            // Checking if permission is not granted
-            if (ContextCompat.checkSelfPermission(
-                    ViewShipmentDetails.this,
-                    permission)
-                    == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat
-                        .requestPermissions(
-                                ViewShipmentDetails.this,
-                                new String[]{permission},
-                                requestCode);
-            } else {
-                Toast
-                        .makeText(ViewShipmentDetails.this,
-                                "Permission already granted",
-                                Toast.LENGTH_SHORT)
-                        .show();
+        if (ContextCompat.checkSelfPermission(ViewShipmentDetails.this, permission)
+                == PackageManager.PERMISSION_DENIED) {
+
+            // Requesting the permission
+            ActivityCompat.requestPermissions(ViewShipmentDetails.this,
+                    new String[]{permission},
+                    requestCode);
+        } else {
+            if (checkbox_remember.isChecked()){
+                signatureDialog();
+            }else {
+                showError("Please tick check box", declair_et);
             }
+
         }
     }
-
     // This function is called when the user accepts or decline the permission.
     // Request Code is used to check which permission called this function.
     // This request code is provided when the user is prompt for permission.
+
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode,
+//                permissions,
+//                grantResults);
+//
+//        if (requestCode == CAMERA_PERMISSION_CODE) {
+//            if (grantResults.length > 0
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                if (checkbox_remember.isChecked()) {
+//                    signatureDialog();
+//                } else {
+//                    showError("Please tick check box", declair_et);
+////                    showToastS("Please tick check box");
+//
+//                }
+//            } else {
+//                Toast.makeText(getApplicationContext(),
+//                        "Camera Permission Denied",
+//                        Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        } else if (requestCode == STORAGE_PERMISSION_CODE) {
+//            if (grantResults.length > 0
+//                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                if (checkbox_remember.isChecked()) {
+//                    signatureDialog();
+//                } else {
+//                    showError("Please tick check box", declair_et);
+////                    showToastS("Please tick check box");
+//
+//                }
+//            } else {
+//                Toast.makeText(getApplicationContext(),
+//                        "Storage Permission Denied",
+//                        Toast.LENGTH_SHORT)
+//                        .show();
+//            }
+//        }
+//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -466,15 +519,14 @@ public class ViewShipmentDetails extends BaseActivity {
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (checkbox_remember.isChecked()) {
+//                signatureDialog();
+                if (checkbox_remember.isChecked()){
                     signatureDialog();
-                } else {
+                }else {
                     showError("Please tick check box", declair_et);
-//                    showToastS("Please tick check box");
-
                 }
             } else {
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(ViewShipmentDetails.this,
                         "Camera Permission Denied",
                         Toast.LENGTH_SHORT)
                         .show();
@@ -482,15 +534,14 @@ public class ViewShipmentDetails extends BaseActivity {
         } else if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (checkbox_remember.isChecked()) {
+//                signatureDialog();
+                if (checkbox_remember.isChecked()){
                     signatureDialog();
-                } else {
+                }else {
                     showError("Please tick check box", declair_et);
-//                    showToastS("Please tick check box");
-
                 }
             } else {
-                Toast.makeText(getApplicationContext(),
+                Toast.makeText(ViewShipmentDetails.this,
                         "Storage Permission Denied",
                         Toast.LENGTH_SHORT)
                         .show();
@@ -549,6 +600,16 @@ public class ViewShipmentDetails extends BaseActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+                if (ActivityCompat.checkSelfPermission(ViewShipmentDetails.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
                 finalMPhotoEditor.saveAsFile(sdPath, new PhotoEditor.OnSaveListener() {
                     @Override
                     public void onSuccess(@NonNull String signaturePath) {
@@ -667,28 +728,18 @@ public class ViewShipmentDetails extends BaseActivity {
         }
 
     }
-//    private boolean Validation() {
-//        try {
-//            if (!checkbox_remember.isChecked()){
-//                showToastS("Please tick check box");
-//                return false;
-//            }
-//
-////            if (userName_st.length() == 0) {
-////                userName_st = "";
-////                showError("Please enter Email ID", usernameEt);
-////                return false;
-////            }
-////            if (password_st.length() == 0) {
-////                password_st = "";
-////                showError(getResources().getString(R.string.enter_pswd_err), passwordEt);
-////                return false;
-////            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return true;
-//    }
+    private boolean Validation() {
+        try {
+            if (!checkbox_remember.isChecked()){
+                showToastS("Please tick check box");
+                return false;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
     private void showError(String error_st, EditText editText) {
         Dialog error_dialog = new Dialog(context);
