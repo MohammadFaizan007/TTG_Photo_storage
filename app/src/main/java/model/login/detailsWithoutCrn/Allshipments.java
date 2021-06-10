@@ -104,6 +104,9 @@ public class Allshipments{
 	@SerializedName("logistic_waybill")
 	private String logistic_waybill;
 
+	@SerializedName("printpdf")
+	private String printpdf;
+
 
 	public void setDate(String date){
 		this.date = date;
@@ -368,5 +371,13 @@ public class Allshipments{
 
 	public String getLogistic_waybill(){
 		return logistic_waybill;
+	}
+
+	public void setPrintpdf(String printpdf){
+		this.printpdf = printpdf;
+	}
+
+	public String getPrintpdf(){
+		return printpdf;
 	}
 }

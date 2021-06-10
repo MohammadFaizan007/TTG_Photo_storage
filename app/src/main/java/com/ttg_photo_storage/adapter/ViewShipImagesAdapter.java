@@ -51,7 +51,7 @@ public class ViewShipImagesAdapter extends RecyclerView.Adapter<ViewShipImagesAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         try {
-            holder.description.setText(list.get(position).getDesc());
+            holder.description.setText(list.get (position).getDesc ());
 //            holder.description.setText(list.get(list.indexOf(list)).getDesc());
             Glide.with(mContext).load(BuildConfig.BASE_URL_FORIMAGE + list.get(position).getFile())
                     .apply(new RequestOptions().diskCacheStrategy(AUTOMATIC).placeholder(R.drawable.photo_view)

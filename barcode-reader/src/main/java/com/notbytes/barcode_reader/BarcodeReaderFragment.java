@@ -358,7 +358,7 @@ public class BarcodeReaderFragment extends Fragment implements View.OnTouchListe
     public void onDestroy() {
         super.onDestroy();
         if (mPreview != null) {
-            mPreview.release();
+//            mPreview.release();
         }
     }
 

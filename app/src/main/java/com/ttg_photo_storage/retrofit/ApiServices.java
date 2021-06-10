@@ -266,6 +266,18 @@ public interface ApiServices {
             @Part("update") RequestBody update
     );
 
+    @FormUrlEncoded
+    @POST("api.php/")
+    Call<UpdateShipResponse> crnUpdate(
+            @Field("action") String action,
+            @Field("token") String token,
+            @Field("crn") String crn,
+            @Field("hash") String hash,
+            @Field("update") String update
+
+    );
+
+
     @Multipart
     @POST("api.php/")
     Call<UpdateImagesResponse> ShipUpdated(

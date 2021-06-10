@@ -752,8 +752,6 @@ public class Dashboard extends BaseFragment implements View.OnClickListener, Bar
             } else if (PreferencesManager.getInstance(context).getType().equalsIgnoreCase("ship")) {
                 edit_search.setText(barcode.rawValue);
             }
-//            mTvResultHeader.setText("On Activity Result");
-//            mTvResult.setText(barcode.rawValue);
         }
 
     }

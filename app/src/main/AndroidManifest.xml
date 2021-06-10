@@ -175,6 +175,14 @@
 
         <activity
             android:name=".activity.Demo"
+            android:label="Upload Photo"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges="keyboard|orientation|screenSize"
+            />
+<!--        android:screenOrientation="portrait"-->
+
+        <activity
+            android:name=".activity.PrintActivity"
             android:label="Change Password"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

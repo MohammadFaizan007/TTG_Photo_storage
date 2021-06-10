@@ -86,7 +86,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageOne"
                         android:layout_width="70dp"
                         android:layout_height="70dp"
@@ -98,11 +98,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_one"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -119,7 +118,24 @@
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageOne"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_one"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintTop_toBottomOf="@+id/des_one"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -149,11 +165,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_two"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -170,7 +185,23 @@
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageSecond"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_two"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/des_two"
+                        app:layout_constraintStart_toStartOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -200,11 +231,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_three"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -222,6 +252,22 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageThird"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_three"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/des_three"
+                        app:layout_constraintStart_toStartOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -251,11 +297,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_four"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -273,6 +318,22 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageFourth"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_four"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/des_four"
+                        app:layout_constraintStart_toStartOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -302,11 +363,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_five"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -323,7 +383,24 @@
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageFive"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_five"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/des_five"
+                        app:layout_constraintStart_toStartOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -354,11 +431,10 @@
                         android:src="@drawable/choose_photo"
                         app:civ_border_color="@color/navyBlue"
                         app:civ_border_width="1dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_six"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -376,6 +452,22 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageSix"
                         app:layout_constraintTop_toTopOf="parent" />
+
+                    <CheckBox
+                        android:id="@+id/actual_image_box_six"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/actual_image"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:textSize="14sp"
+                        android:textColor="@color/black"
+                        android:background="@drawable/curveborder"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/des_six"
+                        app:layout_constraintStart_toStartOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -409,7 +501,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_seven"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -426,7 +518,7 @@
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageSeven"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -460,7 +552,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_Eight"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -511,7 +603,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_nine"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -528,7 +620,7 @@
                         android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/imageNine"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"/>
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -562,7 +654,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_ten"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -613,7 +705,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_eleven"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -664,7 +756,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <EditText
+                    <AutoCompleteTextView
                         android:id="@+id/des_twele"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
